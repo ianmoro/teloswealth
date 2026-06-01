@@ -144,8 +144,8 @@ export default function App() {
           <HeroCanvas prog={P.hero} />
 
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 40px', pointerEvents: 'none' }}>
-            <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 80px)', maxWidth: 1300, fontSize: 'clamp(32px,5vw,76px)', lineHeight: 1.08, color: '#232323', opacity: heroPhrase1, transition: 'transform .25s linear' }}>
-              Investimentos e planejamento patrimonial.<br />Para essa geração <em style={{ color: '#5E6B57' }}>e para as próximas.</em>
+            <h1 className="serif" style={{ position: 'absolute', left: isMobile ? '20px' : '80px', top: '50%', transform: `translateY(calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: isMobile ? 'calc(100% - 40px)' : '50%', maxWidth: 680, fontSize: 'clamp(22px,2.8vw,48px)', lineHeight: 1.12, color: '#F5F4F1', opacity: heroPhrase1, transition: 'transform .25s linear', textAlign: 'left', textShadow: '0 2px 18px rgba(0,0,0,0.55)' }}>
+              Investimentos e planejamento patrimonial.<br />Para essa geração <em style={{ color: '#A8C49A' }}>e para as próximas.</em>
             </h1>
             <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase2) * 22}px))`, width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 80px)', maxWidth: 1240, fontSize: 'clamp(28px,4.4vw,68px)', lineHeight: 1.14, color: '#F5F4F1', opacity: heroPhrase2, transition: 'transform .25s linear', textShadow: '0 0 50px rgba(0,0,0,0.4)' }}>
               Nosso trabalho é garantir tranquilidade com um <em style={{ color: '#C6A46C' }}>planejamento patrimonial completo e independente.</em>
@@ -202,7 +202,10 @@ export default function App() {
               <div style={{ maxWidth: 760 }}>
                 <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>02 · Objetivos</div>
                 <h2 className="serif" style={{ fontSize: 'clamp(28px,2.6vw,40px)', lineHeight: 1.18, color: '#0A0A0A' }}>
-                  Entendemos em conjunto <em style={{ color: '#5E6B57' }}>os seus objetivos de vida.</em>
+                  Entendemos em conjunto <em style={{ color: '#5E6B57' }}>os seus objetivos de vida{P.curve >= 0.88 ? ',' : '.'}</em>
+                  <span style={{ display: 'block', opacity: clamp((P.curve - 0.88) / 0.06, 0, 1), transform: `translateY(${(1 - clamp((P.curve - 0.88) / 0.06, 0, 1)) * 10}px)`, transition: 'opacity .25s linear, transform .25s linear' }}>
+                    e traduzimos em <em style={{ color: '#5E6B57' }}>um plano possível.</em>
+                  </span>
                 </h2>
               </div>
             </div>
@@ -211,11 +214,7 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0 20px 60px' : '0 80px 96px', pointerEvents: 'none', opacity: clamp((P.curve - 0.88) / 0.05, 0, 1) }}>
-            <h2 className="serif" style={{ fontSize: 'clamp(30px,3.4vw,54px)', lineHeight: 1.12, maxWidth: 1100, textAlign: 'center', color: '#0A0A0A', transform: `translateY(${(1 - clamp((P.curve - 0.88) / 0.05, 0, 1)) * 18}px)`, transition: 'transform .3s linear' }}>
-              E traduzimos em <em style={{ color: '#5E6B57' }}>um plano possível.</em>
-            </h2>
-          </div>
+
         </div>
       </section>
 
