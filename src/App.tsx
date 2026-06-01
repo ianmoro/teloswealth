@@ -53,6 +53,14 @@ export default function App() {
   const [mounted, setMounted] = useState(false)
   useEffect(() => { const id = setTimeout(() => setMounted(true), 60); return () => clearTimeout(id) }, [])
 
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
+  const [isTablet, setIsTablet] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024)
+  useEffect(() => {
+    const checkSize = () => { setIsMobile(window.innerWidth < 768); setIsTablet(window.innerWidth < 1024) }
+    window.addEventListener('resize', checkSize, { passive: true })
+    return () => window.removeEventListener('resize', checkSize)
+  }, [])
+
   const startM = 10
 
   useEffect(() => {
@@ -97,16 +105,18 @@ export default function App() {
     <div>
 
       {/* ─── NAV ─── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, height: 78, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 56px', background: isOverDark ? 'rgba(10,10,10,0.4)' : 'rgba(245,244,241,0.86)', backdropFilter: 'blur(14px)', borderBottom: isOverDark ? '1px solid rgba(245,244,241,0.06)' : '1px solid rgba(10,10,10,0.06)', transition: 'background .4s, border-color .4s' }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, height: isMobile ? 60 : 78, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 56px', background: isOverDark ? 'rgba(10,10,10,0.4)' : 'rgba(245,244,241,0.86)', backdropFilter: 'blur(14px)', borderBottom: isOverDark ? '1px solid rgba(245,244,241,0.06)' : '1px solid rgba(10,10,10,0.06)', transition: 'background .4s, border-color .4s' }}>
         <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', filter: isOverDark ? 'invert(1) brightness(1.6)' : 'none', transition: 'filter .4s' }}>
           <Logo size={36} />
         </div>
-        <div style={{ display: 'flex', gap: 42 }}>
-          {([['Família', famRef], ['Objetivos', curveRef], ['Vulnerabilidades', vulnRef], ['Pilares', metRef], ['Time', teamRef]] as [string, React.RefObject<HTMLElement>][]).map(([l, r]) => (
-            <a key={l} onClick={() => scrollToEl(r.current)} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
-          ))}
-        </div>
-        <button onClick={() => scrollToEl(ctaRef.current)} className="syncop" style={{ fontSize: 9, background: isOverDark ? 'rgba(245,244,241,0.92)' : '#0A0A0A', color: isOverDark ? '#0A0A0A' : '#F5F4F1', border: 'none', padding: '13px 26px', cursor: 'pointer', transition: 'all .4s', letterSpacing: '0.32em' }}>Diagnóstico</button>
+        {!isMobile && (
+          <div style={{ display: 'flex', gap: 32 }}>
+            {([['Família', famRef], ['Objetivos', curveRef], ['Vulnerabilidades', vulnRef], ['Pilares', metRef], ['Time', teamRef]] as [string, React.RefObject<HTMLElement>][]).map(([l, r]) => (
+              <a key={l} onClick={() => scrollToEl(r.current)} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
+            ))}
+          </div>
+        )}
+        <button onClick={() => scrollToEl(ctaRef.current)} className="syncop" style={{ fontSize: isMobile ? 8 : 9, background: isOverDark ? 'rgba(245,244,241,0.92)' : '#0A0A0A', color: isOverDark ? '#0A0A0A' : '#F5F4F1', border: 'none', padding: isMobile ? '10px 16px' : '13px 26px', cursor: 'pointer', transition: 'all .4s', letterSpacing: '0.32em' }}>Diagnóstico</button>
       </nav>
 
       {/* ─── HERO (320vh) ─── */}
@@ -134,10 +144,10 @@ export default function App() {
           <HeroCanvas prog={P.hero} />
 
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 40px', pointerEvents: 'none' }}>
-            <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: 'calc(100% - 80px)', maxWidth: 1300, fontSize: 'clamp(40px,5vw,76px)', lineHeight: 1.08, color: '#232323', opacity: heroPhrase1, transition: 'transform .25s linear' }}>
+            <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 80px)', maxWidth: 1300, fontSize: 'clamp(32px,5vw,76px)', lineHeight: 1.08, color: '#232323', opacity: heroPhrase1, transition: 'transform .25s linear' }}>
               Investimentos e planejamento patrimonial.<br />Para essa geração <em style={{ color: '#5E6B57' }}>e para as próximas.</em>
             </h1>
-            <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase2) * 22}px))`, width: 'calc(100% - 80px)', maxWidth: 1240, fontSize: 'clamp(36px,4.4vw,68px)', lineHeight: 1.14, color: '#F5F4F1', opacity: heroPhrase2, transition: 'transform .25s linear', textShadow: '0 0 50px rgba(0,0,0,0.4)' }}>
+            <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase2) * 22}px))`, width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 80px)', maxWidth: 1240, fontSize: 'clamp(28px,4.4vw,68px)', lineHeight: 1.14, color: '#F5F4F1', opacity: heroPhrase2, transition: 'transform .25s linear', textShadow: '0 0 50px rgba(0,0,0,0.4)' }}>
               Nosso trabalho é garantir tranquilidade com um <em style={{ color: '#C6A46C' }}>planejamento patrimonial completo e independente.</em>
             </h1>
           </div>
@@ -151,15 +161,15 @@ export default function App() {
 
       {/* ─── FAMÍLIA (340vh) ─── */}
       <section ref={famRef} style={{ height: '340vh', position: 'relative', background: '#F5F4F1' }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', padding: '0 80px' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', padding: isMobile ? '0 24px' : '0 80px' }}>
           {(() => {
             const treeProg = clamp((P.fam - 0.16) / 0.52, 0, 1)
             const blurP    = clamp((P.fam - 0.72) / 0.16, 0, 1)
             const p1 = clamp((P.fam - 0.02) / 0.05, 0, 1)
             const p2 = clamp((P.fam - 0.78) / 0.10, 0, 1)
             return (
-              <div style={{ height: '100%', display: 'grid', gridTemplateColumns: 'minmax(320px,38%) 1fr', gap: 40, alignItems: 'center' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 30, padding: '40px 0' }}>
+              <div style={{ height: '100%', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(320px,38%) 1fr', gridTemplateRows: isMobile ? 'auto 1fr' : undefined, gap: isMobile ? 12 : 40, alignItems: isMobile ? 'start' : 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 16 : 30, padding: isMobile ? '20px 0 0' : '40px 0' }}>
                   <div className="eyebrow eyebrow-terra" style={{ opacity: p1 }}>01 · Família</div>
                   <p className="serif" style={{ fontSize: 'clamp(26px,2.6vw,42px)', lineHeight: 1.22, color: '#0A0A0A', opacity: p1 * (1 - blurP * 0.15), transform: `translateY(${(1 - p1) * 16}px)`, transition: 'transform .4s' }}>
                     Entendemos <em style={{ color: '#5E6B57' }}>onde a sua família está</em>
@@ -168,7 +178,7 @@ export default function App() {
                     e <em style={{ color: '#5E6B57' }}>onde ela quer chegar.</em>
                   </p>
                 </div>
-                <div style={{ position: 'relative', height: '100%', padding: '70px 0 40px', filter: `blur(${(blurP * 6).toFixed(2)}px)`, opacity: 1 - blurP * 0.42, transition: 'opacity .3s' }}>
+                <div style={{ position: 'relative', height: '100%', padding: isMobile ? '16px 0 24px' : '70px 0 40px', filter: `blur(${(blurP * 6).toFixed(2)}px)`, opacity: 1 - blurP * 0.42, transition: 'opacity .3s' }}>
                   <TreeCanvas prog={treeProg} />
                 </div>
               </div>
@@ -181,14 +191,14 @@ export default function App() {
       <section ref={curveRef} style={{ height: '560vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 80px', pointerEvents: 'none', opacity: clamp((P.curve - 0.02) / 0.06, 0, 1) * clamp(1 - (P.curve - 0.16) / 0.06, 0, 1) }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 80px', pointerEvents: 'none', opacity: clamp((P.curve - 0.02) / 0.06, 0, 1) * clamp(1 - (P.curve - 0.16) / 0.06, 0, 1) }}>
             <h2 className="serif" style={{ fontSize: 'clamp(36px,4.2vw,68px)', lineHeight: 1.12, maxWidth: 1400, textAlign: 'center', color: '#0A0A0A' }}>
               Entendemos em conjunto <em style={{ color: '#5E6B57' }}>os seus objetivos de vida.</em>
             </h2>
           </div>
 
           <div style={{ position: 'absolute', inset: 0, opacity: clamp((P.curve - 0.18) / 0.06, 0, 1), pointerEvents: P.curve > 0.18 ? 'auto' : 'none', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: '104px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0 }}>
+            <div style={{ padding: isMobile ? '80px 24px 0' : '104px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0 }}>
               <div style={{ maxWidth: 760 }}>
                 <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>02 · Objetivos</div>
                 <h2 className="serif" style={{ fontSize: 'clamp(28px,2.6vw,40px)', lineHeight: 1.18, color: '#0A0A0A' }}>
@@ -196,12 +206,12 @@ export default function App() {
                 </h2>
               </div>
             </div>
-            <div style={{ flex: 1, position: 'relative', padding: '56px 40px 80px', minHeight: 0 }}>
+            <div style={{ flex: 1, position: 'relative', padding: isMobile ? '24px 16px 40px' : '56px 40px 80px', minHeight: 0 }}>
               <CurveCanvas prog={clamp((P.curve - 0.18) / 0.68, 0, 1)} startM={startM} mood="alive" />
             </div>
           </div>
 
-          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '0 80px 96px', pointerEvents: 'none', opacity: clamp((P.curve - 0.88) / 0.05, 0, 1) }}>
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: isMobile ? '0 20px 60px' : '0 80px 96px', pointerEvents: 'none', opacity: clamp((P.curve - 0.88) / 0.05, 0, 1) }}>
             <h2 className="serif" style={{ fontSize: 'clamp(30px,3.4vw,54px)', lineHeight: 1.12, maxWidth: 1100, textAlign: 'center', color: '#0A0A0A', transform: `translateY(${(1 - clamp((P.curve - 0.88) / 0.05, 0, 1)) * 18}px)`, transition: 'transform .3s linear' }}>
               E traduzimos em <em style={{ color: '#5E6B57' }}>um plano possível.</em>
             </h2>
@@ -222,12 +232,18 @@ export default function App() {
               opacity: 1 - clamp(handoffP / 0.10, 0, 1),
               ...extra,
             })
-            const fs = lerp(56, 33, shrinkP)
-            const left = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
-            const top  = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 102, shrinkP)}px)`
+            const fs = isMobile ? lerp(28, 18, shrinkP) : lerp(56, 33, shrinkP)
+            const left = isMobile
+              ? `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 16, shrinkP).toFixed(1)}px)`
+              : `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
+            const top  = isMobile
+              ? `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 72, shrinkP).toFixed(1)}px)`
+              : `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 102, shrinkP)}px)`
             const tx   = lerp(-50, 0, shrinkP)
             const ty   = lerp(-50, 0, shrinkP)
-            const width = lerp(1120, 440, shrinkP)
+            const width = isMobile
+              ? `calc(100vw - 32px)`
+              : lerp(1120, 440, shrinkP)
             return (
               <>
                 <div style={{ position: 'absolute', inset: 0, opacity: clamp((shrinkP - 0.25) / 0.4, 0, 1), display: 'flex', flexDirection: 'column' }}>
@@ -272,7 +288,7 @@ export default function App() {
             return (
               <>
                 {/* Phase A — intro phrase */}
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px', opacity: intro, pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 40px', opacity: intro, pointerEvents: 'none' }}>
                   <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
                     Um <em style={{ color: '#5E6B57', opacity: lockedIn }}>plano</em> que <em style={{ color: '#5E6B57', opacity: lockedIn }}>resiste</em> ao previsível —<br />
                     e que está preparado <em style={{ color: '#5E6B57' }}>para o que não é.</em>
@@ -281,7 +297,7 @@ export default function App() {
 
                 {/* Phases B/C — vulnerabilidades → soluções */}
                 <div style={{ position: 'absolute', inset: 0, opacity: listIn * listFade, pointerEvents: (listIn > 0.5 && morphP < 0.05) ? 'auto' : 'none', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ padding: '92px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, opacity: headFade }}>
+                  <div style={{ padding: isMobile ? '72px 20px 0' : '92px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, opacity: headFade }}>
                     <div style={{ maxWidth: 900 }}>
                       <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>04 · Vulnerabilidades</div>
                       <h2 className="serif" style={{ fontSize: 'clamp(26px,2.6vw,40px)', lineHeight: 1.22, color: '#0A0A0A' }}>
@@ -296,7 +312,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(6px,1.3vh,16px)', padding: '0 80px 56px', minHeight: 0 }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(6px,1.3vh,16px)', padding: isMobile ? '0 16px 40px' : '0 80px 56px', minHeight: 0 }}>
                     {VULN_PAIRS.map((pair, i) => {
                       const dockT = ease(clamp((P.vuln - (dockStart + i * rowStag)) / dockSpan, 0, 1))
                       const shown = revealed.has(i) || autoReveal
@@ -304,7 +320,8 @@ export default function App() {
                       return (
                         <div key={i}
                           onMouseEnter={() => addReveal(i)}
-                          style={{ display: 'grid', gridTemplateColumns: '1fr 130px 1fr', alignItems: 'center', minHeight: 44, cursor: shown ? 'default' : 'pointer' }}>
+                          onClick={() => addReveal(i)}
+                          style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 50px 1fr' : '1fr 130px 1fr', alignItems: 'center', minHeight: 44, cursor: shown ? 'default' : 'pointer' }}>
                           <div style={{ position: 'relative', textAlign: 'right', paddingRight: 10, minHeight: '1.4em' }}>
                             <span className="serif" style={{ fontSize: 'clamp(16px,1.65vw,25px)', color: '#0A0A0A', display: 'inline-block', opacity: 0.38 + reveal * 0.62, filter: `blur(${((1 - reveal) * 7).toFixed(2)}px)`, transition: 'opacity .5s ease, filter .5s ease', willChange: 'filter' }}>{pair.vuln}</span>
                           </div>
@@ -339,7 +356,7 @@ export default function App() {
       <section ref={metRef} style={{ height: '520vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
-          <div style={{ padding: '88px 80px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, borderBottom: '1px solid rgba(10,10,10,0.08)' }}>
+          <div style={{ padding: isMobile ? '64px 24px 20px' : '88px 80px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, borderBottom: '1px solid rgba(10,10,10,0.08)' }}>
             <div style={{ maxWidth: 760 }}>
               <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>05 · Nossos pilares</div>
               <h2 className="serif" style={{ fontSize: 'clamp(26px,2.6vw,38px)', lineHeight: 1.2, color: '#0A0A0A' }}>
@@ -362,21 +379,21 @@ export default function App() {
           <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', display: 'flex', transform: `translateX(${-P.met * (PILARES.length - 1) * 100}vw)`, willChange: 'transform' }}>
               {PILARES.map((pil, i) => {
-                const open = hoverPillar === i
+                const open = isMobile || hoverPillar === i
                 return (
                   <div key={i}
                     onMouseEnter={() => setHoverPillar(i)}
                     onMouseLeave={() => setHoverPillar(h => h === i ? null : h)}
-                    style={{ width: '100vw', height: '100%', flexShrink: 0, padding: '80px 12vw', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center', borderRight: i < PILARES.length - 1 ? '1px solid rgba(10,10,10,0.06)' : 'none' }}>
+                    style={{ width: '100vw', height: '100%', flexShrink: 0, padding: isMobile ? '28px 24px' : '80px 12vw', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 20 : 80, alignItems: isMobile ? 'start' : 'center', borderRight: i < PILARES.length - 1 ? '1px solid rgba(10,10,10,0.06)' : 'none' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                      <div className="serif" style={{ fontSize: 'clamp(160px,15vw,250px)', color: open ? 'rgba(94,107,87,0.30)' : 'rgba(94,107,87,0.16)', lineHeight: 0.85, letterSpacing: '-0.02em', transition: 'color .5s' }}>{pil.n}</div>
+                      <div className="serif" style={{ fontSize: isMobile ? 'clamp(60px,18vw,96px)' : 'clamp(160px,15vw,250px)', color: open ? 'rgba(94,107,87,0.30)' : 'rgba(94,107,87,0.16)', lineHeight: 0.85, letterSpacing: '-0.02em', transition: 'color .5s' }}>{pil.n}</div>
                       <div style={{ width: 60, height: 1, background: '#5E6B57' }} />
                       <div className="eyebrow eyebrow-terra">Pilar {pil.n}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 28, maxWidth: 540 }}>
-                      <h3 className="serif" style={{ fontSize: 'clamp(40px,4.4vw,72px)', lineHeight: 1.04, color: '#0A0A0A', letterSpacing: '-0.005em' }}>{pil.lbl}</h3>
+                        <h3 className="serif" style={{ fontSize: isMobile ? 'clamp(28px,7vw,48px)' : 'clamp(40px,4.4vw,72px)', lineHeight: 1.04, color: '#0A0A0A', letterSpacing: '-0.005em' }}>{pil.lbl}</h3>
                       <div style={{ position: 'relative', minHeight: 150 }}>
-                        <p style={{ fontSize: 19, fontWeight: 300, lineHeight: 1.75, color: 'rgba(35,35,35,0.7)', opacity: open ? 1 : 0, filter: open ? 'blur(0px)' : 'blur(5px)', transform: open ? 'translateY(0)' : 'translateY(12px)', transition: 'opacity .5s ease, filter .5s ease, transform .5s ease', willChange: 'filter' }}>{pil.def}</p>
+                          <p style={{ fontSize: isMobile ? 15 : 19, fontWeight: 300, lineHeight: 1.75, color: 'rgba(35,35,35,0.7)', opacity: open ? 1 : 0, filter: open ? 'blur(0px)' : 'blur(5px)', transform: open ? 'translateY(0)' : 'translateY(12px)', transition: 'opacity .5s ease, filter .5s ease, transform .5s ease', willChange: 'filter' }}>{pil.def}</p>
                         <div className="syncop" style={{ position: 'absolute', top: 4, left: 0, fontSize: 9, letterSpacing: '0.32em', color: 'rgba(94,107,87,0.6)', opacity: open ? 0 : 1, transition: 'opacity .4s', pointerEvents: 'none' }}>passe o mouse para ler</div>
                       </div>
                     </div>
@@ -386,34 +403,34 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ padding: '18px 80px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(10,10,10,0.06)', flexShrink: 0 }}>
+          <div style={{ padding: isMobile ? '10px 24px 14px' : '18px 80px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(10,10,10,0.06)', flexShrink: 0 }}>
             <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.35)' }}>
               {PILARES[Math.min(PILARES.length - 1, Math.floor(P.met * PILARES.length))].lbl}
             </span>
             <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.35)' }}>
-              ← role para avançar · passe o mouse para ler →
+              {isMobile ? '↑ role para avançar' : '← role para avançar · passe o mouse para ler →'}
             </span>
           </div>
         </div>
       </section>
 
       {/* ─── TIME ─── */}
-      <section ref={teamRef} style={{ background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)', padding: '140px 80px 120px' }}>
+      <section ref={teamRef} style={{ background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)', padding: isMobile ? '80px 24px 80px' : '140px 80px 120px' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 96, marginBottom: 80, alignItems: 'end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 360px', gap: isMobile ? 32 : 96, marginBottom: isMobile ? 40 : 80, alignItems: 'end' }}>
             <div>
               <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24 }}>06 · Quem somos</div>
               <h2 className="serif" style={{ fontSize: 'clamp(36px,4vw,62px)', lineHeight: 1.1, color: '#0A0A0A' }}>
                 Sete sócios certificados.<br /><em style={{ color: '#5E6B57' }}>Um único critério.</em>
               </h2>
             </div>
-            <div style={{ borderLeft: '1px solid rgba(10,10,10,0.12)', paddingLeft: 36 }}>
-              <div className="serif" style={{ fontSize: 64, color: '#5E6B57', lineHeight: 1 }}>+R$700M</div>
+            <div style={{ borderLeft: isMobile ? 'none' : '1px solid rgba(10,10,10,0.12)', borderTop: isMobile ? '1px solid rgba(10,10,10,0.12)' : 'none', paddingLeft: isMobile ? 0 : 36, paddingTop: isMobile ? 24 : 0 }}>
+              <div className="serif" style={{ fontSize: isMobile ? 48 : 64, color: '#5E6B57', lineHeight: 1 }}>+R$700M</div>
               <div style={{ fontSize: 13, color: 'rgba(10,10,10,0.5)', marginTop: 8, letterSpacing: '0.05em' }}>sob aconselhamento</div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: 'rgba(10,10,10,0.08)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: 'rgba(10,10,10,0.08)' }}>
             {TEAM.map((p, i) => (
               <a key={i} href={p.li} target="_blank" rel="noopener noreferrer"
                 onMouseEnter={() => setHoverMember(i)}
@@ -450,7 +467,7 @@ export default function App() {
       </section>
 
       {/* ─── CTA ─── */}
-      <section ref={ctaRef} style={{ background: '#0A0A0A', padding: '140px 80px 80px', color: '#F5F4F1' }}>
+      <section ref={ctaRef} style={{ background: '#0A0A0A', padding: isMobile ? '80px 24px 60px' : '140px 80px 80px', color: '#F5F4F1' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 48 }}>
           <div>
             <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24, color: '#A8B0A2' }}>Início de relação</div>
@@ -459,12 +476,12 @@ export default function App() {
             </h2>
           </div>
           <a href="mailto:contato@teloswealth.com.br" className="syncop"
-            style={{ display: 'inline-block', background: '#F5F4F1', color: '#0A0A0A', border: 'none', padding: '20px 56px', fontSize: 10, cursor: 'pointer', letterSpacing: '0.32em', textDecoration: 'none' }}>
+            style={{ display: 'inline-block', background: '#F5F4F1', color: '#0A0A0A', border: 'none', padding: isMobile ? '16px 32px' : '20px 56px', fontSize: 10, cursor: 'pointer', letterSpacing: '0.32em', textDecoration: 'none' }}>
             Entre em contato conosco →
           </a>
         </div>
 
-        <div style={{ maxWidth: 1100, margin: '120px auto 0', paddingTop: 48, borderTop: '1px solid rgba(245,244,241,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div style={{ maxWidth: 1100, margin: isMobile ? '60px auto 0' : '120px auto 0', paddingTop: 48, borderTop: '1px solid rgba(245,244,241,0.06)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
           <div style={{ filter: 'invert(1) brightness(1.6)' }}>
             <Logo size={42} />
           </div>
