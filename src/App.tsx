@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { clamp, ease, lerp } from './utils/math'
+import { clamp, ease } from './utils/math'
 import { PILARES, TEAM, LOCATIONS } from './data'
 import { Logo } from './components/Logo'
 import HeroCanvas from './components/canvas/HeroCanvas'
 import TreeCanvas from './components/canvas/TreeCanvas'
-import VolatilityCanvas from './components/canvas/VolatilityCanvas'
+import CurveCanvas from './components/canvas/CurveCanvas'
 import TelosMorphCanvas from './components/canvas/TelosMorphCanvas'
 
 function getSectionProgress(el: HTMLElement | null) {
@@ -21,27 +21,17 @@ function scrollToEl(el: HTMLElement | null) {
   window.scrollTo({ top, behavior: 'smooth' })
 }
 
-function SectionIntro({ eyebrow, title, sub, dark = false }: { eyebrow: string; title: string; sub?: string; dark?: boolean }) {
-  return (
-    <div style={{ padding: '120px 80px 60px', maxWidth: 1400, margin: '0 auto' }}>
-      <div className={`eyebrow ${dark ? 'eyebrow-dark' : ''}`} style={{ marginBottom: 24 }}>{eyebrow}</div>
-      <h2 className="serif" style={{ fontSize: 'clamp(36px,4.4vw,68px)', lineHeight: 1.1, fontWeight: 400, color: dark ? '#F5F4F1' : '#0A0A0A', maxWidth: 1100 }} dangerouslySetInnerHTML={{ __html: title }} />
-      {sub && <p style={{ marginTop: 28, fontSize: 17, fontWeight: 300, lineHeight: 1.75, color: dark ? 'rgba(245,244,241,0.6)' : 'rgba(10,10,10,0.55)', maxWidth: 680 }}>{sub}</p>}
-    </div>
-  )
-}
-
 export default function App() {
   const heroRef = useRef<HTMLElement>(null)
   const famRef  = useRef<HTMLElement>(null)
-  const volRef  = useRef<HTMLElement>(null)
+  const objRef  = useRef<HTMLElement>(null)
   const vulnRef = useRef<HTMLElement>(null)
   const collapseRef = useRef<HTMLElement>(null)
   const metRef  = useRef<HTMLElement>(null)
   const teamRef = useRef<HTMLElement>(null)
   const ctaRef  = useRef<HTMLElement>(null)
 
-  const [P, setP] = useState({ hero: 0, fam: 0, vol: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
+  const [P, setP] = useState({ hero: 0, fam: 0, obj: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
   const [scrollY, setScrollY] = useState(0)
   const [hoverMember, setHoverMember] = useState<number | null>(null)
   const [hoverPillar, setHoverPillar] = useState<number | null>(null)
@@ -69,7 +59,7 @@ export default function App() {
         setP({
           hero:     getSectionProgress(heroRef.current),
           fam:      getSectionProgress(famRef.current),
-          vol:      getSectionProgress(volRef.current),
+          obj:      getSectionProgress(objRef.current),
           vuln:     getSectionProgress(vulnRef.current),
           collapse: getSectionProgress(collapseRef.current),
           met:      getSectionProgress(metRef.current),
@@ -89,11 +79,6 @@ export default function App() {
   const heroPhrase1 = (mounted ? 1 : 0) * clamp(1 - (heroReveal - 0.30) / 0.16, 0, 1)
   const heroPhrase2 = clamp((heroReveal - 0.62) / 0.20, 0, 1)
 
-  const handoffP = P.vol < 0.999
-    ? clamp((P.vol - 0.90) / 0.10, 0, 1) * 0.42
-    : 0.42 + 0.58 * clamp(P.vuln / 0.07, 0, 1)
-  const handoffE = ease(handoffP)
-  const lockedIn = clamp((handoffP - 0.90) / 0.08, 0, 1)
 
   return (
     <div>
@@ -111,8 +96,8 @@ export default function App() {
                 const top = el.getBoundingClientRect().top + window.scrollY
                 window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.45, behavior: 'smooth' })
               }],
-              ['Alocação', () => {
-                const el = volRef.current; if (!el) return
+              ['Objetivos', () => {
+                const el = objRef.current; if (!el) return
                 const top = el.getBoundingClientRect().top + window.scrollY
                 window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.40, behavior: 'smooth' })
               }],
@@ -137,7 +122,7 @@ export default function App() {
 
           <video
             muted loop playsInline
-            src="/bannerinicial.mp4"
+            src="/0605.mov"
             ref={(el) => {
               if (!el || (el as any)._telosInit) return
               ;(el as any)._telosInit = true
@@ -199,51 +184,24 @@ export default function App() {
         </div>
       </section>
 
-      {/* ─── ALOCAÇÃO / VOLATILIDADE (560vh) ─── */}
-      <section ref={volRef} style={{ height: '560vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
+      {/* ─── OBJETIVOS (400vh) ─── */}
+      <section ref={objRef} style={{ height: '400vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
           {(() => {
-            const shrinkP = ease(clamp((P.vol - 0.05) / 0.18, 0, 1))
-            const volMap = clamp((P.vol - 0.16) / 0.80, 0, 1)
-            const anchored = shrinkP > 0.45
-            const kw = (extra?: React.CSSProperties): React.CSSProperties => ({
-              color: '#5E6B57',
-              display: 'inline-block',
-              opacity: 1 - clamp(handoffP / 0.10, 0, 1),
-              ...extra,
-            })
-            const fs = isMobile ? lerp(28, 18, shrinkP) : lerp(56, 33, shrinkP)
-            const left = isMobile
-              ? `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 16, shrinkP).toFixed(1)}px)`
-              : `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
-            const top  = isMobile
-              ? `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 72, shrinkP).toFixed(1)}px)`
-              : `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 102, shrinkP)}px)`
-            const tx   = lerp(-50, 0, shrinkP)
-            const ty   = lerp(-50, 0, shrinkP)
-            const width = isMobile
-              ? `calc(100vw - 32px)`
-              : lerp(1120, 440, shrinkP)
+            const curveProg = clamp((P.obj - 0.08) / 0.82, 0, 1)
+            const textIn    = clamp(P.obj / 0.06, 0, 1)
             return (
-              <>
-                <div style={{ position: 'absolute', inset: 0, opacity: clamp((shrinkP - 0.25) / 0.4, 0, 1), display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ flex: 1, position: 'relative' }}>
-                    <VolatilityCanvas prog={volMap} />
-                  </div>
-                  <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', opacity: clamp((shrinkP - 0.5) / 0.3, 0, 1) * clamp(1 - (volMap - 0.85) / 0.1, 0, 1), pointerEvents: 'none' }}>
-                    <p style={{ fontSize: 11, color: 'rgba(35,35,35,0.45)', fontWeight: 300, fontStyle: 'italic' }}>
-                      Role para esticar a janela de observação.
-                    </p>
-                  </div>
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <div style={{ position: 'absolute', inset: 0, paddingTop: isMobile ? 60 : 78, paddingLeft: isMobile ? 0 : 'clamp(460px, 33vw, 560px)' }}>
+                  <CurveCanvas prog={curveProg} startM={startM} padTop={200} hideTopLabels />
                 </div>
-
-                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform' }}>
-                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 10, opacity: clamp((shrinkP - 0.6) / 0.3, 0, 1) }}>03 · Alocação</div>
-                  <h2 className="serif" style={{ fontSize: fs, lineHeight: anchored ? 1.22 : 1.12, textAlign: anchored ? 'left' : 'center', color: '#0A0A0A', margin: '0 auto' }}>
-                    Em um <em style={kw()}>plano</em> que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e <em style={kw()}>resiste</em> <em style={{ color: '#5E6B57' }}>ao tempo.</em>
+                <div style={{ position: 'absolute', top: isMobile ? 80 : 120, left: isMobile ? 24 : 80, maxWidth: isMobile ? '58vw' : 420, opacity: textIn, transform: `translateY(${(1 - textIn) * 12}px)`, transition: 'transform .4s', pointerEvents: 'none' }}>
+                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>02 · Objetivos</div>
+                  <h2 className="serif" style={{ fontSize: 'clamp(22px,2.2vw,34px)', lineHeight: 1.22, color: '#0A0A0A' }}>
+                    Construímos um <em style={{ color: '#5E6B57' }}>plano</em> que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e <em style={{ color: '#5E6B57' }}>resiste ao tempo.</em>
                   </h2>
                 </div>
-              </>
+              </div>
             )
           })()}
         </div>
@@ -253,7 +211,7 @@ export default function App() {
       <section ref={vulnRef} style={{ height: '800vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const introIn  = lockedIn
+            const introIn  = clamp(P.vuln / 0.05, 0, 1)
             const introOut = clamp(1 - (P.vuln - 0.10) / 0.03, 0, 1)
             const intro = introIn * introOut
             const listIn    = clamp((P.vuln - 0.115) / 0.035, 0, 1)
@@ -265,7 +223,7 @@ export default function App() {
                 {/* Phase A — intro phrase */}
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 40px', opacity: intro, pointerEvents: 'none' }}>
                   <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
-                    Um <em style={{ color: '#5E6B57', opacity: lockedIn }}>plano</em> que <em style={{ color: '#5E6B57', opacity: lockedIn }}>resiste</em> ao previsível<br />
+                    Um <em style={{ color: '#5E6B57' }}>plano</em> que <em style={{ color: '#5E6B57' }}>resiste</em> ao previsível<br />
                     e que está preparado <em style={{ color: '#5E6B57' }}>para o que não é.</em>
                   </h2>
                 </div>
@@ -474,20 +432,6 @@ export default function App() {
       </section>
 
       {/* ─── Travelling words overlay ─── */}
-      {(() => {
-        const vwHalf = typeof window !== 'undefined' ? window.innerWidth  / 2 : 720
-        const vhHalf = typeof window !== 'undefined' ? window.innerHeight / 2 : 450
-        const dx0 = Math.round(300 - vwHalf)
-        const dy0 = Math.round(202 - vhHalf)
-        const surroundA = clamp((handoffE - 0.55) / 0.38, 0, 1)
-        return (
-          <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px', pointerEvents: 'none', zIndex: 1400, opacity: clamp(handoffP / 0.05, 0, 1) * (1 - lockedIn) }}>
-            <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A', transform: `translate(${lerp(dx0, 0, handoffE).toFixed(1)}px, ${lerp(dy0, 0, handoffE).toFixed(1)}px) scale(${lerp(0.52, 1, handoffE).toFixed(3)})`, transformOrigin: 'center', willChange: 'transform' }}>
-              <span style={{ opacity: surroundA }}>Um </span><em style={{ color: '#5E6B57' }}>plano</em><span style={{ opacity: surroundA }}> que </span><em style={{ color: '#5E6B57' }}>resiste</em><span style={{ opacity: surroundA }}> ao previsível</span><br /><span style={{ opacity: surroundA }}>e que está preparado </span><em style={{ color: '#5E6B57', opacity: surroundA }}>para o que não é.</em>
-            </h2>
-          </div>
-        )
-      })()}
 
     </div>
   )
