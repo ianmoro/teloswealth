@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { clamp, ease, lerp } from './utils/math'
-import { VULN_PAIRS, PILARES, TEAM, LOCATIONS } from './data'
+import { PILARES, TEAM, LOCATIONS } from './data'
 import { Logo } from './components/Logo'
 import HeroCanvas from './components/canvas/HeroCanvas'
 import TreeCanvas from './components/canvas/TreeCanvas'
@@ -257,11 +257,8 @@ export default function App() {
             const introOut = clamp(1 - (P.vuln - 0.10) / 0.03, 0, 1)
             const intro = introIn * introOut
             const listIn    = clamp((P.vuln - 0.115) / 0.035, 0, 1)
-            const dockStart = 0.30, dockSpan = 0.24, rowStag = 0.020
-            const morphStart = 0.66, morphEnd = 0.96
-            const morphP   = clamp((P.vuln - morphStart) / (morphEnd - morphStart), 0, 1)
-            const listFade = clamp(1 - morphP / 0.14, 0, 1)
-            const headFade = clamp(1 - (P.vuln - 0.60) / 0.05, 0, 1)
+            const headFade  = clamp(1 - (P.vuln - 0.58) / 0.06, 0, 1)
+            const canvasIn  = clamp((P.vuln - 0.27) / 0.04, 0, 1)
 
             return (
               <>
@@ -273,8 +270,8 @@ export default function App() {
                   </h2>
                 </div>
 
-                {/* Phases B/C — vulnerabilidades → soluções */}
-                <div style={{ position: 'absolute', inset: 0, opacity: listIn * listFade, pointerEvents: (listIn > 0.5 && morphP < 0.05) ? 'auto' : 'none', display: 'flex', flexDirection: 'column' }}>
+                {/* Phase B — header + pixel vulnerabilidades → TELOS */}
+                <div style={{ position: 'absolute', inset: 0, opacity: listIn, pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ padding: isMobile ? '72px 20px 0' : '92px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, opacity: headFade }}>
                     <div style={{ maxWidth: 900 }}>
                       <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>04 · Vulnerabilidades</div>
@@ -284,26 +281,11 @@ export default function App() {
                     </div>
                     <div />
                   </div>
-
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(8px,1.5vh,20px)', padding: isMobile ? '0 24px 40px' : '0 80px 56px', minHeight: 0 }}>
-                    {VULN_PAIRS.map((pair, i) => {
-                      const itemT = ease(clamp((P.vuln - (dockStart + i * rowStag)) / dockSpan, 0, 1))
-                      return (
-                        <div key={i} style={{ minHeight: 44, display: 'flex', alignItems: 'center', opacity: itemT, transform: `translateY(${(1 - itemT) * 14}px)` }}>
-                          <span className="serif" style={{ fontSize: 'clamp(18px,1.8vw,28px)', color: '#0A0A0A', fontWeight: 400 }}>{pair.vuln}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', opacity: clamp((listIn - 0.3) / 0.4, 0, 1) * clamp(1 - (P.vuln - 0.27) / 0.04, 0, 1) }}>
-                    <span className="syncop" style={{ fontSize: 9, color: 'rgba(154,92,69,0.7)', letterSpacing: '0.42em' }}>passe o mouse para revelar</span>
-                  </div>
                 </div>
 
-                {/* Phase D — TELOS morph */}
-                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: clamp(morphP / 0.1, 0, 1) }}>
-                  <TelosMorphCanvas prog={morphP} />
+                {/* Pixel animation: vulnerabilidades aparecem → somem → TELOS */}
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: canvasIn }}>
+                  <TelosMorphCanvas sectionProg={P.vuln} />
                 </div>
               </>
             )
