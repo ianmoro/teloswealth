@@ -18,7 +18,15 @@ export default function CurveCanvas({ prog, startM, mood = 'alive' }: Props) {
     const CW = W - PAD.l - PAD.r, CH = H - PAD.t - PAD.b
 
     const pts = buildCurve(startM)
-    const maxV = Math.max(...pts.map(p => p.v)) * 1.08
+    const accRate = 0.082, useRate = 0.011
+    const valAt60Ghost = startM * Math.pow(1 + accRate, 15)
+    const ghostPts = pts.map(p => ({
+      ...p,
+      v: p.age <= 60
+        ? startM * Math.pow(1 + accRate, p.age - 45)
+        : valAt60Ghost * Math.pow(1 + useRate, p.age - 60)
+    }))
+    const maxV = Math.max(...pts.map(p => p.v), ...ghostPts.map(p => p.v)) * 1.08
     const minV = 0
     const toX = (t: number) => PAD.l + t * CW
     const toY = (v: number) => PAD.t + (1 - (v - minV) / (maxV - minV)) * CH
@@ -122,6 +130,59 @@ export default function CurveCanvas({ prog, startM, mood = 'alive' }: Props) {
     ctx.strokeStyle = lineCol
     ctx.lineWidth = 2
     ctx.fill(); ctx.stroke()
+
+    // Consumption ghost zone — pure compounding vs. life spent
+    const retireT = ageToT(60)
+    const ghostFade = dim ? 0 : clamp((prog - retireT) / 0.06, 0, 1)
+    if (ghostFade > 0) {
+      const retI = pts.findIndex(p => p.age >= 59.5)
+      const gSeg = ghostPts.slice(retI, cutIdx + 1)
+      const rSeg = pts.slice(retI, cutIdx + 1)
+      if (gSeg.length > 1 && rSeg.length > 1) {
+        ctx.save()
+        // Filled zone between ghost and real
+        ctx.globalAlpha = ghostFade * 0.55
+        ctx.beginPath()
+        gSeg.forEach((p, i) => {
+          const x = toX(p.t), y = toY(p.v)
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+        })
+        for (let i = rSeg.length - 1; i >= 0; i--) {
+          ctx.lineTo(toX(rSeg[i].t), toY(rSeg[i].v))
+        }
+        ctx.closePath()
+        const gc = ctx.createLinearGradient(toX(retireT), 0, toX(1), 0)
+        gc.addColorStop(0, 'rgba(198,164,108,0.05)')
+        gc.addColorStop(1, 'rgba(198,164,108,0.26)')
+        ctx.fillStyle = gc
+        ctx.fill()
+        // Ghost dashed line
+        ctx.globalAlpha = ghostFade * 0.48
+        ctx.beginPath()
+        gSeg.forEach((p, i) => {
+          const x = toX(p.t), y = toY(p.v)
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+        })
+        ctx.strokeStyle = 'rgba(198,164,108,0.75)'
+        ctx.lineWidth = 1.2
+        ctx.setLineDash([5, 4])
+        ctx.lineJoin = 'round'
+        ctx.stroke()
+        ctx.setLineDash([])
+        // Label centred in the gap
+        if (gSeg.length > 14 && ghostFade > 0.65) {
+          const mi = Math.floor(gSeg.length * 0.54)
+          const lx = toX(gSeg[mi].t)
+          const ly = (toY(gSeg[mi].v) + toY(rSeg[Math.min(mi, rSeg.length - 1)].v)) / 2
+          ctx.globalAlpha = clamp((ghostFade - 0.65) / 0.3, 0, 1) * 0.65
+          ctx.font = "italic 9px 'Inter', sans-serif"
+          ctx.fillStyle = 'rgba(154,92,69,0.8)'
+          ctx.textAlign = 'center'
+          ctx.fillText('consumo financiado', lx, ly + 4)
+        }
+        ctx.restore()
+      }
+    }
 
     CURVE_EVENTS.forEach((ev: any, i) => {
       const eT = ageToT(ev.age)

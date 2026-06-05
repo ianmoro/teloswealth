@@ -125,7 +125,13 @@ export default function TreeCanvas({ prog }: Props) {
     const iA = (s: number, e: number, p: number) => p <= s ? 0 : p >= e ? 1 : ease((p - s) / (e - s))
     ctx.clearRect(0, 0, W, H)
 
-    GEN_LABELS.forEach(g => {
+    const genLabelStarts = [0.05, 0.74]
+    const genLabelEnds   = [0.14, 0.84]
+    GEN_LABELS.forEach((g, idx) => {
+      const a = iA(genLabelStarts[idx], genLabelEnds[idx], prog)
+      if (a <= 0) return
+      ctx.save()
+      ctx.globalAlpha = a
       ctx.font = "400 9.5px 'Syncopate', sans-serif"
       ctx.fillStyle = 'rgba(35,35,35,0.3)'
       ctx.textAlign = 'center'
@@ -135,6 +141,7 @@ export default function TreeCanvas({ prog }: Props) {
       ctx.beginPath(); ctx.moveTo(vx(440) - w / 2 - 14, vy(g.y) - 4); ctx.lineTo(vx(440) - w / 2 - 28, vy(g.y) - 4); ctx.stroke()
       ctx.beginPath(); ctx.moveTo(vx(440) + w / 2 + 14, vy(g.y) - 4); ctx.lineTo(vx(440) + w / 2 + 28, vy(g.y) - 4); ctx.stroke()
       ctx.fillText(g.t, vx(440), vy(g.y))
+      ctx.restore()
     })
 
     TREE_SEQ.filter(s => s.t === 'l').forEach(s => {
