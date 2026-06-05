@@ -4,7 +4,6 @@ import { VULN_PAIRS, PILARES, TEAM, LOCATIONS } from './data'
 import { Logo } from './components/Logo'
 import HeroCanvas from './components/canvas/HeroCanvas'
 import TreeCanvas from './components/canvas/TreeCanvas'
-import CurveCanvas from './components/canvas/CurveCanvas'
 import VolatilityCanvas from './components/canvas/VolatilityCanvas'
 import TelosMorphCanvas from './components/canvas/TelosMorphCanvas'
 
@@ -35,21 +34,18 @@ function SectionIntro({ eyebrow, title, sub, dark = false }: { eyebrow: string; 
 export default function App() {
   const heroRef = useRef<HTMLElement>(null)
   const famRef  = useRef<HTMLElement>(null)
-  const beforeObjRef = useRef<HTMLElement>(null)
   const volRef  = useRef<HTMLElement>(null)
-  const curveRef = useRef<HTMLElement>(null)
   const vulnRef = useRef<HTMLElement>(null)
   const collapseRef = useRef<HTMLElement>(null)
   const metRef  = useRef<HTMLElement>(null)
   const teamRef = useRef<HTMLElement>(null)
   const ctaRef  = useRef<HTMLElement>(null)
 
-  const [P, setP] = useState({ hero: 0, fam: 0, beforeObj: 0, vol: 0, curve: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
+  const [P, setP] = useState({ hero: 0, fam: 0, vol: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
   const [scrollY, setScrollY] = useState(0)
   const [hoverMember, setHoverMember] = useState<number | null>(null)
   const [hoverPillar, setHoverPillar] = useState<number | null>(null)
-  const [revealed, setRevealed] = useState<Set<number>>(() => new Set())
-  const addReveal = (i: number) => setRevealed(s => s.has(i) ? s : new Set(s).add(i))
+
   const [mounted, setMounted] = useState(false)
   useEffect(() => { const id = setTimeout(() => setMounted(true), 60); return () => clearTimeout(id) }, [])
 
@@ -73,9 +69,7 @@ export default function App() {
         setP({
           hero:     getSectionProgress(heroRef.current),
           fam:      getSectionProgress(famRef.current),
-          beforeObj:getSectionProgress(beforeObjRef.current),
           vol:      getSectionProgress(volRef.current),
-          curve:    getSectionProgress(curveRef.current),
           vuln:     getSectionProgress(vulnRef.current),
           collapse: getSectionProgress(collapseRef.current),
           met:      getSectionProgress(metRef.current),
@@ -111,8 +105,26 @@ export default function App() {
         </div>
         {!isMobile && (
           <div style={{ display: 'flex', gap: 32 }}>
-            {([['Família', famRef], ['Objetivos', curveRef], ['Vulnerabilidades', vulnRef], ['Pilares', metRef], ['Time', teamRef]] as [string, React.RefObject<HTMLElement>][]).map(([l, r]) => (
-              <a key={l} onClick={() => scrollToEl(r.current)} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
+            {([
+              ['Família', () => {
+                const el = famRef.current; if (!el) return
+                const top = el.getBoundingClientRect().top + window.scrollY
+                window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.45, behavior: 'smooth' })
+              }],
+              ['Alocação', () => {
+                const el = volRef.current; if (!el) return
+                const top = el.getBoundingClientRect().top + window.scrollY
+                window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.40, behavior: 'smooth' })
+              }],
+              ['Vulnerabilidades',  () => {
+                const el = vulnRef.current; if (!el) return
+                const top = el.getBoundingClientRect().top + window.scrollY
+                window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.62, behavior: 'smooth' })
+              }],
+              ['Pilares',           () => scrollToEl(metRef.current)],
+              ['Time',              () => scrollToEl(teamRef.current)],
+            ] as [string, () => void][]).map(([l, fn]) => (
+              <a key={l} onClick={fn} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
             ))}
           </div>
         )}
@@ -187,37 +199,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ─── OBJETIVOS (560vh) ─── */}
-      <section ref={curveRef} style={{ height: '560vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 80px', pointerEvents: 'none', opacity: clamp((P.curve - 0.02) / 0.06, 0, 1) * clamp(1 - (P.curve - 0.16) / 0.06, 0, 1) }}>
-            <h2 className="serif" style={{ fontSize: 'clamp(36px,4.2vw,68px)', lineHeight: 1.12, maxWidth: 1400, textAlign: 'center', color: '#0A0A0A' }}>
-              Entendemos em conjunto <em style={{ color: '#5E6B57' }}>os seus objetivos de vida.</em>
-            </h2>
-          </div>
-
-          <div style={{ position: 'absolute', inset: 0, opacity: clamp((P.curve - 0.18) / 0.06, 0, 1), pointerEvents: P.curve > 0.18 ? 'auto' : 'none', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ padding: isMobile ? '80px 24px 0' : '104px 80px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0 }}>
-              <div style={{ maxWidth: 760 }}>
-                <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>02 · Objetivos</div>
-                <h2 className="serif" style={{ fontSize: 'clamp(28px,2.6vw,40px)', lineHeight: 1.18, color: '#0A0A0A' }}>
-                  Entendemos em conjunto <em style={{ color: '#5E6B57' }}>os seus objetivos de vida{P.curve >= 0.88 ? ',' : '.'}</em>
-                  <span style={{ display: 'block', opacity: clamp((P.curve - 0.88) / 0.06, 0, 1), transform: `translateY(${(1 - clamp((P.curve - 0.88) / 0.06, 0, 1)) * 10}px)`, transition: 'opacity .25s linear, transform .25s linear' }}>
-                    e traduzimos em <em style={{ color: '#5E6B57' }}>um plano possível.</em>
-                  </span>
-                </h2>
-              </div>
-            </div>
-            <div style={{ flex: 1, position: 'relative', padding: isMobile ? '24px 16px 40px' : '56px 40px 80px', minHeight: 0 }}>
-              <CurveCanvas prog={clamp((P.curve - 0.18) / 0.68, 0, 1)} startM={startM} mood="alive" />
-            </div>
-          </div>
-
-
-        </div>
-      </section>
-
       {/* ─── ALOCAÇÃO / VOLATILIDADE (560vh) ─── */}
       <section ref={volRef} style={{ height: '560vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
@@ -272,13 +253,11 @@ export default function App() {
       <section ref={vulnRef} style={{ height: '800vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const introIn  = clamp((P.vuln - 0.002) / 0.02, 0, 1)
+            const introIn  = lockedIn
             const introOut = clamp(1 - (P.vuln - 0.10) / 0.03, 0, 1)
             const intro = introIn * introOut
             const listIn    = clamp((P.vuln - 0.115) / 0.035, 0, 1)
             const dockStart = 0.30, dockSpan = 0.24, rowStag = 0.020
-            const autoReveal = P.vuln > 0.275
-            const revealedCount = autoReveal ? 7 : revealed.size
             const morphStart = 0.66, morphEnd = 0.96
             const morphP   = clamp((P.vuln - morphStart) / (morphEnd - morphStart), 0, 1)
             const listFade = clamp(1 - morphP / 0.14, 0, 1)
@@ -289,7 +268,7 @@ export default function App() {
                 {/* Phase A — intro phrase */}
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 40px', opacity: intro, pointerEvents: 'none' }}>
                   <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
-                    Um <em style={{ color: '#5E6B57', opacity: lockedIn }}>plano</em> que <em style={{ color: '#5E6B57', opacity: lockedIn }}>resiste</em> ao previsível —<br />
+                    Um <em style={{ color: '#5E6B57', opacity: lockedIn }}>plano</em> que <em style={{ color: '#5E6B57', opacity: lockedIn }}>resiste</em> ao previsível<br />
                     e que está preparado <em style={{ color: '#5E6B57' }}>para o que não é.</em>
                   </h2>
                 </div>
@@ -303,34 +282,15 @@ export default function App() {
                         Mapeamos as <em style={{ color: '#5E6B57' }}>vulnerabilidades</em> — e as <em style={{ color: '#5E6B57' }}>resolvemos.</em>
                       </h2>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div className="syncop" style={{ fontSize: 13, color: '#9A5C45', letterSpacing: '0.2em' }}>{revealedCount} / 7</div>
-                      <div className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.35)', letterSpacing: '0.3em', marginTop: 6 }}>
-                        {P.vuln < dockStart ? 'reveladas' : 'soluções'}
-                      </div>
-                    </div>
+                    <div />
                   </div>
 
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(6px,1.3vh,16px)', padding: isMobile ? '0 16px 40px' : '0 80px 56px', minHeight: 0 }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(8px,1.5vh,20px)', padding: isMobile ? '0 24px 40px' : '0 80px 56px', minHeight: 0 }}>
                     {VULN_PAIRS.map((pair, i) => {
-                      const dockT = ease(clamp((P.vuln - (dockStart + i * rowStag)) / dockSpan, 0, 1))
-                      const shown = revealed.has(i) || autoReveal
-                      const reveal = shown ? 1 : 0
+                      const itemT = ease(clamp((P.vuln - (dockStart + i * rowStag)) / dockSpan, 0, 1))
                       return (
-                        <div key={i}
-                          onMouseEnter={() => addReveal(i)}
-                          onClick={() => addReveal(i)}
-                          style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 50px 1fr' : '1fr 130px 1fr', alignItems: 'center', minHeight: 44, cursor: shown ? 'default' : 'pointer' }}>
-                          <div style={{ position: 'relative', textAlign: 'right', paddingRight: 10, minHeight: '1.4em' }}>
-                            <span className="serif" style={{ fontSize: 'clamp(16px,1.65vw,25px)', color: '#0A0A0A', display: 'inline-block', opacity: 0.38 + reveal * 0.62, filter: `blur(${((1 - reveal) * 7).toFixed(2)}px)`, transition: 'opacity .5s ease, filter .5s ease', willChange: 'filter' }}>{pair.vuln}</span>
-                          </div>
-                          <div style={{ position: 'relative', height: 18, display: 'flex', alignItems: 'center' }}>
-                            <div style={{ position: 'absolute', left: 10, right: 18, top: '50%', height: 1, background: 'rgba(154,92,69,0.32)', transform: `scaleX(${dockT})`, transformOrigin: 'left' }} />
-                            <div style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '6px solid #9A5C45', opacity: dockT }} />
-                          </div>
-                          <div style={{ textAlign: 'left', paddingLeft: 10, minHeight: '1.4em' }}>
-                            <span className="serif" style={{ fontSize: 'clamp(16px,1.65vw,25px)', color: '#5E6B57', opacity: dockT, transform: `translateX(${(1 - dockT) * -22}px)`, display: 'inline-block', transition: 'opacity .25s linear' }}>{pair.sol}</span>
-                          </div>
+                        <div key={i} style={{ minHeight: 44, display: 'flex', alignItems: 'center', opacity: itemT, transform: `translateY(${(1 - itemT) * 14}px)` }}>
+                          <span className="serif" style={{ fontSize: 'clamp(18px,1.8vw,28px)', color: '#0A0A0A', fontWeight: 400 }}>{pair.vuln}</span>
                         </div>
                       )
                     })}
@@ -471,7 +431,7 @@ export default function App() {
           <div>
             <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24, color: '#A8B0A2' }}>Início de relação</div>
             <h2 className="serif" style={{ fontSize: 'clamp(40px,4.4vw,68px)', lineHeight: 1.08, color: '#F5F4F1' }}>
-              A primeira conversa<br />já <em style={{ color: '#A8B0A2' }}>vale por ela mesma.</em>
+              Entre em contato<br />com o <em style={{ color: '#A8B0A2' }}>nosso time.</em>
             </h2>
           </div>
           <a href="mailto:contato@teloswealth.com.br" className="syncop"
@@ -480,7 +440,43 @@ export default function App() {
           </a>
         </div>
 
-        <div style={{ maxWidth: 1100, margin: isMobile ? '60px auto 0' : '120px auto 0', paddingTop: 48, borderTop: '1px solid rgba(245,244,241,0.06)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
+        <div style={{ maxWidth: 1100, margin: isMobile ? '60px auto 0' : '100px auto 0', paddingTop: 48, borderTop: '1px solid rgba(245,244,241,0.08)' }}>
+          <div className="syncop" style={{ fontSize: 8, color: 'rgba(245,244,241,0.35)', letterSpacing: '0.32em', marginBottom: 28 }}>ARTIGOS</div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: isMobile ? 10 : 12, marginBottom: isMobile ? 40 : 56 }}>
+            {[
+              { label: 'Artigo #1 — Investir o máximo o quanto antes', file: 'Artigo #1.pdf' },
+              { label: 'Artigo #2 — O custo invisível de um modelo interesseiro', file: 'Artigo #2.pdf' },
+            ].map(({ label, file }) => (
+              <a key={file} href={`/docs/${file}`} download
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 20px', border: '1px solid rgba(245,244,241,0.08)', color: 'rgba(245,244,241,0.55)', textDecoration: 'none', transition: 'border-color .25s, color .25s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,244,241,0.22)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,244,241,0.9)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,244,241,0.08)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,244,241,0.55)' }}>
+                <span style={{ fontSize: isMobile ? 12 : 13, fontWeight: 300, letterSpacing: '0.02em' }}>{label}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </a>
+            ))}
+          </div>
+
+          <div className="syncop" style={{ fontSize: 8, color: 'rgba(245,244,241,0.35)', letterSpacing: '0.32em', marginBottom: 28 }}>DOCUMENTOS REGULATÓRIOS</div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: isMobile ? 10 : 12 }}>
+            {[
+              { label: 'Código de Ética e Conduta', file: 'TELOS WEALTH - CÓDIGO DE ÉTICA E CONDUTA.pdf' },
+              { label: 'Formulário de Referência — Anexo E', file: 'TELOS WEALTH - FORMULÁRIO DE REFERÊNCIA ANEXO - E - Clicksign.pdf' },
+              { label: 'Manual de Compliance', file: 'TELOS WEALTH - MANUAL DE COMPLIANCE.pdf' },
+              { label: 'Política de Investimentos Pessoais', file: 'TELOS WEALTH - POLÍTICA DE INVESTIMENTOS PESSOAIS.pdf' },
+            ].map(({ label, file }) => (
+              <a key={file} href={`/docs/${file}`} download
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '16px 20px', border: '1px solid rgba(245,244,241,0.08)', color: 'rgba(245,244,241,0.55)', textDecoration: 'none', transition: 'border-color .25s, color .25s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,244,241,0.22)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,244,241,0.9)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,244,241,0.08)'; (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(245,244,241,0.55)' }}>
+                <span style={{ fontSize: isMobile ? 12 : 13, fontWeight: 300, letterSpacing: '0.02em' }}>{label}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ maxWidth: 1100, margin: isMobile ? '40px auto 0' : '60px auto 0', paddingTop: 40, borderTop: '1px solid rgba(245,244,241,0.06)', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
           <div style={{ filter: 'invert(1) brightness(1.6)' }}>
             <Logo size={42} />
           </div>
@@ -501,10 +497,11 @@ export default function App() {
         const vhHalf = typeof window !== 'undefined' ? window.innerHeight / 2 : 450
         const dx0 = Math.round(300 - vwHalf)
         const dy0 = Math.round(202 - vhHalf)
+        const surroundA = clamp((handoffE - 0.55) / 0.38, 0, 1)
         return (
           <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px', pointerEvents: 'none', zIndex: 1400, opacity: clamp(handoffP / 0.05, 0, 1) * (1 - lockedIn) }}>
             <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A', transform: `translate(${lerp(dx0, 0, handoffE).toFixed(1)}px, ${lerp(dy0, 0, handoffE).toFixed(1)}px) scale(${lerp(0.52, 1, handoffE).toFixed(3)})`, transformOrigin: 'center', willChange: 'transform' }}>
-              <span style={{ opacity: 0 }}>Um </span><em style={{ color: '#5E6B57' }}>plano</em><span style={{ opacity: 0 }}> que </span><em style={{ color: '#5E6B57' }}>resiste</em><span style={{ opacity: 0 }}> ao previsível —</span><br /><span style={{ opacity: 0 }}>e que está preparado </span><em style={{ color: '#5E6B57', opacity: 0 }}>para o que não é.</em>
+              <span style={{ opacity: surroundA }}>Um </span><em style={{ color: '#5E6B57' }}>plano</em><span style={{ opacity: surroundA }}> que </span><em style={{ color: '#5E6B57' }}>resiste</em><span style={{ opacity: surroundA }}> ao previsível</span><br /><span style={{ opacity: surroundA }}>e que está preparado </span><em style={{ color: '#5E6B57', opacity: surroundA }}>para o que não é.</em>
             </h2>
           </div>
         )

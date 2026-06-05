@@ -4,6 +4,19 @@ import { clamp, lerp, easeOutCubic, gauss } from '../../utils/math'
 
 interface Props { prog: number }
 
+const LIFE_EVENTS: { frac: number; lbl: string; above: boolean; retire?: true; legado?: true }[] = [
+  { frac: 0.08, lbl: 'Reserva de emergência', above: true  },
+  { frac: 0.17, lbl: 'Faculdade dos filhos',  above: false },
+  { frac: 0.27, lbl: 'Viagem em família',      above: true  },
+  { frac: 0.38, lbl: 'Imóvel próprio',         above: false },
+  { frac: 0.49, lbl: 'Liberdade financeira',   above: true, retire: true },
+  { frac: 0.60, lbl: 'Casa de campo',          above: false },
+  { frac: 0.70, lbl: 'Novo negócio',           above: true  },
+  { frac: 0.80, lbl: 'Doações',                above: false },
+  { frac: 0.89, lbl: 'Viagens recorrentes',    above: true  },
+  { frac: 0.97, lbl: 'Legado',                 above: false, legado: true },
+]
+
 export default function VolatilityCanvas({ prog }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
   const seriesRef = useRef<number[] | null>(null)
@@ -12,7 +25,7 @@ export default function VolatilityCanvas({ prog }: Props) {
 
   if (!seriesRef.current) {
     const N = 2600
-    const drift = 0.0018, vol = 0.012
+    const drift = 0.00042, vol = 0.010
     const s = [1]
     for (let i = 1; i < N; i++) {
       s.push(s[i - 1] * (1 + drift + vol * gauss()))
@@ -34,7 +47,7 @@ export default function VolatilityCanvas({ prog }: Props) {
     const prog = progRef.current
 
     const series = seriesRef.current!
-    const labels = ['6 MESES', '1 ANO', '3 ANOS', '5 ANOS', '10 ANOS']
+    const labels = ['10 ANOS', '20 ANOS', '30 ANOS', '40 ANOS', '50 ANOS']
 
     const minN = 120, maxN = 2520
     const n = Math.max(minN, Math.floor(minN + (maxN - minN) * easeOutCubic(clamp(prog, 0, 1))))
@@ -61,15 +74,17 @@ export default function VolatilityCanvas({ prog }: Props) {
     const pad = (maxV - minV) * 0.08
     minV -= pad; maxV += pad
 
-    const expand = 1 + Math.pow(clamp(prog, 0, 1), 1.5) * 1.25
+    const expand = 1 + Math.pow(clamp(prog, 0, 1), 1.5) * 0.40
     const center = (minV + maxV) / 2
     const half   = (maxV - minV) / 2 * expand
     minV = center - half
     maxV = center + half
+    // keep start point pinned at 0% (bottom of chart)
     if (minV < displayData[0]) minV = displayData[0]
     if (maxV <= minV) maxV = minV + 1
 
-    const PAD = { l: 104, r: 120, t: 176, b: 72 }
+    const padTop = W < 640 ? 210 : W < 1024 ? 260 : 310
+    const PAD = { l: 104, r: 120, t: padTop, b: 72 }
     const CW = W - PAD.l - PAD.r
     const CH = H - PAD.t - PAD.b
     const rightFrac = lerp(0.30, 1.0, easeOutCubic(clamp(prog, 0, 1)))
@@ -104,6 +119,17 @@ export default function VolatilityCanvas({ prog }: Props) {
     ctx.fillText('VARIAÇÃO', 0, 0)
     ctx.restore()
 
+    const calm = easeOutCubic(prog)
+    const r = Math.round(lerp(154, 94, calm))
+    const g = Math.round(lerp(92, 107, calm))
+    const b = Math.round(lerp(69, 87, calm))
+
+    // clip to chart area so line never draws below the x-axis
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(PAD.l - 6, PAD.t - 6, W - PAD.l + 6, CH + 12)
+    ctx.clip()
+
     const renderN = Math.min(700, n)
     ctx.beginPath()
     for (let i = 0; i < renderN; i++) {
@@ -111,10 +137,6 @@ export default function VolatilityCanvas({ prog }: Props) {
       const x = toX(di), y = toY(displayData[di])
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y)
     }
-    const calm = easeOutCubic(prog)
-    const r = Math.round(lerp(154, 94, calm))
-    const g = Math.round(lerp(92, 107, calm))
-    const b = Math.round(lerp(69, 87, calm))
     ctx.strokeStyle = `rgb(${r},${g},${b})`
     ctx.lineWidth = 1.2
     ctx.lineJoin = 'round'
@@ -134,6 +156,9 @@ export default function VolatilityCanvas({ prog }: Props) {
       ctx.setLineDash([6, 5]); ctx.stroke(); ctx.setLineDash([])
     }
 
+    ctx.restore()
+
+    // dots drawn outside clip so they don't get cut
     ctx.beginPath()
     ctx.arc(PAD.l, toY(data0), 4.5, 0, Math.PI * 2)
     ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.fill()
@@ -147,6 +172,54 @@ export default function VolatilityCanvas({ prog }: Props) {
     ctx.fillStyle = '#F5F4F1'
     ctx.strokeStyle = `rgb(${r},${g},${b})`
     ctx.lineWidth = 1.5; ctx.fill(); ctx.stroke()
+
+    // ── Life events ───────────────────────────────────────
+    LIFE_EVENTS.forEach(ev => {
+      const evIdx = Math.floor(ev.frac * (maxN - 1))
+      if (evIdx >= n) return
+      const fadeIn = clamp((n - evIdx) / (maxN * 0.05), 0, 1)
+      const ex = toX(evIdx)
+      const eyd = displayData[Math.min(evIdx, displayData.length - 1)]
+      const ey = clamp(toY(eyd), PAD.t, H - PAD.b)
+      const bw = ev.retire ? 136 : 120
+      const bh = 30
+      const above = ev.above
+      const labelTopY = above
+        ? Math.max(PAD.t + 4, ey - 70 - bh)
+        : Math.min(H - PAD.b - bh - 12, ey + 40)
+      const bx = clamp(ex - bw / 2, PAD.l + 2, W - PAD.r - bw - 2)
+      ctx.save()
+      ctx.globalAlpha = fadeIn
+      ctx.beginPath()
+      ctx.moveTo(ex, above ? ey - 6 : ey + 6)
+      ctx.lineTo(ex, above ? labelTopY + bh : labelTopY)
+      ctx.strokeStyle = 'rgba(35,35,35,0.18)'
+      ctx.lineWidth = 0.8
+      ctx.setLineDash([2, 3]); ctx.stroke(); ctx.setLineDash([])
+      if (ev.retire) {
+        ctx.beginPath(); ctx.arc(ex, ey, 7, 0, Math.PI * 2)
+        ctx.fillStyle = '#5E6B57'; ctx.fill()
+        ctx.beginPath(); ctx.arc(ex, ey, 13, 0, Math.PI * 2)
+        ctx.strokeStyle = 'rgba(94,107,87,0.25)'; ctx.lineWidth = 1.2; ctx.stroke()
+      } else {
+        ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI * 2)
+        ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.fill()
+      }
+      ctx.fillStyle = '#F5F4F1'
+      ctx.strokeStyle = ev.retire ? 'rgba(94,107,87,0.7)' : 'rgba(35,35,35,0.18)'
+      ctx.lineWidth = ev.retire ? 1.1 : 0.7
+      ctx.fillRect(bx, labelTopY, bw, bh)
+      ctx.strokeRect(bx, labelTopY, bw, bh)
+      const yrs = Math.round(ev.frac * 50)
+      ctx.font = "9px 'Inter', sans-serif"
+      ctx.fillStyle = 'rgba(35,35,35,0.42)'
+      ctx.textAlign = 'center'
+      ctx.fillText(`${yrs} anos`, bx + bw / 2, labelTopY + 11)
+      ctx.font = `${ev.retire || ev.legado ? '600 ' : '400 '}10px 'Inter', sans-serif`
+      ctx.fillStyle = ev.retire ? '#5E6B57' : '#232323'
+      ctx.fillText(ev.lbl, bx + bw / 2, labelTopY + 23)
+      ctx.restore()
+    })
 
     const stepF = clamp(prog, 0, 0.9999) * labels.length
     const stepIdx = Math.min(labels.length - 1, Math.floor(stepF))
@@ -177,15 +250,6 @@ export default function VolatilityCanvas({ prog }: Props) {
       ctx.fillText(nextLbl, janelaX, PAD.t - 32)
     }
     ctx.restore()
-
-    const volPct = (maxV - minV) / data0 * 100
-    ctx.font = "700 10px 'Syncopate', sans-serif"
-    ctx.fillStyle = 'rgba(35,35,35,0.45)'
-    ctx.textAlign = 'right'
-    ctx.fillText('AMPLITUDE', W - PAD.r, PAD.t - 64)
-    ctx.font = `600 ${volPct > 999 ? 18 : volPct > 99 ? 20 : 22}px 'Inter', sans-serif`
-    ctx.fillStyle = `rgb(${r},${g},${b})`
-    ctx.fillText(volPct.toFixed(1) + '%', W - PAD.r, PAD.t - 32)
 
     ctx.font = "10px 'Inter', sans-serif"
     ctx.fillStyle = 'rgba(35,35,35,0.45)'
