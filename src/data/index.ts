@@ -47,11 +47,11 @@ export const LOCATIONS = ['São Paulo', 'Rio de Janeiro', 'Curitiba']
 
 // ── Family tree ────────────────────────────────────────
 export const TREE_NODES = [
-  { id: 'carlos',  cx: 215, cy: 100, lbl: 'Carlos',  sub: 'Sócio-fundador', you: true  },
-  { id: 'ana',     cx: 665, cy: 100, lbl: 'Ana',     sub: 'Médica'                      },
-  { id: 'lucas',   cx: 160, cy: 330, lbl: 'Lucas',   sub: 'Filho · 28 anos'             },
-  { id: 'beatriz', cx: 440, cy: 330, lbl: 'Beatriz', sub: 'Filha · 25 anos'             },
-  { id: 'pedro',   cx: 720, cy: 330, lbl: 'Pedro',   sub: 'Filho · 22 anos'             },
+  { id: 'carlos',  cx: 215, cy: 100, lbl: 'Carlos',  sub: '40 anos', you: true  },
+  { id: 'ana',     cx: 665, cy: 100, lbl: 'Ana',     sub: '38 anos'             },
+  { id: 'lucas',   cx: 160, cy: 330, lbl: 'Lucas',   sub: 'Filho · 8 anos'     },
+  { id: 'beatriz', cx: 440, cy: 330, lbl: 'Beatriz', sub: 'Filha · 5 anos'     },
+  { id: 'pedro',   cx: 720, cy: 330, lbl: 'Pedro',   sub: 'Filho · 2 anos'     },
 ]
 export const TREE_LINES = [
   [275, 100, 605, 100], [440, 100, 440, 210], [160, 210, 720, 210],
@@ -81,9 +81,9 @@ export const CURVE_EVENTS = [
   { age: 50,  lbl: 'Faculdade dos filhos', delta: -2,   tone: 'down'  },
   { age: 55,  lbl: 'Viagem em família',    delta: -0.6, tone: 'down'  },
   { age: 60,  lbl: 'Liberdade financeira', retire: true               },
-  { age: 68,  lbl: 'Casa de campo',        delta: -2.2, tone: 'down'  },
-  { age: 77,  lbl: 'Doações',              delta: -1.4, tone: 'down'  },
-  { age: 86,  lbl: 'Viagens recorrentes',  delta: -1.6, tone: 'down'  },
+  { age: 68,  lbl: 'Viagens recorrentes',  delta: -1.6, tone: 'down'  },
+  { age: 74,  lbl: 'Casa de campo',        delta: -2.2, tone: 'down'  },
+  { age: 86,  lbl: 'Doações',              delta: -1.4, tone: 'down'  },
   { age: 100, lbl: 'Legado',               legado: true               },
 ]
 

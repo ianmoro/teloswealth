@@ -36,7 +36,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   font-family: 'Playfair Display', serif;
   font-weight: 400;
 }
-em { font-style: italic }
+em { font-style: normal }
 
 .eyebrow {
   font-family: 'Syncopate', sans-serif;

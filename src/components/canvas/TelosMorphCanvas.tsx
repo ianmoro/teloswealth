@@ -9,13 +9,12 @@ type RowCache = {
   scatter: { x: number; y: number }[]
   outDest: { x: number; y: number }[]
   delay: number[]
+  tx: number
+  ty: number
 }
 
 type VulnLayout = {
-  padL: number
   rowFs: number
-  startY: number
-  rowGap: number
   texts: string[]
 }
 
@@ -103,21 +102,29 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
     if (!cacheRef.current || cacheRef.current.key !== key) {
       const vulns = VULN_PAIRS.map(pair => pair.vuln)
       const isMobile = W < 768
-      const padL = isMobile ? 24 : 80
-      const rowFs = clamp(Math.round(H * 0.028), 16, 28)
-      const rowGap = clamp(Math.round(44 + H * 0.015), 52, 64)
-      const headerH = isMobile ? H * 0.28 : H * 0.24
-      const listH = H - headerH
-      const blockH = (vulns.length - 1) * rowGap
-      const startY = headerH + listH * 0.5 - blockH / 2
+      const rowFs = clamp(Math.round(H * 0.030), 16, 30)
+
+      // Posições espalhadas pela tela (frações de W e H)
+      const SCATTER_POS = isMobile ? [
+        { fx: 0.04, fy: 0.28 }, { fx: 0.50, fy: 0.18 }, { fx: 0.08, fy: 0.42 },
+        { fx: 0.38, fy: 0.55 }, { fx: 0.05, fy: 0.65 }, { fx: 0.42, fy: 0.76 },
+        { fx: 0.10, fy: 0.86 },
+      ] : [
+        { fx: 0.05, fy: 0.40 }, { fx: 0.68, fy: 0.36 }, { fx: 0.33, fy: 0.52 },
+        { fx: 0.62, fy: 0.65 }, { fx: 0.06, fy: 0.70 }, { fx: 0.42, fy: 0.80 },
+        { fx: 0.50, fy: 0.46 },
+      ]
 
       const rows: RowCache[] = vulns.map((v, i) => {
+        const pos = SCATTER_POS[i] ?? SCATTER_POS[SCATTER_POS.length - 1]
+        const tx = pos.fx * W
+        const ty = pos.fy * H
         const pts = sampleText(W, H, 2, (o) => {
           o.fillStyle = '#000'
           o.textAlign = 'left'
           o.textBaseline = 'middle'
           o.font = `400 ${rowFs}px 'Playfair Display', serif`
-          o.fillText(v, padL, startY + i * rowGap)
+          o.fillText(v, tx, ty)
         })
         const scatter = scatterPts(pts.length, W, H)
         const outDest = pts.map((pt, j) => ({
@@ -129,10 +136,12 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
           scatter,
           outDest,
           delay: staggerDelays(pts.length, 0.16),
+          tx,
+          ty,
         }
       })
 
-      const tFontSize = Math.min(W * 0.19, H * 0.38)
+      const tFontSize = Math.min(W * 0.095, H * 0.19)
       const wFontSize = Math.max(10, Math.round(tFontSize * 0.15))
       const capH  = tFontSize * 0.72
       const gap   = tFontSize * 0.16
@@ -145,7 +154,7 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
         o.fillStyle = '#000'
         o.textAlign = 'center'
         o.textBaseline = 'alphabetic'
-        o.font = `700 ${tFontSize}px 'Syncopate', sans-serif`
+        o.font = `400 ${tFontSize}px 'Syncopate', sans-serif`
         ;(o as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '-1px'
         o.fillText('TELOS', W / 2, baseT)
         o.font = `400 ${wFontSize}px 'Syncopate', sans-serif`
@@ -157,7 +166,7 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
       cacheRef.current = {
         key,
         rows,
-        vulnLayout: { padL, rowFs, startY, rowGap, texts: vulns },
+        vulnLayout: { rowFs, texts: vulns },
         telosPts,
         telosScatter: scatterPts(telosPts.length, W, H),
         telosDelay: staggerDelays(telosPts.length, 0.12),
@@ -166,7 +175,7 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
     }
 
     const { rows, vulnLayout, telosPts, telosScatter, telosDelay, telosFont } = cacheRef.current
-    const { padL, rowFs, startY, rowGap, texts } = vulnLayout
+    const { rowFs, texts } = vulnLayout
     const lastOutEnd = VULN_OUT_START + (rows.length - 1) * ROW_OUT_STAG + VULN_OUT_DUR
     const showVulns = p < lastOutEnd + 0.01
 
@@ -217,7 +226,7 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
           ctx.textAlign = 'left'
           ctx.textBaseline = 'middle'
           ctx.font = `400 ${rowFs}px 'Playfair Display', serif`
-          ctx.fillText(texts[ri], padL, startY + ri * rowGap)
+          ctx.fillText(texts[ri], rows[ri].tx, rows[ri].ty)
           ctx.restore()
         }
       })
@@ -254,7 +263,7 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
       ctx.fillStyle = '#232323'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'alphabetic'
-      ctx.font = `700 ${tFontSize}px 'Syncopate', sans-serif`
+      ctx.font = `400 ${tFontSize}px 'Syncopate', sans-serif`
       ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '-1px'
       ctx.fillText('TELOS', W / 2, baseT)
       ctx.font = `400 ${wFontSize}px 'Syncopate', sans-serif`
