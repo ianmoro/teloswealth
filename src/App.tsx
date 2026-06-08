@@ -30,8 +30,9 @@ export default function App() {
   const vulnRef = useRef<HTMLElement>(null)
   const collapseRef = useRef<HTMLElement>(null)
   const metRef  = useRef<HTMLElement>(null)
-  const teamRef = useRef<HTMLElement>(null)
-  const ctaRef  = useRef<HTMLElement>(null)
+  const teamRef     = useRef<HTMLElement>(null)
+  const conteudoRef = useRef<HTMLElement>(null)
+  const ctaRef      = useRef<HTMLElement>(null)
 
   const [P, setP] = useState({ hero: 0, fam: 0, obj: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
   const [scrollY, setScrollY] = useState(0)
@@ -107,17 +108,13 @@ export default function App() {
                 const top = el.getBoundingClientRect().top + window.scrollY
                 window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.40, behavior: 'smooth' })
               }],
-              ['Vulnerabilidades',  () => {
-                const el = vulnRef.current; if (!el) return
-                const top = el.getBoundingClientRect().top + window.scrollY
-                window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.62, behavior: 'smooth' })
-              }],
+              ['Vulnerabilidades',  () => scrollToEl(vulnRef.current)],
               ['Pilares',           () => scrollToEl(metRef.current)],
               ['Time',              () => scrollToEl(teamRef.current)],
             ] as [string, () => void][]).map(([l, fn]) => (
               <a key={l} onClick={fn} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
             ))}
-            <a onClick={() => setPage('artigos')} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>Artigos</a>
+            <a onClick={() => scrollToEl(conteudoRef.current)} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>Conteúdo</a>
           </div>
         )}
         <button onClick={() => scrollToEl(ctaRef.current)} className="syncop" style={{ fontSize: isMobile ? 8 : 9, background: isOverDark ? 'rgba(245,244,241,0.92)' : '#0A0A0A', color: isOverDark ? '#0A0A0A' : '#F5F4F1', border: 'none', padding: isMobile ? '10px 16px' : '13px 26px', cursor: 'pointer', transition: 'all .4s', letterSpacing: '0.32em' }}>Diagnóstico</button>
@@ -242,16 +239,10 @@ export default function App() {
                       Role para esticar a janela de observação.
                     </p>
                   </div>
-                  {/* scroll hint — objectives reveal */}
-                  <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', opacity: clamp((morphMap - 0.25) / 0.2, 0, 1) * clamp(1 - (drawMap - 0.86) / 0.08, 0, 1), pointerEvents: 'none' }}>
-                    <p style={{ fontSize: 11, color: 'rgba(94,107,87,0.7)', fontWeight: 300, fontStyle: 'italic' }}>
-                      Role — cada objetivo aparece ao longo da vida.
-                    </p>
-                  </div>
                 </div>
 
                 {/* Phrase — shrinks & migrates to top-left, then anchors */}
-                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform' }}>
+                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform', background: `rgba(245,244,241,${ease(clamp((shrinkP - 0.45) / 0.3, 0, 1))})`, padding: anchored ? '12px 16px 16px 0' : undefined }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 10, opacity: clamp((shrinkP - 0.6) / 0.3, 0, 1) }}>
                     — 02 · {goalUI > 0.5 ? 'Objetivos' : 'Alocação'}
                   </div>
@@ -285,10 +276,13 @@ export default function App() {
       <section ref={vulnRef} style={{ height: '800vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const headIn   = clamp((P.vuln - 0.10) / 0.04, 0, 1)
-            const headFade = clamp(1 - (P.vuln - 0.48) / 0.06, 0, 1)
+            const headIn   = clamp((P.vuln - 0.02) / 0.06, 0, 1)
+            const headFade = clamp(1 - (P.vuln - 0.65) / 0.08, 0, 1)
             const head     = headIn * headFade
-            const canvasIn = clamp(P.vuln / 0.02, 0, 1)
+            const CANVAS_START = 0.22
+            const canvasIn = clamp((P.vuln - CANVAS_START) / 0.06, 0, 1)
+            // Remap so TelosMorphCanvas always receives 0→1 starting from when it first appears
+            const canvasProg = clamp((P.vuln - CANVAS_START) / (1 - CANVAS_START), 0, 1)
 
             // Services spat out from TELOS center after it solidifies
             const cx = 50, cy = 47
@@ -303,7 +297,7 @@ export default function App() {
             return (
               <>
                 {/* Phase B — header */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: isMobile ? '72px 20px 0' : '92px 80px 0', opacity: head, pointerEvents: 'none' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: isMobile ? '72px 20px 0' : '92px 80px 0', opacity: head, pointerEvents: 'none', zIndex: 2 }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>03 · Vulnerabilidades</div>
                   <h2 className="serif" style={{ fontSize: 'clamp(26px,2.6vw,40px)', lineHeight: 1.22, color: '#0A0A0A' }}>
                     Mapeamos as <em style={{ color: '#5E6B57' }}>vulnerabilidades</em> e as <em style={{ color: '#5E6B57' }}>resolvemos.</em>
@@ -312,12 +306,12 @@ export default function App() {
 
                 {/* Phase C — pixels: palavras espalhadas → somem → TELOS */}
                 <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: canvasIn }}>
-                  <TelosMorphCanvas sectionProg={P.vuln} />
+                  <TelosMorphCanvas sectionProg={canvasProg} />
                 </div>
 
                 {/* Phase D — serviços orbitam TELOS */}
                 {SERVICES.map((sv, i) => {
-                  const r = ease(clamp((P.vuln - (0.84 + sv.rev * 0.020)) / 0.06, 0, 1))
+                  const r = ease(clamp((canvasProg - (0.84 + sv.rev * 0.020)) / 0.06, 0, 1))
                   const x = lerp(cx, sv.xp, r)
                   const y = lerp(cy, sv.yp, r)
                   return (
@@ -453,6 +447,39 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ─── CONTEÚDO ─── */}
+      <section ref={conteudoRef} style={{ background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)', padding: isMobile ? '80px 24px 80px' : '140px 80px 120px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>06 · Conteúdo</div>
+          <h2 className="serif" style={{ fontSize: isMobile ? 'clamp(28px,6vw,40px)' : 'clamp(32px,3.6vw,56px)', lineHeight: 1.14, color: '#0A0A0A', marginBottom: isMobile ? 48 : 72 }}>
+            Perspectivas sobre<br />patrimônio e planejamento.
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {[
+              { num: '01', label: 'Investir o máximo o quanto antes', file: 'Artigo #1.pdf' },
+              { num: '02', label: 'O custo invisível de um modelo interesseiro', file: 'Artigo #2.pdf' },
+            ].map(({ num, label, file }) => (
+              <a key={file} href={`/docs/${file}`} download
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: isMobile ? '24px 0' : '32px 0', borderBottom: '1px solid rgba(10,10,10,0.08)', textDecoration: 'none', color: '#0A0A0A', transition: 'opacity .2s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.55' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: isMobile ? 16 : 28 }}>
+                  <span className="syncop" style={{ fontSize: 9, color: 'rgba(10,10,10,0.35)', letterSpacing: '0.3em', flexShrink: 0 }}>{num}</span>
+                  <span className="serif" style={{ fontSize: isMobile ? 16 : 'clamp(18px,1.8vw,26px)', fontWeight: 400, lineHeight: 1.3 }}>{label}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, color: 'rgba(10,10,10,0.4)' }}>
+                  <span className="syncop" style={{ fontSize: 8, letterSpacing: '0.3em', display: isMobile ? 'none' : 'block' }}>PDF</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+              </a>
+            ))}
+          </div>
+          <p style={{ marginTop: isMobile ? 48 : 72, fontSize: 13, color: 'rgba(10,10,10,0.4)', lineHeight: 1.7, maxWidth: 480 }}>
+            Novos artigos são publicados periodicamente. Entre em contato para receber atualizações.
+          </p>
         </div>
       </section>
 
