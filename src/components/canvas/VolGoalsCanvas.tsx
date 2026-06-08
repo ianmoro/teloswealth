@@ -136,10 +136,11 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
         const y = PAD.t + i * CH / 4
         const v = vMax - (i / 4) * (vMax - vMin)
         const pct = (v / data0 - 1) * 100
+        if (pct < 0) continue
         ctx.font = "10px 'Inter', sans-serif"
         ctx.fillStyle = 'rgba(35,35,35,0.42)'
         ctx.textAlign = 'right'
-        ctx.fillText((pct >= 0 ? '+' : '') + pct.toFixed(0) + '%', PAD.l - 12, y + 3.5)
+        ctx.fillText('+' + pct.toFixed(0) + '%', PAD.l - 12, y + 3.5)
       }
       // VARIAÇÃO axis title
       ctx.save()
