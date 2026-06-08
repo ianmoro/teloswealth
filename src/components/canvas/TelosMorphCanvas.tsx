@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useEffect, useCallback } from 'react'
+import { useRef, useLayoutEffect, useEffect, useCallback, useState } from 'react'
 import { clamp, lerp, ease } from '../../utils/math'
 import { VULN_PAIRS } from '../../data'
 
@@ -25,7 +25,7 @@ type Cache = {
   telosPts: { x: number; y: number }[]
   telosScatter: { x: number; y: number }[]
   telosDelay: number[]
-  telosFont: { tFontSize: number; wFontSize: number; baseT: number; baseW: number; ls: number }
+  logoBounds: { x: number; y: number; w: number; h: number }
 }
 
 function sampleText(W: number, H: number, step: number, draw: (ctx: CanvasRenderingContext2D) => void) {
@@ -41,6 +41,33 @@ function sampleText(W: number, H: number, step: number, draw: (ctx: CanvasRender
     }
   }
   return pts
+}
+
+function sampleImage(img: HTMLImageElement, W: number, H: number, step: number) {
+  // Draw logo centred in the canvas, scaled to fit nicely
+  const logoAspect = img.naturalWidth / img.naturalHeight
+  const maxW = W * 0.72
+  const maxH = H * 0.30
+  let lw = maxW, lh = maxW / logoAspect
+  if (lh > maxH) { lh = maxH; lw = lh * logoAspect }
+  const lx = (W - lw) / 2
+  const ly = (H - lh) / 2
+
+  const off = document.createElement('canvas')
+  off.width = W; off.height = H
+  const o = off.getContext('2d')!
+  o.drawImage(img, lx, ly, lw, lh)
+  const data = o.getImageData(0, 0, W, H).data
+  const pts: { x: number; y: number }[] = []
+  for (let y = 0; y < H; y += step) {
+    for (let x = 0; x < W; x += step) {
+      const a = data[(y * W + x) * 4 + 3]
+      // logo is dark on white/transparent — sample dark pixels
+      const r = data[(y * W + x) * 4]
+      if (a > 60 && r < 100) pts.push({ x, y })
+    }
+  }
+  return { pts, bounds: { x: lx, y: ly, w: lw, h: lh } }
 }
 
 function scatterPts(n: number, W: number, H: number) {
@@ -60,9 +87,6 @@ function staggerDelays(n: number, spread: number) {
 }
 
 // Timings mapped to section scroll progress (P.vuln 0→1)
-const DOCK_START     = 0.30
-const ROW_STAG       = 0.020
-const ROW_ASSEMBLE   = 0.13
 const VULN_OUT_START = 0.58
 const VULN_OUT_DUR   = 0.10
 const ROW_OUT_STAG   = 0.007
@@ -71,7 +95,7 @@ const TELOS_END      = 0.83
 const SOLID_START    = 0.80
 const SOLID_END      = 0.90
 const TELOS_SAMPLE   = 3
-const TELOS_MAX_PTS  = 2200
+const TELOS_MAX_PTS  = 2400
 
 function subsamplePts<T>(pts: T[], max: number) {
   if (pts.length <= max) return pts
@@ -84,6 +108,14 @@ function subsamplePts<T>(pts: T[], max: number) {
 export default function TelosMorphCanvas({ sectionProg }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
   const cacheRef = useRef<Cache | null>(null)
+  const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null)
+
+  // Load logo once
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => setLogoImg(img)
+    img.src = '/telos-logo.png'
+  }, [])
 
   const draw = useCallback(() => {
     const canvas = ref.current; if (!canvas) return
@@ -96,15 +128,16 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
     ctx.resetTransform(); ctx.scale(dpr, dpr)
     ctx.clearRect(0, 0, W, H)
     const p = clamp(sectionProg, 0, 1)
-    if (p < DOCK_START - 0.02 || W < 10) return
+    if (W < 10) return
 
     const key = `${W}x${H}`
+    // Rebuild cache when size changes or when logo first loads
     if (!cacheRef.current || cacheRef.current.key !== key) {
+      // If logo not loaded yet, skip telos sample — will rebuild once loaded
       const vulns = VULN_PAIRS.map(pair => pair.vuln)
       const isMobile = W < 768
       const rowFs = clamp(Math.round(H * 0.030), 16, 30)
 
-      // Posições espalhadas pela tela (frações de W e H)
       const SCATTER_POS = isMobile ? [
         { fx: 0.04, fy: 0.28 }, { fx: 0.50, fy: 0.18 }, { fx: 0.08, fy: 0.42 },
         { fx: 0.38, fy: 0.55 }, { fx: 0.05, fy: 0.65 }, { fx: 0.42, fy: 0.76 },
@@ -131,37 +164,17 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
           x: pt.x + (scatter[j].x - pt.x) * 1.8 + (pt.x - W / 2) * 0.25,
           y: pt.y + (scatter[j].y - pt.y) * 1.8 + (pt.y - H / 2) * 0.25,
         }))
-        return {
-          pts,
-          scatter,
-          outDest,
-          delay: staggerDelays(pts.length, 0.16),
-          tx,
-          ty,
-        }
+        return { pts, scatter, outDest, delay: staggerDelays(pts.length, 0.16), tx, ty }
       })
 
-      const tFontSize = Math.min(W * 0.095, H * 0.19)
-      const wFontSize = Math.max(10, Math.round(tFontSize * 0.15))
-      const capH  = tFontSize * 0.72
-      const gap   = tFontSize * 0.16
-      const logoH = capH + gap + wFontSize * 0.72
-      const baseT = (H - logoH) / 2 + capH
-      const baseW = baseT + gap + wFontSize * 0.72
-      const ls    = Math.round(wFontSize * 0.78)
+      let telosPts: { x: number; y: number }[] = []
+      let logoBounds = { x: 0, y: 0, w: 0, h: 0 }
 
-      const telosPts = subsamplePts(sampleText(W, H, TELOS_SAMPLE, (o) => {
-        o.fillStyle = '#000'
-        o.textAlign = 'center'
-        o.textBaseline = 'alphabetic'
-        o.font = `400 ${tFontSize}px 'Syncopate', sans-serif`
-        ;(o as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '-1px'
-        o.fillText('TELOS', W / 2, baseT)
-        o.font = `400 ${wFontSize}px 'Syncopate', sans-serif`
-        ;(o as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`
-        o.fillText('WEALTH', W / 2 - ls / 2, baseW)
-        ;(o as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '0px'
-      }), TELOS_MAX_PTS)
+      if (logoImg) {
+        const sampled = sampleImage(logoImg, W, H, TELOS_SAMPLE)
+        telosPts = subsamplePts(sampled.pts, TELOS_MAX_PTS)
+        logoBounds = sampled.bounds
+      }
 
       cacheRef.current = {
         key,
@@ -170,69 +183,49 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
         telosPts,
         telosScatter: scatterPts(telosPts.length, W, H),
         telosDelay: staggerDelays(telosPts.length, 0.12),
-        telosFont: { tFontSize, wFontSize, baseT, baseW, ls },
+        logoBounds,
       }
     }
 
-    const { rows, vulnLayout, telosPts, telosScatter, telosDelay, telosFont } = cacheRef.current
+    const { rows, vulnLayout, telosPts, telosScatter, telosDelay, logoBounds } = cacheRef.current
     const { rowFs, texts } = vulnLayout
     const lastOutEnd = VULN_OUT_START + (rows.length - 1) * ROW_OUT_STAG + VULN_OUT_DUR
     const showVulns = p < lastOutEnd + 0.01
 
-    // ── Vulnerability rows: pixel assemble → texto sólido → pixel disperse ──
+    // ── Vulnerability rows: já visíveis (apagadas) → mais nítidas com scroll → dispersão ──
     if (showVulns) {
-      const maxDelay = 0.16
-
       rows.forEach((row, ri) => {
-        const rowInP  = ease(clamp((p - (DOCK_START + ri * ROW_STAG)) / ROW_ASSEMBLE, 0, 1))
         const rowOutP = ease(clamp((p - (VULN_OUT_START + ri * ROW_OUT_STAG)) / VULN_OUT_DUR, 0, 1))
-        if (rowInP <= 0 && rowOutP <= 0) return
 
-        const rowSolidP = rowOutP > 0 ? 0 : ease(clamp((rowInP - 0.65) / 0.35, 0, 1))
-        const formed = rowInP >= 0.55 || rowOutP > 0
-
-        if (formed) {
+        if (rowOutP > 0) {
           for (let i = 0; i < row.pts.length; i++) {
-            const inE = ease(clamp((rowInP - row.delay[i]) / (1 - maxDelay), 0, 1))
-            if (inE <= 0 && rowOutP <= 0) continue
-
             const t = row.pts[i]
-            const s = row.scatter[i]
             const d = row.outDest[i]
-            let x: number, y: number, dotA: number, size: number
-
-            if (rowOutP > 0) {
-              x = lerp(t.x, d.x, rowOutP)
-              y = lerp(t.y, d.y, rowOutP)
-              dotA = 1 - rowOutP
-              size = lerp(2.4, 1.2, rowOutP)
-            } else {
-              x = lerp(s.x, t.x, inE)
-              y = lerp(s.y, t.y, inE)
-              dotA = lerp(0.5, 1, inE) * (1 - rowSolidP)
-              size = lerp(1.6, 2.4, inE)
-            }
-
+            const x = lerp(t.x, d.x, rowOutP)
+            const y = lerp(t.y, d.y, rowOutP)
+            const dotA = (1 - rowOutP) * 0.9
+            const size = lerp(2.4, 1.2, rowOutP)
             if (dotA < 0.02) continue
-            ctx.fillStyle = `rgba(10,10,10,${dotA})`
+            ctx.fillStyle = `rgba(10,10,10,${dotA.toFixed(2)})`
             ctx.fillRect(x - size / 2, y - size / 2, size, size)
           }
-        }
-
-        if (rowSolidP > 0.02) {
+        } else {
+          const staggerStart = ri * 0.03
+          const revealP = ease(clamp((p - staggerStart) / 0.30, 0, 1))
+          const alpha = lerp(0.13, 0.82, revealP)
           ctx.save()
-          ctx.globalAlpha = rowSolidP
+          ctx.globalAlpha = alpha
           ctx.fillStyle = '#0A0A0A'
           ctx.textAlign = 'left'
           ctx.textBaseline = 'middle'
           ctx.font = `400 ${rowFs}px 'Playfair Display', serif`
-          ctx.fillText(texts[ri], rows[ri].tx, rows[ri].ty)
+          ctx.fillText(texts[ri], row.tx, row.ty)
           ctx.restore()
         }
       })
     }
 
-    // ── TELOS pixel → solid (unchanged — user liked this) ──
+    // ── TELOS logo: pixel dots converge → solid image ──
     const telosPhase = ease(clamp((p - TELOS_START) / (TELOS_END - TELOS_START), 0, 1))
     const solidP = ease(clamp((p - SOLID_START) / (SOLID_END - SOLID_START), 0, 1))
     const dotsAlpha = 1 - solidP
@@ -256,23 +249,14 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
       ctx.globalAlpha = 1
     }
 
-    if (solidP > 0.01) {
-      const { tFontSize, wFontSize, baseT, baseW, ls } = telosFont
+    // Solid image fade-in
+    if (solidP > 0.01 && logoImg) {
       ctx.save()
       ctx.globalAlpha = solidP
-      ctx.fillStyle = '#232323'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'alphabetic'
-      ctx.font = `400 ${tFontSize}px 'Syncopate', sans-serif`
-      ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '-1px'
-      ctx.fillText('TELOS', W / 2, baseT)
-      ctx.font = `400 ${wFontSize}px 'Syncopate', sans-serif`
-      ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`
-      ctx.fillText('WEALTH', W / 2 - ls / 2, baseW)
-      ;(ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '0px'
+      ctx.drawImage(logoImg, logoBounds.x, logoBounds.y, logoBounds.w, logoBounds.h)
       ctx.restore()
     }
-  }, [sectionProg])
+  }, [sectionProg, logoImg])
 
   useLayoutEffect(() => { draw() }, [draw])
 
@@ -281,6 +265,11 @@ export default function TelosMorphCanvas({ sectionProg }: Props) {
     window.addEventListener('resize', onResize, { passive: true })
     return () => window.removeEventListener('resize', onResize)
   }, [draw])
+
+  // Rebuild cache when logo loads (was null before)
+  useEffect(() => {
+    if (logoImg) { cacheRef.current = null; draw() }
+  }, [logoImg, draw])
 
   return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
 }
