@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { clamp, ease } from './utils/math'
+import { clamp, ease, lerp } from './utils/math'
 import { PILARES, TEAM, LOCATIONS } from './data'
 import { Logo } from './components/Logo'
 import HeroCanvas from './components/canvas/HeroCanvas'
 import TreeCanvas from './components/canvas/TreeCanvas'
-import CurveCanvas from './components/canvas/CurveCanvas'
+import VolGoalsCanvas from './components/canvas/VolGoalsCanvas'
 import TelosMorphCanvas from './components/canvas/TelosMorphCanvas'
 import ArtigosPage from './pages/ArtigosPage'
 import MobileSite from './pages/MobileSite'
@@ -191,35 +191,91 @@ export default function App() {
         </div>
       </section>
 
-      {/* ─── OBJETIVOS (400vh) ─── */}
-      <section ref={objRef} style={{ height: '400vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
+      {/* ─── ALOCAÇÃO → OBJETIVOS (1000vh) ─── */}
+      <section ref={objRef} style={{ height: '1000vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
           {(() => {
-            const curveProg = clamp((P.obj - 0.08) / 0.82, 0, 1)
-            const textIn    = clamp(P.obj / 0.06, 0, 1)
-            const wordsFly  = clamp((P.obj - 0.72) / 0.28, 0, 1)
-            const wordFlyY  = ease(wordsFly) * 220
-            const wordFlyA  = 1 - ease(wordsFly)
-            const flySpan   = (word: string) => (
-              <span style={{ display: 'inline-block', transform: `translateY(${wordFlyY}px)`, opacity: wordFlyA }}>{word}</span>
-            )
+            const shrinkP  = ease(clamp((P.obj - 0.03) / 0.10, 0, 1))
+            const volMap   = clamp((P.obj - 0.10) / 0.32, 0, 1)
+            const morphMap = clamp((P.obj - 0.44) / 0.16, 0, 1)
+            const drawMap  = clamp((P.obj - 0.16) / 0.70, 0, 1)
+            const anchored = shrinkP > 0.45
+            const curveOut = clamp((P.obj - 0.87) / 0.07, 0, 1)
+            const phraseIn = clamp((P.obj - 0.89) / 0.07, 0, 1)
+            const goalUI   = clamp((morphMap - 0.30) / 0.40, 0, 1)
+
+            const fs    = lerp(56, 33, shrinkP)
+            const left  = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
+            const top   = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 64, shrinkP)}px)`
+            const tx    = lerp(-50, 0, shrinkP)
+            const ty    = lerp(-50, 0, shrinkP)
+            const width = lerp(1120, 440, shrinkP)
+
+            // Flying word shared style
+            const flyWord = (delay = 0) => {
+              const p = ease(clamp((P.obj - (0.80 + delay)) / 0.09, 0, 1))
+              return {
+                display: 'inline-block' as const,
+                opacity: 1 - p,
+                transform: `translateY(${p * 80}px)`,
+              }
+            }
+            const arrWord = (delay = 0) => {
+              const p = ease(clamp((P.obj - (0.89 + delay)) / 0.07, 0, 1))
+              return {
+                display: 'inline-block' as const,
+                opacity: p,
+                transform: `translateY(${(1 - p) * -60}px)`,
+              }
+            }
+
             return (
-              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                <div style={{ position: 'absolute', inset: 0, paddingTop: isMobile ? 60 : 78, paddingLeft: isMobile ? 0 : 'clamp(460px, 33vw, 560px)' }}>
-                  <CurveCanvas prog={curveProg} startM={startM} padTop={200} hideTopLabels />
+              <>
+                {/* Chart layer */}
+                <div style={{ position: 'absolute', inset: 0, opacity: clamp((shrinkP - 0.25) / 0.4, 0, 1) * (1 - curveOut), display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ flex: 1, position: 'relative' }}>
+                    <VolGoalsCanvas volProg={volMap} morphProg={morphMap} drawProg={drawMap} startM={startM} />
+                  </div>
+                  {/* scroll hint — volatility window */}
+                  <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', opacity: clamp((shrinkP - 0.5) / 0.3, 0, 1) * clamp(1 - (volMap - 0.85) / 0.1, 0, 1) * (1 - morphMap), pointerEvents: 'none' }}>
+                    <p style={{ fontSize: 11, color: 'rgba(35,35,35,0.45)', fontWeight: 300, fontStyle: 'italic' }}>
+                      Role para esticar a janela de observação.
+                    </p>
+                  </div>
+                  {/* scroll hint — objectives reveal */}
+                  <div style={{ position: 'absolute', bottom: 30, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', opacity: clamp((morphMap - 0.25) / 0.2, 0, 1) * clamp(1 - (drawMap - 0.86) / 0.08, 0, 1), pointerEvents: 'none' }}>
+                    <p style={{ fontSize: 11, color: 'rgba(94,107,87,0.7)', fontWeight: 300, fontStyle: 'italic' }}>
+                      Role — cada objetivo aparece ao longo da vida.
+                    </p>
+                  </div>
                 </div>
-                <div style={{ position: 'absolute', top: isMobile ? 80 : 120, left: isMobile ? 24 : 80, maxWidth: isMobile ? '58vw' : 420, opacity: textIn, transform: `translateY(${(1 - textIn) * 12}px)`, transition: 'transform .4s', pointerEvents: 'none' }}>
-                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>02 · Curva de Objetivos</div>
-                  <h2 className="serif" style={{ fontSize: 'clamp(22px,2.2vw,34px)', lineHeight: 1.22, color: '#0A0A0A' }}>
+
+                {/* Phrase — shrinks & migrates to top-left, then anchors */}
+                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform' }}>
+                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 10, opacity: clamp((shrinkP - 0.6) / 0.3, 0, 1) }}>
+                    — 02 · {goalUI > 0.5 ? 'Objetivos' : 'Alocação'}
+                  </div>
+                  <h2 className="serif" style={{ fontSize: fs, lineHeight: anchored ? 1.22 : 1.12, textAlign: anchored ? 'left' : 'center', color: '#0A0A0A', margin: '0 auto', overflow: 'visible' }}>
                     Construímos um{' '}
-                    <em style={{ color: '#5E6B57' }}>{flySpan('plano')}</em>
-                    {' '}que{' '}
-                    <em style={{ color: '#5E6B57' }}>maximiza a conquista</em>
-                    {' '}dos seus objetivos e{' '}
-                    <em style={{ color: '#5E6B57' }}>{flySpan('resiste')} ao tempo.</em>
+                    <em style={{ color: '#5E6B57', fontStyle: 'italic', ...flyWord(0) }}>plano</em>{' '}
+                    que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e{' '}
+                    <em style={{ color: '#5E6B57', fontStyle: 'italic', ...flyWord(0.01) }}>resiste</em>{' '}
+                    ao tempo.
                   </h2>
                 </div>
-              </div>
+
+                {/* Bridge phrase — "plano" and "resiste" slots empty until words arrive */}
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px', opacity: phraseIn, pointerEvents: 'none', zIndex: 5, overflow: 'hidden' }}>
+                  <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
+                    Um{' '}
+                    <em style={{ color: '#5E6B57', ...arrWord(0) }}>plano</em>{' '}
+                    que{' '}
+                    <em style={{ color: '#5E6B57', ...arrWord(0.01) }}>resiste</em>{' '}
+                    ao previsível<br />
+                    e que está preparado <em style={{ color: '#5E6B57' }}>para o que não é.</em>
+                  </h2>
+                </div>
+              </>
             )
           })()}
         </div>
@@ -229,36 +285,23 @@ export default function App() {
       <section ref={vulnRef} style={{ height: '800vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const introIn  = clamp(P.vuln / 0.05, 0, 1)
-            const introOut = clamp(1 - (P.vuln - 0.10) / 0.03, 0, 1)
-            const intro    = introIn * introOut
-
-            const wordsArrive = clamp(P.vuln / 0.08, 0, 1)
-            const wordArrY    = (1 - ease(wordsArrive)) * -160
-            const arrSpan     = (word: string) => (
-              <span style={{ display: 'inline-block', transform: `translateY(${wordArrY}px)` }}>{word}</span>
-            )
-
             const headIn   = clamp((P.vuln - 0.10) / 0.04, 0, 1)
             const headFade = clamp(1 - (P.vuln - 0.48) / 0.06, 0, 1)
             const head     = headIn * headFade
-            const canvasIn = clamp((P.vuln - 0.27) / 0.04, 0, 1)
+            const canvasIn = clamp(P.vuln / 0.02, 0, 1)
+
+            // Services spat out from TELOS center after it solidifies
+            const cx = 50, cy = 47
+            const SERVICES = [
+              { lbl: 'Riscos e Seguros',                              xp: 50, yp: 18, rev: 0 },
+              { lbl: 'Planejamento Tributário',                       xp: 17, yp: 40, rev: 1 },
+              { lbl: 'Planejamento Sucessório',                       xp: 83, yp: 40, rev: 2 },
+              { lbl: 'Gestão de investimentos\nlocal e Internacional', xp: 28, yp: 73, rev: 3 },
+              { lbl: 'Planejamento de Objetivos',                     xp: 72, yp: 73, rev: 4 },
+            ]
 
             return (
               <>
-                {/* Phase A — intro phrase */}
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '0 20px' : '0 40px', opacity: intro, pointerEvents: 'none', overflow: 'hidden' }}>
-                  <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
-                    Um{' '}
-                    <em style={{ color: '#5E6B57' }}>{arrSpan('plano')}</em>
-                    {' '}que{' '}
-                    <em style={{ color: '#5E6B57' }}>{arrSpan('resiste')}</em>
-                    {' '}ao previsível<br />
-                    e que está preparado{' '}
-                    <em style={{ color: '#5E6B57' }}>para o que não é.</em>
-                  </h2>
-                </div>
-
                 {/* Phase B — header */}
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: isMobile ? '72px 20px 0' : '92px 80px 0', opacity: head, pointerEvents: 'none' }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>03 · Vulnerabilidades</div>
@@ -271,6 +314,28 @@ export default function App() {
                 <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: canvasIn }}>
                   <TelosMorphCanvas sectionProg={P.vuln} />
                 </div>
+
+                {/* Phase D — serviços orbitam TELOS */}
+                {SERVICES.map((sv, i) => {
+                  const r = ease(clamp((P.vuln - (0.84 + sv.rev * 0.020)) / 0.06, 0, 1))
+                  const x = lerp(cx, sv.xp, r)
+                  const y = lerp(cy, sv.yp, r)
+                  return (
+                    <div key={i} style={{
+                      position: 'absolute',
+                      left: `${x}%`, top: `${y}%`,
+                      width: 280,
+                      transform: 'translate(-50%,-50%)',
+                      opacity: r,
+                      pointerEvents: 'none',
+                    }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#C6A46C' }} />
+                        <div className="serif" style={{ fontSize: 'clamp(15px,1.5vw,21px)', lineHeight: 1.25, color: '#0A0A0A', textAlign: 'center', whiteSpace: 'pre-line' }}>{sv.lbl}</div>
+                      </div>
+                    </div>
+                  )
+                })}
               </>
             )
           })()}
