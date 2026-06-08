@@ -108,11 +108,7 @@ export default function App() {
                 const top = el.getBoundingClientRect().top + window.scrollY
                 window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.40, behavior: 'smooth' })
               }],
-              ['Vulnerabilidades',  () => {
-                const el = vulnRef.current; if (!el) return
-                const top = el.getBoundingClientRect().top + window.scrollY
-                window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.62, behavior: 'smooth' })
-              }],
+              ['Vulnerabilidades',  () => scrollToEl(vulnRef.current)],
               ['Pilares',           () => scrollToEl(metRef.current)],
               ['Time',              () => scrollToEl(teamRef.current)],
             ] as [string, () => void][]).map(([l, fn]) => (
