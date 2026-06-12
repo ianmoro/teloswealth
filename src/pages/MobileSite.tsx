@@ -8,9 +8,12 @@ interface Props {
   onArtigos: () => void
 }
 
+type TeamMember = typeof TEAM[0]
+
 export default function MobileSite({ onArtigos }: Props) {
   const ctaRef = useRef<HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
 
   const scrollTo = (id: string) => {
     setMenuOpen(false)
@@ -65,7 +68,7 @@ export default function MobileSite({ onArtigos }: Props) {
 
       {/* HERO */}
       <section style={{ position: 'relative', height: '100vh', overflow: 'hidden', background: '#1a1208' }}>
-        <video muted loop playsInline src="/0605.mov"
+        <video muted loop playsInline src="/0610.mov"
           ref={el => { if (!el || (el as any)._init) return; (el as any)._init = true; el.play().catch(() => {}) }}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 30%, rgba(10,10,10,0.5) 100%)' }} />
@@ -143,7 +146,7 @@ export default function MobileSite({ onArtigos }: Props) {
 
       {/* 05 · QUEM SOMOS */}
       <section id="time" style={{ padding: '72px 20px 60px', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
-        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 16 }}>05 · Quem somos</div>
+        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 16 }}>05 · Nosso Time</div>
         <h2 className="serif" style={{ fontSize: 'clamp(26px,6.5vw,36px)', lineHeight: 1.1, color: '#0A0A0A', marginBottom: 12 }}>
           Sete sócios certificados.<br /><em style={{ color: '#5E6B57' }}>Um único critério.</em>
         </h2>
@@ -151,16 +154,17 @@ export default function MobileSite({ onArtigos }: Props) {
           <div className="serif" style={{ fontSize: 42, color: '#5E6B57', lineHeight: 1 }}>+R$700M</div>
           <div style={{ fontSize: 13, color: 'rgba(10,10,10,0.5)', marginTop: 4 }}>sob aconselhamento</div>
         </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, background: 'rgba(10,10,10,0.08)' }}>
           {TEAM.map((p, i) => (
-            <a key={i} href={p.li} target="_blank" rel="noopener noreferrer"
-              style={{ background: '#F5F4F1', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 160, textDecoration: 'none', color: '#0A0A0A' }}>
+            <div key={i} onClick={() => p.bio ? setSelectedMember(p) : window.open(p.li, '_blank')}
+              style={{ background: '#F5F4F1', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 12, minHeight: 160, cursor: 'pointer', color: '#0A0A0A' }}>
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(94,107,87,0.1)', border: '1px solid rgba(94,107,87,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5E6B57', fontFamily: "'Syncopate', sans-serif", fontSize: 10, letterSpacing: '0.2em', fontWeight: 700 }}>{p.initials}</div>
               <div>
                 <div className="serif" style={{ fontSize: 15, lineHeight: 1.2, marginBottom: 4 }}>{p.name}</div>
                 <div className="syncop" style={{ fontSize: 7, color: '#5E6B57' }}>{p.cert}</div>
               </div>
-            </a>
+            </div>
           ))}
           <div style={{ background: '#0A0A0A', color: '#F5F4F1', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 16, gridColumn: '1 / -1' }}>
             <div className="eyebrow eyebrow-terra" style={{ color: '#A8B0A2' }}>Onde estamos</div>
@@ -172,6 +176,32 @@ export default function MobileSite({ onArtigos }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Team member popup */}
+      {selectedMember && (
+        <div onClick={() => setSelectedMember(null)}
+          style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(10,10,10,0.75)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: '#F5F4F1', width: '100%', maxHeight: '88vh', overflowY: 'auto', borderRadius: '12px 12px 0 0', padding: '36px 24px 48px', position: 'relative' }}>
+            <button onClick={() => setSelectedMember(null)}
+              style={{ position: 'absolute', top: 16, right: 16, width: 32, height: 32, borderRadius: '50%', background: 'rgba(10,10,10,0.07)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, letterSpacing: '0.24em', color: '#5E6B57', marginBottom: 10, textTransform: 'uppercase' }}>{selectedMember.role}</div>
+            <h3 className="serif" style={{ fontSize: 24, lineHeight: 1.15, color: '#0A0A0A', marginBottom: 8 }}>{selectedMember.name}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+              <span style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, color: '#5E6B57', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
+              <span style={{ width: 1, height: 12, background: 'rgba(10,10,10,0.15)' }} />
+              <a href={selectedMember.li} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: 5, textDecoration: 'none', color: '#0A0A0A' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                <span style={{ fontSize: 11, fontWeight: 500 }}>LinkedIn</span>
+              </a>
+            </div>
+            <p style={{ fontSize: 14, lineHeight: 1.78, color: 'rgba(10,10,10,0.68)', margin: 0 }}>{selectedMember.bio}</p>
+          </div>
+        </div>
+      )}
 
       {/* CTA */}
       <section ref={ctaRef} style={{ background: '#0A0A0A', padding: '80px 20px 60px', color: '#F5F4F1', textAlign: 'center' }}>
