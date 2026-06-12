@@ -78,15 +78,9 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       </section>
 
       {/* STAT BAR */}
-      <div style={{ background: '#0A0A0A', padding: '24px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <div className="serif" style={{ fontSize: 32, color: '#A8B0A2', lineHeight: 1 }}>+R$700M</div>
-          <div style={{ fontSize: 11, color: 'rgba(245,244,241,0.4)', marginTop: 4, letterSpacing: '0.04em' }}>sob aconselhamento</div>
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          <div className="syncop" style={{ fontSize: 8, color: '#A8C49A', letterSpacing: '0.2em' }}>7 sócios</div>
-          <div className="syncop" style={{ fontSize: 8, color: 'rgba(245,244,241,0.35)', letterSpacing: '0.15em', marginTop: 6 }}>CFP® · CEA</div>
-        </div>
+      <div style={{ background: '#0A0A0A', padding: '24px 20px' }}>
+        <div className="serif" style={{ fontSize: 32, color: '#A8B0A2', lineHeight: 1 }}>+R$700M</div>
+        <div style={{ fontSize: 11, color: 'rgba(245,244,241,0.4)', marginTop: 4, letterSpacing: '0.04em' }}>sob aconselhamento</div>
       </div>
 
       {/* 01 · FAMÍLIA */}
@@ -118,10 +112,10 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
           Mapeamos as <em style={{ color: '#5E6B57' }}>vulnerabilidades</em> e as <em style={{ color: '#5E6B57' }}>resolvemos.</em>
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {VULN_PAIRS.map(({ vuln, sol }) => (
-            <div key={vuln} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '18px 0', borderBottom: '1px solid rgba(10,10,10,0.07)' }}>
-              <span style={{ fontSize: 14, color: 'rgba(10,10,10,0.65)', fontWeight: 300, lineHeight: 1.4 }}>{vuln}</span>
-              <span className="syncop" style={{ fontSize: 7, color: '#5E6B57', letterSpacing: '0.18em', textAlign: 'right', flexShrink: 0, maxWidth: 100 }}>{sol}</span>
+          {VULN_PAIRS.map(({ vuln }) => (
+            <div key={vuln} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', borderBottom: '1px solid rgba(10,10,10,0.07)' }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#5E6B57', flexShrink: 0 }} />
+              <span style={{ fontSize: 15, color: 'rgba(10,10,10,0.7)', fontWeight: 300, lineHeight: 1.4 }}>{vuln}</span>
             </div>
           ))}
         </div>
@@ -228,7 +222,6 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
 
       {/* CTA */}
       <section ref={ctaRef} style={{ background: '#0A0A0A', padding: '80px 20px 64px', color: '#F5F4F1', textAlign: 'center' }}>
-        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20, color: '#A8B0A2' }}>Início de relação</div>
         <h2 className="serif" style={{ fontSize: 'clamp(32px,9vw,52px)', lineHeight: 1.1, color: '#F5F4F1', marginBottom: 40 }}>
           Entre em contato<br />com o <em style={{ color: '#A8B0A2' }}>nosso time.</em>
         </h2>
