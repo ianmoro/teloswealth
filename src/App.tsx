@@ -467,13 +467,13 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: 'rgba(10,10,10,0.08)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1, background: 'transparent' }}>
             {TEAM.map((p, i) => (
               <div key={i} onClick={() => p.bio ? setSelectedMember(p) : window.open(p.li, '_blank')}
-                style={{ background: '#F5F4F1', display: 'flex', flexDirection: 'column', minHeight: 380, position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden' }}
+                style={{ background: '#F5F4F1', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden', width: isMobile ? 'calc(50% - 1px)' : isTablet ? 'calc(50% - 1px)' : 'calc(25% - 1px)' }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#0A0A0A'; el.style.color = '#F5F4F1'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#A8B0A2'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(245,244,241,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0.25)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '1') }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#F5F4F1'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#5E6B57'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
-                <div style={{ position: 'relative', width: '100%', paddingBottom: (p as any).photoAspect ?? '100%', flexShrink: 0, overflow: 'hidden', background: 'rgba(94,107,87,0.08)' }}>
+                <div style={{ position: 'relative', width: '100%', paddingBottom: '100%', flexShrink: 0, overflow: 'hidden', background: 'rgba(94,107,87,0.08)' }}>
                   {p.photo
                     ? <img src={p.photo} alt={p.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: (p as any).photoPosition ?? 'center top', display: 'block', filter: 'grayscale(15%)' }} />
                     : <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: 22, letterSpacing: '0.2em', fontWeight: 700, color: 'rgba(94,107,87,0.4)' }}>{p.initials}</div>
@@ -493,21 +493,6 @@ export default function App() {
                 </div>
               </div>
             ))}
-
-            <div style={{ background: '#0A0A0A', color: '#F5F4F1', padding: '32px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 280 }}>
-              <div className="eyebrow eyebrow-terra" style={{ color: '#A8B0A2' }}>Onde estamos</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {LOCATIONS.map(l => (
-                  <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#A8B0A2' }} />
-                    <span className="serif" style={{ fontSize: 22 }}>{l}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={{ fontSize: 11, color: 'rgba(245,244,241,0.4)', letterSpacing: '0.06em', lineHeight: 1.6 }}>
-                Operação nacional.<br />Atendimento confidencial.
-              </div>
-            </div>
           </div>
         </div>
       </section>
