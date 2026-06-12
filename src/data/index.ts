@@ -34,13 +34,55 @@ export const PILARES = [
 ]
 
 export const TEAM = [
-  { name: 'Lucas Taxweiler',     cert: 'CFP®', li: 'https://www.linkedin.com/in/lucas-taxweiler-cfp%C2%AE-b648a911a/',       initials: 'LT' },
-  { name: 'Gabriel Almendra',    cert: 'CFP®', li: 'https://www.linkedin.com/in/gabriel-almendra-cfp%C2%AE-a66798132/',       initials: 'GA' },
-  { name: 'Ian Moro',            cert: 'CFP®', li: 'https://br.linkedin.com/in/ianmoro',                                       initials: 'IM' },
-  { name: 'Rodrigo Albuquerque', cert: 'CFP®', li: 'https://www.linkedin.com/in/rodrigo-albuquerque-cfp%C2%AE-41a1ba90/',     initials: 'RA' },
-  { name: 'Fernando Cieninga',   cert: 'CFP®', li: 'https://br.linkedin.com/in/fernando-cieninga-cfp%C2%AE-98a821ab',         initials: 'FC' },
-  { name: 'Renato Andrade',      cert: 'CFP®', li: 'https://br.linkedin.com/in/renatoandradejunior',                          initials: 'RA' },
-  { name: 'Higo Hideki',         cert: 'CEA',  li: 'https://br.linkedin.com/in/higohideki',                                   initials: 'HH' },
+  {
+    name: 'Gabriel Almendra', cert: 'CFP®️', initials: 'GA',
+    li: 'https://www.linkedin.com/in/gabriel-almendra-cfp%C2%AE-a66798132/',
+    role: 'Co-Founder',
+    photo: '/team/gabriel.jpg',
+    bio: 'Com quase 15 anos de experiência no mercado financeiro, Gabriel Almendra é Planejador Financeiro CFP®️, formado em Administração de Empresas e CFA Level III Candidate. Ao longo de sua trajetória, construiu sua carreira em algumas das principais instituições financeiras do país, incluindo Banco Santander, Itaú Unibanco e Warren Investimentos, onde liderou o segmento Wealth em São Paulo.',
+  },
+  {
+    name: 'Ian Moro', cert: 'CFP®️', initials: 'IM',
+    li: 'https://br.linkedin.com/in/ianmoro',
+    role: 'Co-Founder',
+    photo: '/team/ian.jpg',
+    bio: 'Engenheiro Civil pelo Instituto Mauá de Tecnologia, Ian traz para a gestão patrimonial um olhar estruturado e analítico. Com quase 10 anos de experiência no mercado financeiro, construiu sua trajetória em instituições como Magnetis, onde foi sócio e liderou a área de aquisição de clientes e parcerias, BTG Pactual e Warren Investimentos, sempre com foco no segmento de Wealth Management. Sócio-fundador e um dos administradores da Telos Wealth.',
+  },
+  {
+    name: 'Lucas Taxweiler', cert: 'CFP®️', initials: 'LT',
+    li: 'https://www.linkedin.com/in/lucas-taxweiler-cfp%C2%AE-b648a911a/',
+    role: 'Co-Founder',
+    photo: '/team/lucas.jpg',
+    bio: 'Engenheiro Civil pelo Instituto Mauá de Tecnologia. Com quase 10 anos de experiência no mercado financeiro, construiu sua trajetória em instituições como Magnetis, onde foi sócio e liderou a área de wealth e relacionamento com os clientes, BTG Pactual e Warren Investimentos, onde também liderou o segmento Wealth da empresa. Sócio-fundador e um dos administradores da Telos Wealth.',
+  },
+  {
+    name: 'Fernando Cieninga', cert: 'CFP®️', initials: 'FC',
+    li: 'https://br.linkedin.com/in/fernando-cieninga-cfp%C2%AE-98a821ab',
+    role: 'Senior Partner',
+    photo: '/team/fernando.jpg',
+    bio: 'Com quase 10 anos de experiência no mercado financeiro, Fernando Cieninga é Planejador Financeiro CFP®️ e formado em Administração. Atuou em instituições como Itaú e Warren, desenvolvendo experiência em planejamento financeiro, gestão patrimonial e acompanhamento de famílias e empresários em decisões financeiras relevantes. Antes do mercado financeiro, foi atleta de voleibol de alto rendimento, experiência que moldou sua visão sobre disciplina, planejamento e execução de longo prazo.',
+  },
+  {
+    name: 'Rodrigo Albuquerque', cert: 'CFP®️', initials: 'RA',
+    li: 'https://www.linkedin.com/in/rodrigo-albuquerque-cfp%C2%AE-41a1ba90/',
+    role: 'Senior Partner',
+    photo: '/team/rodrigo.jpg',
+    bio: 'Engenheiro mecânico de formação, com MBA em Finanças pelo IBMEC. Possui 10 anos de experiência no mercado financeiro, com passagens por renomados Multi Family Offices, como Turim e TNA, além da Warren Investimentos.',
+  },
+  {
+    name: 'Higo Hideki', cert: 'CEA', initials: 'HH',
+    li: 'https://br.linkedin.com/in/higohideki',
+    role: 'Senior Partner',
+    photo: '/team/higo.jpg',
+    bio: 'Com background em Exatas e formação multidisciplinar em Ciência e Tecnologia pela UFABC, Higo traz um perfil altamente analítico para a área de Wealth Management. É Especialista em Investimentos Anbima e acumula forte experiência no mercado financeiro. Atuando diretamente no relacionamento e na estratégia para clientes de alta renda, possui passagens como Daily Banker por grandes instituições como Itaú, Magnetis, BTG Pactual e Warren.',
+  },
+  {
+    name: 'Renato Andrade', cert: 'CFP®️', initials: 'RA',
+    li: 'https://br.linkedin.com/in/renatoandradejunior',
+    role: 'Senior Partner',
+    photo: '/team/renato.jpg',
+    bio: 'Com mais de 15 anos de experiência no mercado financeiro, Renato Andrade é Planejador Financeiro CFP®️ e Especialista em Investimentos certificado pela ANBIMA (CEA). Ao longo de sua trajetória, atuou em instituições como Itaú, Magnetis, BTG Pactual e Warren, desenvolvendo experiência em planejamento financeiro, gestão patrimonial e construção de estratégias de investimento para pessoas e famílias.',
+  },
 ]
 
 export const LOCATIONS = ['São Paulo', 'Rio de Janeiro', 'Curitiba']

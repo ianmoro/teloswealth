@@ -3,9 +3,9 @@ import { clamp, ease, lerp } from './utils/math'
 import { PILARES, TEAM, LOCATIONS } from './data'
 import { Logo } from './components/Logo'
 import HeroCanvas from './components/canvas/HeroCanvas'
+import TelosMorphCanvas from './components/canvas/TelosMorphCanvas'
 import TreeCanvas from './components/canvas/TreeCanvas'
 import VolGoalsCanvas from './components/canvas/VolGoalsCanvas'
-import TelosMorphCanvas from './components/canvas/TelosMorphCanvas'
 import ArtigosPage from './pages/ArtigosPage'
 import MobileSite from './pages/MobileSite'
 
@@ -36,8 +36,9 @@ export default function App() {
 
   const [P, setP] = useState({ hero: 0, fam: 0, obj: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
   const [scrollY, setScrollY] = useState(0)
-  const [hoverMember, setHoverMember] = useState<number | null>(null)
   const [hoverPillar, setHoverPillar] = useState<number | null>(null)
+  const [selectedMember, setSelectedMember] = useState<typeof TEAM[0] | null>(null)
+  const [previewPdf, setPreviewPdf] = useState<{ label: string; file: string } | null>(null)
 
   const [page, setPage] = useState<'home' | 'artigos'>('home')
   const [mounted, setMounted] = useState(false)
@@ -126,7 +127,7 @@ export default function App() {
 
           <video
             muted loop playsInline
-            src="/0605.mov"
+            src="/0611.mov"
             ref={(el) => {
               if (!el || (el as any)._telosInit) return
               ;(el as any)._telosInit = true
@@ -157,6 +158,7 @@ export default function App() {
             <div className="syncop" style={{ fontSize: 8, color: 'rgba(35,35,35,0.5)' }}>Scroll</div>
             <div style={{ width: 1, height: 38, background: 'linear-gradient(to bottom, rgba(35,35,35,0.45), transparent)', animation: 'scrollPulse 2.2s ease-in-out infinite' }} />
           </div>
+
         </div>
       </section>
 
@@ -272,67 +274,118 @@ export default function App() {
         </div>
       </section>
 
-      {/* ─── VULNERABILIDADES (800vh) ─── */}
-      <section ref={vulnRef} style={{ height: '800vh', position: 'relative' }}>
+      {/* ─── VULNERABILIDADES (700vh) ─── */}
+      <section ref={vulnRef} style={{ height: '700vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const headIn   = clamp((P.vuln - 0.02) / 0.06, 0, 1)
-            const headFade = clamp(1 - (P.vuln - 0.65) / 0.08, 0, 1)
-            const head     = headIn * headFade
-            const CANVAS_START = 0.22
-            const canvasIn = clamp((P.vuln - CANVAS_START) / 0.06, 0, 1)
-            // Remap so TelosMorphCanvas always receives 0→1 starting from when it first appears
-            const canvasProg = clamp((P.vuln - CANVAS_START) / (1 - CANVAS_START), 0, 1)
+            const p = P.vuln
 
-            // Services spat out from TELOS center after it solidifies
-            const cx = 50, cy = 47
-            const SERVICES = [
-              { lbl: 'Riscos e Seguros',                              xp: 50, yp: 18, rev: 0 },
-              { lbl: 'Planejamento Tributário',                       xp: 17, yp: 40, rev: 1 },
-              { lbl: 'Planejamento Sucessório',                       xp: 83, yp: 40, rev: 2 },
-              { lbl: 'Gestão de investimentos\nlocal e Internacional', xp: 28, yp: 73, rev: 3 },
-              { lbl: 'Planejamento de Objetivos',                     xp: 72, yp: 73, rev: 4 },
+            const headIn  = clamp((p - 0.03) / 0.06, 0, 1)
+            const frameIn = ease(clamp((p - 0.10) / 0.10, 0, 1))
+            const hint    = clamp((p - 0.16) / 0.04, 0, 1) * clamp(1 - (p - 0.74) / 0.05, 0, 1)
+
+            const SPHERES: { lbl: string; x: number; y: number; r: number }[] = [
+              { lbl: 'Riscos e Seguros',          x: 0.19, y: 0.82, r: 124 },
+              { lbl: 'Planejamento de Objetivos', x: 0.36, y: 0.55, r: 142 },
+              { lbl: 'Planejamento Tributário',   x: 0.60, y: 0.77, r: 120 },
+              { lbl: 'Sucessório',                x: 0.80, y: 0.63, r: 116 },
+              { lbl: 'Gestão de Ativos',          x: 0.29, y: 0.27, r: 122 },
+              { lbl: 'Previdência',               x: 0.75, y: 0.25, r: 116 },
+            ]
+            const SEQ0 = 0.20, SEQ_STEP = 0.105, SEQ_DUR = 0.075
+
+            const quad: [string, { top?: number; bottom?: number; left?: number; right?: number }][] = [
+              ['Prioridade',      { top: 12,    left: 14  }],
+              ['Agir',            { top: 12,    right: 14 }],
+              ['Agir',            { bottom: 12, left: 14  }],
+              ['Não prioritário', { bottom: 12, right: 14 }],
             ]
 
             return (
               <>
-                {/* Phase B — header */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: isMobile ? '72px 20px 0' : '92px 80px 0', opacity: head, pointerEvents: 'none', zIndex: 2 }}>
-                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 18 }}>03 · Vulnerabilidades</div>
-                  <h2 className="serif" style={{ fontSize: 'clamp(26px,2.6vw,40px)', lineHeight: 1.22, color: '#0A0A0A' }}>
-                    Mapeamos as <em style={{ color: '#5E6B57' }}>vulnerabilidades</em> e as <em style={{ color: '#5E6B57' }}>resolvemos.</em>
+                {/* cabeçalho */}
+                <div style={{ position: 'absolute', top: 88, left: 80, maxWidth: 760, opacity: headIn, pointerEvents: 'none', zIndex: 3 }}>
+                  <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>— 03 · Vulnerabilidades</div>
+                  <h2 className="serif" style={{ fontSize: 'clamp(23px,2.2vw,33px)', lineHeight: 1.3, color: '#0A0A0A' }}>
+                    Mapeamos as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>vulnerabilidades patrimoniais</em> que podem comprometer o plano e as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>resolvemos</em> ao longo do tempo.
                   </h2>
                 </div>
 
-                {/* Phase C — pixels: palavras espalhadas → somem → TELOS */}
-                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: canvasIn }}>
-                  <TelosMorphCanvas sectionProg={canvasProg} />
+                {/* matriz esforço × impacto */}
+                <div style={{
+                  position: 'absolute',
+                  left: 'calc(50% + 26px)',
+                  top: '58%',
+                  transform: 'translate(-50%,-50%)',
+                  width: 'min(800px,58vw)',
+                  height: 'min(516px,52vh)',
+                }}>
+                  <div style={{ position: 'absolute', inset: 0, border: '1px solid rgba(10,10,10,0.07)', opacity: frameIn }} />
+                  <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 0, borderLeft: '1px dotted rgba(10,10,10,0.22)', opacity: frameIn, transform: `scaleY(${frameIn})`, transformOrigin: 'center' }} />
+                  <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 0, borderTop: '1px dotted rgba(10,10,10,0.22)', opacity: frameIn, transform: `scaleX(${frameIn})`, transformOrigin: 'center' }} />
+                  <div style={{ position: 'absolute', left: -64, top: 0, bottom: 0, width: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', opacity: frameIn }}>
+                    <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.42)', letterSpacing: '0.2em' }}>Alto</span>
+                    <span className="syncop" style={{ fontSize: 9, color: '#9A5C45', letterSpacing: '0.3em', writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Impacto</span>
+                    <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.42)', letterSpacing: '0.2em' }}>Baixo</span>
+                  </div>
+                  <div style={{ position: 'absolute', left: 0, right: 0, bottom: -44, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: frameIn }}>
+                    <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.42)', letterSpacing: '0.2em' }}>Baixo</span>
+                    <span className="syncop" style={{ fontSize: 9, color: '#9A5C45', letterSpacing: '0.3em' }}>Esforço</span>
+                    <span className="syncop" style={{ fontSize: 8, color: 'rgba(10,10,10,0.42)', letterSpacing: '0.2em' }}>Alto</span>
+                  </div>
+                  {quad.map(([t, pos], qi) => (
+                    <span key={qi} className="syncop" style={{ position: 'absolute', ...pos, fontSize: 8.5, color: 'rgba(154,92,69,0.78)', letterSpacing: '0.24em', opacity: frameIn }}>{t}</span>
+                  ))}
+                  {SPHERES.map((s, i) => {
+                    const rev = ease(clamp((p - (SEQ0 + i * SEQ_STEP)) / SEQ_DUR, 0, 1))
+                    const sc  = lerp(0.55, 1, rev)
+                    return (
+                      <div key={i} style={{
+                        position: 'absolute',
+                        left: `${s.x * 100}%`,
+                        top: `${(1 - s.y) * 100}%`,
+                        width: s.r,
+                        height: s.r,
+                        marginLeft: -s.r / 2,
+                        marginTop: -s.r / 2,
+                        opacity: rev,
+                        transform: `scale(${sc})`,
+                        transformOrigin: 'center',
+                        pointerEvents: 'none',
+                      }}>
+                        <div style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          background: 'radial-gradient(circle at 38% 30%, rgba(198,164,108,0.30), rgba(198,164,108,0.13) 58%, rgba(198,164,108,0.05) 100%)',
+                          border: '1px solid rgba(198,164,108,0.5)',
+                          boxShadow: '0 10px 34px rgba(154,92,69,0.07)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '0 14px',
+                        }}>
+                          <span className="serif" style={{ fontSize: 'clamp(12px,1.05vw,15px)', lineHeight: 1.22, color: '#2A2A28', textAlign: 'center' }}>{s.lbl}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
 
-                {/* Phase D — serviços orbitam TELOS */}
-                {SERVICES.map((sv, i) => {
-                  const r = ease(clamp((canvasProg - (0.84 + sv.rev * 0.020)) / 0.06, 0, 1))
-                  const x = lerp(cx, sv.xp, r)
-                  const y = lerp(cy, sv.yp, r)
-                  return (
-                    <div key={i} style={{
-                      position: 'absolute',
-                      left: `${x}%`, top: `${y}%`,
-                      width: 280,
-                      transform: 'translate(-50%,-50%)',
-                      opacity: r,
-                      pointerEvents: 'none',
-                    }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#C6A46C' }} />
-                        <div className="serif" style={{ fontSize: 'clamp(15px,1.5vw,21px)', lineHeight: 1.25, color: '#0A0A0A', textAlign: 'center', whiteSpace: 'pre-line' }}>{sv.lbl}</div>
-                      </div>
-                    </div>
-                  )
-                })}
+                {/* scroll hint */}
+                <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', opacity: hint }}>
+                  <span className="syncop" style={{ fontSize: 9, color: 'rgba(154,92,69,0.7)', letterSpacing: '0.42em' }}>— role · cada esfera encontra seu lugar na matriz —</span>
+                </div>
               </>
             )
           })()}
+        </div>
+      </section>
+
+      {/* ─── TRANSIÇÃO TELOS (350vh) ─── */}
+      <section ref={collapseRef} style={{ height: '350vh', position: 'relative', background: '#F5F4F1' }}>
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+          <TelosMorphCanvas sectionProg={0.72 + P.collapse * 0.28} />
         </div>
       </section>
 
@@ -403,9 +456,9 @@ export default function App() {
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 360px', gap: isMobile ? 32 : 96, marginBottom: isMobile ? 40 : 80, alignItems: 'end' }}>
             <div>
-              <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24 }}>05 · Quem somos</div>
+              <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24 }}>05 · Nosso Time</div>
               <h2 className="serif" style={{ fontSize: 'clamp(36px,4vw,62px)', lineHeight: 1.1, color: '#0A0A0A' }}>
-                Sete sócios certificados.<br /><em style={{ color: '#5E6B57' }}>Um único critério.</em>
+                Nosso Time
               </h2>
             </div>
             <div style={{ borderLeft: isMobile ? 'none' : '1px solid rgba(10,10,10,0.12)', borderTop: isMobile ? '1px solid rgba(10,10,10,0.12)' : 'none', paddingLeft: isMobile ? 0 : 36, paddingTop: isMobile ? 24 : 0 }}>
@@ -416,20 +469,29 @@ export default function App() {
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 1, background: 'rgba(10,10,10,0.08)' }}>
             {TEAM.map((p, i) => (
-              <a key={i} href={p.li} target="_blank" rel="noopener noreferrer"
-                onMouseEnter={() => setHoverMember(i)}
-                onMouseLeave={() => setHoverMember(null)}
-                style={{ background: hoverMember === i ? '#0A0A0A' : '#F5F4F1', padding: '32px 28px', display: 'flex', flexDirection: 'column', gap: 20, minHeight: 280, position: 'relative', cursor: 'pointer', transition: 'background .35s', color: hoverMember === i ? '#F5F4F1' : '#0A0A0A' }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', background: hoverMember === i ? 'rgba(245,244,241,0.08)' : 'rgba(94,107,87,0.1)', border: `1px solid ${hoverMember === i ? 'rgba(245,244,241,0.15)' : 'rgba(94,107,87,0.2)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: hoverMember === i ? '#A8B0A2' : '#5E6B57', fontFamily: "'Syncopate', sans-serif", fontSize: 13, letterSpacing: '0.2em', fontWeight: 700, transition: 'all .35s' }}>{p.initials}</div>
-                <div>
-                  <div className="serif" style={{ fontSize: 20, lineHeight: 1.2, marginBottom: 6 }}>{p.name}</div>
-                  <div className="syncop" style={{ fontSize: 8, color: hoverMember === i ? '#A8B0A2' : '#5E6B57' }}>{p.cert}</div>
+              <div key={i} onClick={() => p.bio ? setSelectedMember(p) : window.open(p.li, '_blank')}
+                style={{ background: '#F5F4F1', display: 'flex', flexDirection: 'column', minHeight: 380, position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#0A0A0A'; el.style.color = '#F5F4F1'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#A8B0A2'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(245,244,241,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0.25)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '1') }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#F5F4F1'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#5E6B57'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
+                <div style={{ position: 'relative', width: '100%', paddingBottom: (p as any).photoAspect ?? '100%', flexShrink: 0, overflow: 'hidden', background: 'rgba(94,107,87,0.08)' }}>
+                  {p.photo
+                    ? <img src={p.photo} alt={p.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: (p as any).photoPosition ?? 'center top', display: 'block', filter: 'grayscale(15%)' }} />
+                    : <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: 22, letterSpacing: '0.2em', fontWeight: 700, color: 'rgba(94,107,87,0.4)' }}>{p.initials}</div>
+                  }
+                  <div data-overlay style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,10,0)', transition: 'background .35s' }} />
                 </div>
-                <div style={{ marginTop: 'auto', opacity: hoverMember === i ? 1 : 0, transform: hoverMember === i ? 'translateY(0)' : 'translateY(8px)', transition: 'all .3s', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.339 18.337H5.667v-8.59h2.672v8.59zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096zm11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z" /></svg>
-                  <span style={{ fontSize: 11, letterSpacing: '0.06em' }}>Ver no LinkedIn</span>
+                <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+                  <div>
+                    <div className="serif" style={{ fontSize: isMobile ? 16 : 20, lineHeight: 1.2, marginBottom: 4 }}>{p.name}</div>
+                    <div data-role style={{ fontSize: 10, color: 'rgba(10,10,10,0.4)', letterSpacing: '0.08em', marginBottom: 4, transition: 'color .35s' }}>{p.role}</div>
+                    <div data-cert className="syncop" style={{ fontSize: 8, color: '#5E6B57', transition: 'color .35s' }}>{p.cert}</div>
+                  </div>
+                  <div data-li style={{ marginTop: 'auto', paddingTop: 8, opacity: 0, transition: 'opacity .3s', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.339 18.337H5.667v-8.59h2.672v8.59zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096zm11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z" /></svg>
+                    <span style={{ fontSize: 11, letterSpacing: '0.06em' }}>{p.bio ? 'Ver mais' : 'Ver no LinkedIn'}</span>
+                  </div>
                 </div>
-              </a>
+              </div>
             ))}
 
             <div style={{ background: '#0A0A0A', color: '#F5F4F1', padding: '32px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 280 }}>
@@ -450,6 +512,59 @@ export default function App() {
         </div>
       </section>
 
+      {/* Team member popup */}
+      {selectedMember && (
+        <div onClick={() => setSelectedMember(null)}
+          style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(10,10,10,0.75)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: '#F5F4F1', width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', padding: '48px 44px', position: 'relative' }}>
+            <button onClick={() => setSelectedMember(null)}
+              style={{ position: 'absolute', top: 20, right: 20, width: 32, height: 32, borderRadius: '50%', background: 'rgba(10,10,10,0.07)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, letterSpacing: '0.26em', color: '#5E6B57', marginBottom: 12, textTransform: 'uppercase' }}>{selectedMember.role}</div>
+            <h3 className="serif" style={{ fontSize: 30, lineHeight: 1.12, color: '#0A0A0A', marginBottom: 10 }}>{selectedMember.name}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+              <span style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, color: '#5E6B57', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
+              <span style={{ width: 1, height: 12, background: 'rgba(10,10,10,0.15)' }} />
+              <a href={selectedMember.li} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: '#0A0A0A' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                <span style={{ fontSize: 11, fontWeight: 500 }}>LinkedIn</span>
+              </a>
+            </div>
+            <p style={{ fontSize: 15, lineHeight: 1.78, color: 'rgba(10,10,10,0.68)', margin: 0 }}>{selectedMember.bio}</p>
+          </div>
+        </div>
+      )}
+
+      {/* PDF preview modal */}
+      {previewPdf && (
+        <div onClick={() => setPreviewPdf(null)}
+          style={{ position: 'fixed', inset: 0, zIndex: 2000, background: 'rgba(10,10,10,0.80)', backdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isMobile ? 16 : 40 }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ width: '100%', maxWidth: 860, height: isMobile ? '85vh' : '88vh', background: '#F5F4F1', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            {/* header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(10,10,10,0.10)', flexShrink: 0 }}>
+              <span className="serif" style={{ fontSize: 15, color: '#0A0A0A' }}>{previewPdf.label}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <a href={`/docs/${previewPdf.file}`} download onClick={e => e.stopPropagation()}
+                  style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '8px 16px', background: '#0A0A0A', color: '#F5F4F1', textDecoration: 'none', fontSize: 11, letterSpacing: '0.08em', fontFamily: "'Syncopate', sans-serif" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Baixar
+                </a>
+                <button onClick={() => setPreviewPdf(null)}
+                  style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(10,10,10,0.07)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            </div>
+            {/* iframe */}
+            <iframe src={`/docs/${previewPdf.file}#toolbar=0`} style={{ flex: 1, border: 'none', width: '100%' }} title={previewPdf.label} />
+          </div>
+        </div>
+      )}
+
       {/* ─── CONTEÚDO ─── */}
       <section ref={conteudoRef} style={{ background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)', padding: isMobile ? '80px 24px 80px' : '140px 80px 120px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
@@ -459,13 +574,13 @@ export default function App() {
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {[
-              { num: '01', label: 'Investir o máximo o quanto antes', file: 'Artigo #1.pdf' },
-              { num: '02', label: 'O custo invisível de um modelo interesseiro', file: 'Artigo #2.pdf' },
+              { num: '01', label: 'Investir o máximo o quanto antes', file: 'artigo-1.pdf' },
+              { num: '02', label: 'O custo invisível de um modelo interesseiro', file: 'artigo-2.pdf' },
             ].map(({ num, label, file }) => (
-              <a key={file} href={`/docs/${file}`} download
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: isMobile ? '24px 0' : '32px 0', borderBottom: '1px solid rgba(10,10,10,0.08)', textDecoration: 'none', color: '#0A0A0A', transition: 'opacity .2s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.55' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}>
+              <div key={file} onClick={() => setPreviewPdf({ label, file })}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: isMobile ? '24px 0' : '32px 0', borderBottom: '1px solid rgba(10,10,10,0.08)', cursor: 'pointer', color: '#0A0A0A', transition: 'opacity .2s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.opacity = '0.55' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.opacity = '1' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: isMobile ? 16 : 28 }}>
                   <span className="syncop" style={{ fontSize: 9, color: 'rgba(10,10,10,0.35)', letterSpacing: '0.3em', flexShrink: 0 }}>{num}</span>
                   <span className="serif" style={{ fontSize: isMobile ? 16 : 'clamp(18px,1.8vw,26px)', fontWeight: 400, lineHeight: 1.3 }}>{label}</span>
@@ -474,7 +589,7 @@ export default function App() {
                   <span className="syncop" style={{ fontSize: 8, letterSpacing: '0.3em', display: isMobile ? 'none' : 'block' }}>PDF</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
           <p style={{ marginTop: isMobile ? 48 : 72, fontSize: 13, color: 'rgba(10,10,10,0.4)', lineHeight: 1.7, maxWidth: 480 }}>
