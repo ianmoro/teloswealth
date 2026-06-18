@@ -89,11 +89,11 @@ export const LOCATIONS = ['São Paulo', 'Rio de Janeiro', 'Curitiba']
 
 // ── Family tree ────────────────────────────────────────
 export const TREE_NODES = [
-  { id: 'carlos',  cx: 215, cy: 100, lbl: 'Carlos',  sub: '40 anos', you: true  },
-  { id: 'ana',     cx: 665, cy: 100, lbl: 'Ana',     sub: '38 anos'             },
-  { id: 'lucas',   cx: 160, cy: 330, lbl: 'Lucas',   sub: 'Filho · 8 anos'     },
-  { id: 'beatriz', cx: 440, cy: 330, lbl: 'Beatriz', sub: 'Filha · 5 anos'     },
-  { id: 'pedro',   cx: 720, cy: 330, lbl: 'Pedro',   sub: 'Filho · 2 anos'     },
+  { id: 'carlos',  cx: 215, cy: 100, lbl: '40 anos',          you: true  },
+  { id: 'ana',     cx: 665, cy: 100, lbl: '38 anos'                      },
+  { id: 'lucas',   cx: 160, cy: 330, lbl: 'Filho · 8 anos'               },
+  { id: 'beatriz', cx: 440, cy: 330, lbl: 'Filha · 5 anos'               },
+  { id: 'pedro',   cx: 720, cy: 330, lbl: 'Filho · 2 anos'               },
 ]
 export const TREE_LINES = [
   [275, 100, 605, 100], [440, 100, 440, 210], [160, 210, 720, 210],
