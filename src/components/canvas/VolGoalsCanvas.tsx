@@ -157,7 +157,7 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       const prazoFill = clamp(eVol, 0.06, 1)
       const volFill   = clamp(1 - eVol * 0.90, 0.08, 1)
       const shortLbl  = ['6M', '1A', '3A', '5A', '10A']
-      const volWord   = ['ALTA', 'ALTA', 'MÉDIA', 'BAIXA', 'MÍN.']
+      const volWord   = ['ALTO', 'ALTO', 'MÉDIO', 'BAIXO', 'MÍN.']
       const C_PRAZO = 'rgb(198,164,108)'
       const C_VOL   = 'rgb(94,107,87)'
       const barW = 34, barGap = 24, barMaxH = 120
