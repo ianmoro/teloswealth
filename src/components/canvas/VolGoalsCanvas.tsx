@@ -239,6 +239,12 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       ctx.font = "700 9px 'Syncopate', sans-serif"
       ctx.fillStyle = 'rgba(35,35,35,0.5)'
       ctx.textAlign = 'right'; ctx.fillText('IDADE', W - PAD.r, H - PAD.b + 38)
+      ctx.save()
+      ctx.translate(PAD.l - 64, PAD.t + CH / 2); ctx.rotate(-Math.PI / 2)
+      ctx.font = "700 9px 'Syncopate', sans-serif"
+      ctx.fillStyle = 'rgba(35,35,35,0.5)'
+      ctx.textAlign = 'center'; ctx.fillText('PATRIMÔNIO', 0, 0)
+      ctx.restore()
 
       const retT = ageToT(60), retX = toX(retT)
       ctx.save(); ctx.globalAlpha = goalChrome * 0.6
