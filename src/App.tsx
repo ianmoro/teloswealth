@@ -236,7 +236,6 @@ export default function App() {
             const anchored = shrinkP > 0.45
             const curveOut = clamp((P.obj - 0.87) / 0.07, 0, 1)
             const phraseIn = clamp((P.obj - 0.89) / 0.07, 0, 1)
-            const goalUI   = clamp((morphMap - 0.30) / 0.40, 0, 1)
 
             const fs    = lerp(56, 33, shrinkP)
             const left  = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
@@ -281,7 +280,7 @@ export default function App() {
                 {/* Phrase — shrinks & migrates to top-left, then anchors */}
                 <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform', background: `rgba(245,244,241,${ease(clamp((shrinkP - 0.45) / 0.3, 0, 1))})`, padding: anchored ? '12px 16px 16px 0' : undefined }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 10, opacity: clamp((shrinkP - 0.6) / 0.3, 0, 1) }}>
-                    — 02 · {goalUI > 0.5 ? 'Objetivos' : 'Alocação'}
+                    02 · Objetivos
                   </div>
                   <h2 className="serif" style={{ fontSize: fs, lineHeight: anchored ? 1.22 : 1.12, textAlign: anchored ? 'left' : 'center', color: '#0A0A0A', margin: '0 auto', overflow: 'visible' }}>
                     Construímos um{' '}
