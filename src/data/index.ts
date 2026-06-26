@@ -24,7 +24,7 @@ export const PILARES = [
   {
     n: 'III',
     lbl: 'Imparcialidade',
-    def: 'Cada decisão é tomada com base nos seus objetivos, no seu perfil e no seu momento de vida. Nunca no que nos beneficia. O produto certo é consequência do plano — nunca o ponto de partida.',
+    def: 'Cada decisão é tomada com base nos seus objetivos, no seu perfil e no seu momento de vida. Nunca no que nos beneficia. O produto certo é consequência do plano, nunca o ponto de partida.',
   },
   {
     n: 'IV',

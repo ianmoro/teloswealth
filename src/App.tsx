@@ -30,15 +30,13 @@ export default function App() {
   const famRef  = useRef<HTMLElement>(null)
   const objRef  = useRef<HTMLElement>(null)
   const vulnRef = useRef<HTMLElement>(null)
-  const collapseRef = useRef<HTMLElement>(null)
   const metRef  = useRef<HTMLElement>(null)
   const teamRef     = useRef<HTMLElement>(null)
   const conteudoRef = useRef<HTMLElement>(null)
   const ctaRef      = useRef<HTMLElement>(null)
 
-  const [P, setP] = useState({ hero: 0, fam: 0, obj: 0, vuln: 0, collapse: 0, met: 0, team: 0 })
+  const [P, setP] = useState({ hero: 0, fam: 0, obj: 0, vuln: 0, met: 0, team: 0 })
   const [scrollY, setScrollY] = useState(0)
-  const [hoverPillar, setHoverPillar] = useState<number | null>(null)
   const [selectedMember, setSelectedMember] = useState<typeof TEAM[0] | null>(null)
   const [previewPdf, setPreviewPdf] = useState<{ label: string; file: string } | null>(null)
 
@@ -101,7 +99,7 @@ export default function App() {
           fam:      getSectionProgress(famRef.current),
           obj:      getSectionProgress(objRef.current),
           vuln:     getSectionProgress(vulnRef.current),
-          collapse: getSectionProgress(collapseRef.current),
+
           met:      getSectionProgress(metRef.current),
           team:     getSectionProgress(teamRef.current),
         })
@@ -129,7 +127,7 @@ export default function App() {
       {/* ─── NAV ─── */}
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, height: isMobile ? 60 : 78, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 56px', background: isOverDark ? 'rgba(10,10,10,0.4)' : 'rgba(245,244,241,0.86)', backdropFilter: 'blur(14px)', borderBottom: isOverDark ? '1px solid rgba(245,244,241,0.06)' : '1px solid rgba(10,10,10,0.06)', transition: 'background .4s, border-color .4s' }}>
         <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', filter: isOverDark ? 'invert(1) brightness(1.6)' : 'none', transition: 'filter .4s' }}>
-          <Logo size={36} />
+          <Logo size={26} />
         </div>
         {!isMobile && (
           <div style={{ display: 'flex', gap: 32 }}>
@@ -148,16 +146,16 @@ export default function App() {
               ['Pilares',           () => scrollToEl(metRef.current)],
               ['Time',              () => scrollToEl(teamRef.current)],
             ] as [string, () => void][]).map(([l, fn]) => (
-              <a key={l} onClick={fn} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
+              <a key={l} onClick={fn} className="syncop" style={{ fontSize: 11, color: isOverDark ? 'rgba(245,244,241,0.85)' : '#0A0A0A', cursor: 'pointer', transition: 'color .4s' }}>{l}</a>
             ))}
-            <a onClick={() => scrollToEl(conteudoRef.current)} className="syncop" style={{ fontSize: 9, color: isOverDark ? 'rgba(245,244,241,0.65)' : 'rgba(10,10,10,0.6)', cursor: 'pointer', transition: 'color .4s' }}>Conteúdo</a>
+            <a onClick={() => scrollToEl(conteudoRef.current)} className="syncop" style={{ fontSize: 11, color: isOverDark ? 'rgba(245,244,241,0.85)' : '#0A0A0A', cursor: 'pointer', transition: 'color .4s' }}>Conteúdo</a>
           </div>
         )}
         <button onClick={() => scrollToEl(ctaRef.current)} className="syncop" style={{ fontSize: isMobile ? 8 : 9, background: isOverDark ? 'rgba(245,244,241,0.92)' : '#0A0A0A', color: isOverDark ? '#0A0A0A' : '#F5F4F1', border: 'none', padding: isMobile ? '10px 16px' : '13px 26px', cursor: 'pointer', transition: 'all .4s', letterSpacing: '0.32em' }}>Diagnóstico</button>
       </nav>
 
       {/* ─── HERO (320vh) ─── */}
-      <section ref={heroRef} style={{ height: '320vh', position: 'relative' }}>
+      <section ref={heroRef} style={{ height: '180vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#1a1208' }}>
 
           <video
@@ -198,7 +196,7 @@ export default function App() {
       </section>
 
       {/* ─── FAMÍLIA (340vh) ─── */}
-      <section ref={famRef} style={{ height: '340vh', position: 'relative', background: '#F5F4F1' }}>
+      <section ref={famRef} style={{ height: '200vh', position: 'relative', background: '#F5F4F1' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', padding: isMobile ? '0 24px' : '0 80px' }}>
           {(() => {
             const treeProg = clamp((P.fam - 0.16) / 0.52, 0, 1)
@@ -226,7 +224,7 @@ export default function App() {
       </section>
 
       {/* ─── ALOCAÇÃO → OBJETIVOS (1000vh) ─── */}
-      <section ref={objRef} style={{ height: '1000vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
+      <section ref={objRef} style={{ height: '550vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
           {(() => {
             const shrinkP  = ease(clamp((P.obj - 0.03) / 0.10, 0, 1))
@@ -278,15 +276,15 @@ export default function App() {
                 </div>
 
                 {/* Phrase — shrinks & migrates to top-left, then anchors */}
-                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform', background: `rgba(245,244,241,${ease(clamp((shrinkP - 0.45) / 0.3, 0, 1))})`, padding: anchored ? '12px 16px 16px 0' : undefined }}>
+                <div style={{ position: 'absolute', left, top, width, transform: `translate(${tx}%,${ty}%)`, opacity: 1 - phraseIn, pointerEvents: 'none', zIndex: 4, willChange: 'left,top,transform', padding: anchored ? '12px 16px 16px 0' : undefined }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 10, opacity: clamp((shrinkP - 0.6) / 0.3, 0, 1) }}>
                     02 · Objetivos
                   </div>
                   <h2 className="serif" style={{ fontSize: fs, lineHeight: anchored ? 1.22 : 1.12, textAlign: anchored ? 'left' : 'center', color: '#0A0A0A', margin: '0 auto', overflow: 'visible' }}>
                     Construímos um{' '}
-                    <em style={{ color: '#5E6B57', fontStyle: 'italic', ...flyWord(0) }}>plano</em>{' '}
+                    <em style={{ color: '#5E6B57', ...flyWord(0) }}>plano</em>{' '}
                     que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e{' '}
-                    <em style={{ color: '#5E6B57', fontStyle: 'italic', ...flyWord(0.01) }}>resiste</em>{' '}
+                    <em style={{ color: '#5E6B57', ...flyWord(0.01) }}>resiste</em>{' '}
                     ao tempo.
                   </h2>
                 </div>
@@ -309,10 +307,16 @@ export default function App() {
       </section>
 
       {/* ─── VULNERABILIDADES (700vh) ─── */}
-      <section ref={vulnRef} style={{ height: '700vh', position: 'relative' }}>
+      <section ref={vulnRef} style={{ height: '500vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
             const p = vulnFromMenu ? VULN_READY_P : P.vuln
+
+            // circles & matrix fade out, then logo morph fades in
+            const matrixAlpha = 1 - ease(clamp((p - 0.60) / 0.14, 0, 1))
+            const logoAlpha   = ease(clamp((p - 0.64) / 0.08, 0, 1))
+            // map vuln progress 0.65→0.98 → TelosMorphCanvas sectionProg 0.72→1.0
+            const morphProg   = 0.72 + clamp((p - 0.65) / 0.33, 0, 1) * 0.28
 
             const headIn  = clamp((p - 0.03) / 0.06, 0, 1)
             const frameIn = ease(clamp((p - 0.10) / 0.10, 0, 1))
@@ -337,15 +341,15 @@ export default function App() {
 
             return (
               <>
-                {/* cabeçalho */}
-                <div style={{ position: 'absolute', top: 88, left: 80, maxWidth: 760, opacity: headIn, pointerEvents: 'none', zIndex: 3 }}>
+                {/* cabeçalho — desaparece junto com a matriz */}
+                <div style={{ position: 'absolute', top: 88, left: 80, maxWidth: 760, opacity: headIn * matrixAlpha, pointerEvents: 'none', zIndex: 3 }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>— 03 · Vulnerabilidades</div>
                   <h2 className="serif" style={{ fontSize: 'clamp(23px,2.2vw,33px)', lineHeight: 1.3, color: '#0A0A0A' }}>
                     Mapeamos as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>vulnerabilidades patrimoniais</em> que podem comprometer o plano e as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>resolvemos</em> ao longo do tempo.
                   </h2>
                 </div>
 
-                {/* matriz esforço × impacto */}
+                {/* matriz esforço × impacto — some ao rolar para o final */}
                 <div style={{
                   position: 'absolute',
                   left: 'calc(50% + 26px)',
@@ -353,6 +357,7 @@ export default function App() {
                   transform: 'translate(-50%,-50%)',
                   width: 'min(800px,58vw)',
                   height: 'min(516px,52vh)',
+                  opacity: matrixAlpha,
                 }}>
                   <div style={{ position: 'absolute', inset: 0, border: '1px solid rgba(10,10,10,0.07)', opacity: frameIn }} />
                   <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 0, borderLeft: '1px dotted rgba(10,10,10,0.22)', opacity: frameIn, transform: `scaleY(${frameIn})`, transformOrigin: 'center' }} />
@@ -407,24 +412,24 @@ export default function App() {
                 </div>
 
                 {/* scroll hint */}
-                <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', opacity: hint }}>
+                <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, textAlign: 'center', pointerEvents: 'none', opacity: hint * matrixAlpha }}>
                   <span className="syncop" style={{ fontSize: 9, color: 'rgba(154,92,69,0.7)', letterSpacing: '0.42em' }}>— role · cada esfera encontra seu lugar na matriz —</span>
                 </div>
+
+                {/* logo morph — aparece no lugar da matriz ao rolar */}
+                {logoAlpha > 0.01 && (
+                  <div style={{ position: 'absolute', inset: 0, opacity: logoAlpha, pointerEvents: 'none' }}>
+                    <TelosMorphCanvas sectionProg={morphProg} />
+                  </div>
+                )}
               </>
             )
           })()}
         </div>
       </section>
 
-      {/* ─── TRANSIÇÃO TELOS (350vh) ─── */}
-      <section ref={collapseRef} style={{ height: '350vh', position: 'relative', background: '#F5F4F1' }}>
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
-          <TelosMorphCanvas sectionProg={0.72 + P.collapse * 0.28} />
-        </div>
-      </section>
-
       {/* ─── NOSSOS PILARES (520vh) ─── */}
-      <section ref={metRef} style={{ height: '520vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
+      <section ref={metRef} style={{ height: '300vh', position: 'relative', background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
           <div style={{ padding: isMobile ? '64px 24px 20px' : '88px 80px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexShrink: 0, borderBottom: '1px solid rgba(10,10,10,0.08)' }}>
@@ -450,22 +455,18 @@ export default function App() {
           <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', display: 'flex', transform: `translateX(${-P.met * (PILARES.length - 1) * 100}vw)`, willChange: 'transform' }}>
               {PILARES.map((pil, i) => {
-                const open = isMobile || hoverPillar === i
                 return (
                   <div key={i}
-                    onMouseEnter={() => setHoverPillar(i)}
-                    onMouseLeave={() => setHoverPillar(h => h === i ? null : h)}
                     style={{ width: '100vw', height: '100%', flexShrink: 0, padding: isMobile ? '28px 24px' : '80px 12vw', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 20 : 80, alignItems: isMobile ? 'start' : 'center', borderRight: i < PILARES.length - 1 ? '1px solid rgba(10,10,10,0.06)' : 'none' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                      <div className="serif" style={{ fontSize: isMobile ? 'clamp(60px,18vw,96px)' : 'clamp(160px,15vw,250px)', color: open ? 'rgba(94,107,87,0.30)' : 'rgba(94,107,87,0.16)', lineHeight: 0.85, letterSpacing: '-0.02em', transition: 'color .5s' }}>{pil.n}</div>
+                      <div className="serif" style={{ fontSize: isMobile ? 'clamp(60px,18vw,96px)' : 'clamp(160px,15vw,250px)', color: 'rgba(94,107,87,0.30)', lineHeight: 0.85, letterSpacing: '-0.02em' }}>{pil.n}</div>
                       <div style={{ width: 60, height: 1, background: '#5E6B57' }} />
                       <div className="eyebrow eyebrow-terra">Pilar {pil.n}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 28, maxWidth: 540 }}>
-                        <h3 className="serif" style={{ fontSize: isMobile ? 'clamp(28px,7vw,48px)' : 'clamp(40px,4.4vw,72px)', lineHeight: 1.04, color: '#0A0A0A', letterSpacing: '-0.005em' }}>{pil.lbl}</h3>
+                      <h3 className="serif" style={{ fontSize: isMobile ? 'clamp(28px,7vw,48px)' : 'clamp(40px,4.4vw,72px)', lineHeight: 1.04, color: '#0A0A0A', letterSpacing: '-0.005em' }}>{pil.lbl}</h3>
                       <div style={{ position: 'relative', minHeight: 150 }}>
-                          <p style={{ fontSize: isMobile ? 15 : 19, fontWeight: 300, lineHeight: 1.75, color: 'rgba(35,35,35,0.7)', opacity: open ? 1 : 0, filter: open ? 'blur(0px)' : 'blur(5px)', transform: open ? 'translateY(0)' : 'translateY(12px)', transition: 'opacity .5s ease, filter .5s ease, transform .5s ease', willChange: 'filter' }}>{pil.def}</p>
-                        <div className="syncop" style={{ position: 'absolute', top: 4, left: 0, fontSize: 9, letterSpacing: '0.32em', color: 'rgba(94,107,87,0.6)', opacity: open ? 0 : 1, transition: 'opacity .4s', pointerEvents: 'none' }}>passe o mouse para ler</div>
+                        <p style={{ fontSize: isMobile ? 15 : 19, fontWeight: 300, lineHeight: 1.75, color: 'rgba(35,35,35,0.7)' }}>{pil.def}</p>
                       </div>
                     </div>
                   </div>
@@ -501,20 +502,13 @@ export default function App() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1, background: 'transparent' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, background: 'transparent', marginTop: 8 }}>
             {TEAM.map((p, i) => (
               <div key={i} onClick={() => p.bio ? setSelectedMember(p) : window.open(p.li, '_blank')}
-                style={{ background: '#F5F4F1', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden', width: isMobile ? 'calc(50% - 1px)' : isTablet ? 'calc(50% - 1px)' : 'calc(25% - 1px)' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#0A0A0A'; el.style.color = '#F5F4F1'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#A8B0A2'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(245,244,241,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0.25)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '1') }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#F5F4F1'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#5E6B57'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-overlay]').forEach(x => x.style.background = 'rgba(10,10,10,0)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
-                <div style={{ position: 'relative', width: '100%', paddingBottom: '100%', flexShrink: 0, overflow: 'hidden', background: 'rgba(94,107,87,0.08)' }}>
-                  {p.photo
-                    ? <img src={p.photo} alt={p.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: (p as any).photoPosition ?? 'center top', display: 'block', filter: 'grayscale(15%)' }} />
-                    : <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: 22, letterSpacing: '0.2em', fontWeight: 700, color: 'rgba(94,107,87,0.4)' }}>{p.initials}</div>
-                  }
-                  <div data-overlay style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,10,0)', transition: 'background .35s' }} />
-                </div>
-                <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
+                style={{ background: '#ECEAE5', border: '1px solid rgba(10,10,10,0.08)', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden', width: isMobile ? 'calc(50% - 8px)' : isTablet ? 'calc(50% - 8px)' : 'calc(25% - 12px)' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#0A0A0A'; el.style.color = '#F5F4F1'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#A8B0A2'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(245,244,241,0.4)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '1') }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#ECEAE5'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#5E6B57'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
+                <div style={{ padding: '28px 28px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
                   <div>
                     <div className="serif" style={{ fontSize: isMobile ? 16 : 20, lineHeight: 1.2, marginBottom: 4 }}>{p.name}</div>
                     <div data-role style={{ fontSize: 10, color: 'rgba(10,10,10,0.4)', letterSpacing: '0.08em', marginBottom: 4, transition: 'color .35s' }}>{p.role}</div>
@@ -621,7 +615,7 @@ export default function App() {
       <section ref={ctaRef} style={{ background: '#0A0A0A', padding: isMobile ? '80px 24px 60px' : '140px 80px 80px', color: '#F5F4F1' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 48 }}>
           <div>
-            <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24, color: '#A8B0A2' }}>Início de relação</div>
+
             <h2 className="serif" style={{ fontSize: 'clamp(40px,4.4vw,68px)', lineHeight: 1.08, color: '#F5F4F1' }}>
               Entre em contato<br />com o <em style={{ color: '#A8B0A2' }}>nosso time.</em>
             </h2>
