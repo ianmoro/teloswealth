@@ -82,19 +82,6 @@ function drawPaintedCard(
   roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, r)
   ctx.stroke()
 
-  if (opts.isYou) {
-    const tw = w * 0.42, th = halfH * 0.18
-    const tx = cx - tw / 2, ty = y - th - 6
-    ctx.fillStyle = '#5E6B57'
-    roundRect(ctx, tx, ty, tw, th, th / 2)
-    ctx.fill()
-    ctx.font = `700 ${Math.max(8, halfH * 0.10)}px 'Syncopate', sans-serif`
-    ctx.fillStyle = '#F5F4F1'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('VOCÊ', cx, ty + th * 0.55)
-    ctx.textBaseline = 'alphabetic'
-  }
 
   ctx.font = `500 ${Math.max(12, halfH * 0.16)}px 'Inter', sans-serif`
   ctx.fillStyle = '#232323'
@@ -165,7 +152,7 @@ export default function TreeCanvas({ prog }: Props) {
       const a = iA(seq.s, seq.e, prog); if (a <= 0) return
       const wash = nodeWashes[node.id] || { base: '#5E6B57', accent: '#C6A46C' }
       drawPaintedCard(ctx, vx(node.cx), vy(node.cy), vx(56), vy(64), {
-        lbl: node.lbl, sub: node.sub, wash, isYou: !!node.you, alpha: a,
+        lbl: node.lbl, sub: (node as any).sub, wash, isYou: !!node.you, alpha: a,
       })
     })
   }, [prog])
