@@ -23,6 +23,8 @@ function scrollToEl(el: HTMLElement | null) {
   window.scrollTo({ top, behavior: 'smooth' })
 }
 
+const VULN_READY_P = 0.82
+
 export default function App() {
   const heroRef = useRef<HTMLElement>(null)
   const famRef  = useRef<HTMLElement>(null)
@@ -39,8 +41,41 @@ export default function App() {
   const [previewPdf, setPreviewPdf] = useState<{ label: string; file: string } | null>(null)
 
   const [page, setPage] = useState<'home' | 'artigos'>('home')
+  const [vulnFromMenu, setVulnFromMenu] = useState(false)
+  const menuScrollLock = useRef(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => { const id = setTimeout(() => setMounted(true), 60); return () => clearTimeout(id) }, [])
+
+  const goToVulnerabilidades = () => {
+    setVulnFromMenu(true)
+    menuScrollLock.current = true
+    const el = vulnRef.current
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY
+    const scrollable = Math.max(0, el.offsetHeight - window.innerHeight)
+    window.scrollTo({ top: top + scrollable * VULN_READY_P, behavior: 'auto' })
+    requestAnimationFrame(() => {
+      setTimeout(() => { menuScrollLock.current = false }, 150)
+    })
+  }
+
+  useEffect(() => {
+    const clearMenuVuln = () => {
+      if (menuScrollLock.current) return
+      setVulnFromMenu(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) clearMenuVuln()
+    }
+    window.addEventListener('wheel', clearMenuVuln, { passive: true })
+    window.addEventListener('touchmove', clearMenuVuln, { passive: true })
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('wheel', clearMenuVuln)
+      window.removeEventListener('touchmove', clearMenuVuln)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [])
 
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
   const [isTablet, setIsTablet] = useState(() => typeof window !== 'undefined' && window.innerWidth < 1024)
@@ -107,7 +142,7 @@ export default function App() {
                 const top = el.getBoundingClientRect().top + window.scrollY
                 window.scrollTo({ top: top + (el.offsetHeight - window.innerHeight) * 0.40, behavior: 'smooth' })
               }],
-              ['Vulnerabilidades',  () => scrollToEl(vulnRef.current)],
+              ['Vulnerabilidades',  goToVulnerabilidades],
               ['Pilares',           () => scrollToEl(metRef.current)],
               ['Time',              () => scrollToEl(teamRef.current)],
             ] as [string, () => void][]).map(([l, fn]) => (
@@ -275,7 +310,7 @@ export default function App() {
       <section ref={vulnRef} style={{ height: '500vh', position: 'relative' }}>
         <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', background: '#F5F4F1' }}>
           {(() => {
-            const p = P.vuln
+            const p = vulnFromMenu ? VULN_READY_P : P.vuln
 
             // circles & matrix fade out, then logo morph fades in
             const matrixAlpha = 1 - ease(clamp((p - 0.60) / 0.14, 0, 1))
@@ -285,7 +320,7 @@ export default function App() {
 
             const headIn  = clamp((p - 0.03) / 0.06, 0, 1)
             const frameIn = ease(clamp((p - 0.10) / 0.10, 0, 1))
-            const hint    = clamp((p - 0.16) / 0.04, 0, 1) * clamp(1 - (p - 0.74) / 0.05, 0, 1)
+            const hint    = vulnFromMenu ? 0 : clamp((p - 0.16) / 0.04, 0, 1) * clamp(1 - (p - 0.74) / 0.05, 0, 1)
 
             const SPHERES: { lbl: string; x: number; y: number; r: number }[] = [
               { lbl: 'Riscos e Seguros',          x: 0.19, y: 0.82, r: 124 },

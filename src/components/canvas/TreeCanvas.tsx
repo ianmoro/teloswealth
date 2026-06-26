@@ -152,7 +152,7 @@ export default function TreeCanvas({ prog }: Props) {
       const a = iA(seq.s, seq.e, prog); if (a <= 0) return
       const wash = nodeWashes[node.id] || { base: '#5E6B57', accent: '#C6A46C' }
       drawPaintedCard(ctx, vx(node.cx), vy(node.cy), vx(56), vy(64), {
-        lbl: node.lbl, sub: (node as any).sub, wash, isYou: !!node.you, alpha: a,
+        lbl: node.lbl, wash, isYou: !!node.you, alpha: a,
       })
     })
   }, [prog])
