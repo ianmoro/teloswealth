@@ -46,8 +46,8 @@ function sampleText(W: number, H: number, step: number, draw: (ctx: CanvasRender
 function sampleImage(img: HTMLImageElement, W: number, H: number, step: number) {
   // Draw logo centred in the canvas, scaled to fit nicely
   const logoAspect = img.naturalWidth / img.naturalHeight
-  const maxW = W * 0.72
-  const maxH = H * 0.30
+  const maxW = W * 0.84
+  const maxH = H * 0.42
   let lw = maxW, lh = maxW / logoAspect
   if (lh > maxH) { lh = maxH; lw = lh * logoAspect }
   const lx = (W - lw) / 2
