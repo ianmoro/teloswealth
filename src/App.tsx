@@ -127,7 +127,7 @@ export default function App() {
       {/* ─── NAV ─── */}
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, height: isMobile ? 60 : 78, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 56px', background: isOverDark ? 'rgba(10,10,10,0.4)' : 'rgba(245,244,241,0.86)', backdropFilter: 'blur(14px)', borderBottom: isOverDark ? '1px solid rgba(245,244,241,0.06)' : '1px solid rgba(10,10,10,0.06)', transition: 'background .4s, border-color .4s' }}>
         <div onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', filter: isOverDark ? 'invert(1) brightness(1.6)' : 'none', transition: 'filter .4s' }}>
-          <Logo size={26} />
+          <Logo size={40} />
         </div>
         {!isMobile && (
           <div style={{ display: 'flex', gap: 32 }}>
