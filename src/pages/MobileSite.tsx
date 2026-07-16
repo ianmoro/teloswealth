@@ -87,7 +87,7 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       <section id="familia" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>01 · Família</div>
         <h2 className="serif" style={{ fontSize: 'clamp(26px,7vw,38px)', lineHeight: 1.2, color: '#0A0A0A', marginBottom: 24 }}>
-          Entendemos <em style={{ color: '#5E6B57' }}>onde a sua família está</em> e <em style={{ color: '#5E6B57' }}>onde ela quer chegar.</em>
+          Entendemos <em style={{ color: '#414E3A' }}>onde a sua família está</em> e <em style={{ color: '#414E3A' }}>onde ela quer chegar.</em>
         </h2>
         <p style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(10,10,10,0.6)', fontWeight: 300 }}>
           Cada família tem uma história, objetivos próprios e um caminho único. Nosso trabalho começa pelo entendimento profundo de onde você está e para onde quer ir.
@@ -98,7 +98,7 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       <section id="objetivos" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)', background: '#F0EFE9' }}>
         <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>02 · Curva de Objetivos</div>
         <h2 className="serif" style={{ fontSize: 'clamp(22px,6vw,34px)', lineHeight: 1.22, color: '#0A0A0A', marginBottom: 24 }}>
-          Construímos um <em style={{ color: '#5E6B57' }}>plano</em> que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e <em style={{ color: '#5E6B57' }}>resiste ao tempo.</em>
+          Construímos um <em style={{ color: '#414E3A' }}>plano</em> que <em style={{ color: '#414E3A' }}>maximiza a conquista</em> dos seus objetivos e <em style={{ color: '#414E3A' }}>resiste ao tempo.</em>
         </h2>
         <p style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(10,10,10,0.6)', fontWeight: 300 }}>
           Mapeamos cada objetivo — educação dos filhos, aposentadoria, aquisição de imóveis — e construímos uma curva de acumulação realista e sustentável.
@@ -109,12 +109,12 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       <section id="vulnerabilidades" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>03 · Vulnerabilidades</div>
         <h2 className="serif" style={{ fontSize: 'clamp(22px,6vw,34px)', lineHeight: 1.22, color: '#0A0A0A', marginBottom: 36 }}>
-          Mapeamos as <em style={{ color: '#5E6B57' }}>vulnerabilidades</em> e as <em style={{ color: '#5E6B57' }}>resolvemos.</em>
+          Mapeamos as <em style={{ color: '#414E3A' }}>vulnerabilidades</em> e as <em style={{ color: '#414E3A' }}>resolvemos.</em>
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {VULN_PAIRS.map(({ vuln }) => (
             <div key={vuln} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', borderBottom: '1px solid rgba(10,10,10,0.07)' }}>
-              <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#5E6B57', flexShrink: 0 }} />
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#414E3A', flexShrink: 0 }} />
               <span style={{ fontSize: 15, color: 'rgba(10,10,10,0.7)', fontWeight: 300, lineHeight: 1.4 }}>{vuln}</span>
             </div>
           ))}
@@ -126,7 +126,7 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
         <div style={{ padding: '0 20px' }}>
           <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>04 · Nossos Pilares</div>
           <h2 className="serif" style={{ fontSize: 'clamp(22px,6vw,34px)', lineHeight: 1.22, color: '#0A0A0A', marginBottom: 32 }}>
-            Os princípios que guiam <em style={{ color: '#5E6B57' }}>cada decisão.</em>
+            Os princípios que guiam <em style={{ color: '#414E3A' }}>cada decisão.</em>
           </h2>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -135,10 +135,10 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
               <button onClick={() => setOpenPilar(openPilar === pil.n ? null : pil.n)}
                 style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 20px', gap: 16, textAlign: 'left' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <span className="serif" style={{ fontSize: 28, color: 'rgba(94,107,87,0.4)', lineHeight: 1, flexShrink: 0 }}>{pil.n}</span>
+                  <span className="serif" style={{ fontSize: 28, color: 'rgba(65,78,58,0.4)', lineHeight: 1, flexShrink: 0 }}>{pil.n}</span>
                   <span className="serif" style={{ fontSize: 'clamp(16px,4.5vw,20px)', color: '#0A0A0A', lineHeight: 1.2 }}>{pil.lbl}</span>
                 </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E6B57" strokeWidth="1.5" strokeLinecap="round"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#414E3A" strokeWidth="1.5" strokeLinecap="round"
                   style={{ flexShrink: 0, transition: 'transform .25s', transform: openPilar === pil.n ? 'rotate(180deg)' : 'none' }}>
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
@@ -155,7 +155,7 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       <section id="time" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
         <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>05 · Nosso Time</div>
         <h2 className="serif" style={{ fontSize: 'clamp(26px,7vw,38px)', lineHeight: 1.1, color: '#0A0A0A', marginBottom: 28 }}>
-          Sócios certificados.<br /><em style={{ color: '#5E6B57' }}>Um único critério.</em>
+          Sócios certificados.<br /><em style={{ color: '#414E3A' }}>Um único critério.</em>
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, background: 'rgba(10,10,10,0.08)', marginBottom: 1 }}>
           {TEAM.map((p, i) => (
@@ -163,21 +163,21 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
               style={{ background: '#F5F4F1', cursor: 'pointer', position: 'relative', overflow: 'hidden' }}>
               {p.photo
                 ? <>
-                    <div style={{ width: '100%', paddingBottom: '100%', position: 'relative', background: 'rgba(94,107,87,0.08)' }}>
+                    <div style={{ width: '100%', paddingBottom: '100%', position: 'relative', background: 'rgba(65,78,58,0.08)' }}>
                       <img src={p.photo} alt={p.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
                     </div>
                     <div style={{ padding: '14px 14px 18px' }}>
                       <div className="serif" style={{ fontSize: 14, lineHeight: 1.2, marginBottom: 3 }}>{p.name}</div>
                       <div style={{ fontSize: 10, color: 'rgba(10,10,10,0.4)', marginBottom: 2 }}>{p.role}</div>
-                      <div className="syncop" style={{ fontSize: 7, color: '#5E6B57' }}>{p.cert}</div>
+                      <div className="syncop" style={{ fontSize: 7, color: '#414E3A' }}>{p.cert}</div>
                     </div>
                   </>
                 : <div style={{ padding: '24px 16px', minHeight: 160, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(94,107,87,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: 9, letterSpacing: '0.2em', color: '#5E6B57', fontWeight: 700 }}>{p.initials}</div>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(65,78,58,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Syncopate', sans-serif", fontSize: 9, letterSpacing: '0.2em', color: '#414E3A', fontWeight: 700 }}>{p.initials}</div>
                     <div>
                       <div className="serif" style={{ fontSize: 14, lineHeight: 1.2, marginBottom: 3 }}>{p.name}</div>
                       <div style={{ fontSize: 10, color: 'rgba(10,10,10,0.4)', marginBottom: 2 }}>{p.role}</div>
-                      <div className="syncop" style={{ fontSize: 7, color: '#5E6B57' }}>{p.cert}</div>
+                      <div className="syncop" style={{ fontSize: 7, color: '#414E3A' }}>{p.cert}</div>
                     </div>
                   </div>
               }
@@ -263,7 +263,7 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
           <div onClick={e => e.stopPropagation()}
             style={{ background: '#F5F4F1', width: '100%', maxHeight: '90svh', overflowY: 'auto', borderRadius: '16px 16px 0 0', position: 'relative' }}>
             {selectedMember.photo && (
-              <div style={{ width: '100%', height: 260, position: 'relative', overflow: 'hidden', background: 'rgba(94,107,87,0.08)' }}>
+              <div style={{ width: '100%', height: 260, position: 'relative', overflow: 'hidden', background: 'rgba(65,78,58,0.08)' }}>
                 <img src={selectedMember.photo} alt={selectedMember.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(245,244,241,1) 0%, transparent 50%)' }} />
               </div>
@@ -273,10 +273,10 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
                 style={{ position: 'absolute', top: 16, right: 16, width: 32, height: 32, borderRadius: '50%', background: 'rgba(10,10,10,0.07)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
-              <div className="syncop" style={{ fontSize: 7, letterSpacing: '0.24em', color: '#5E6B57', marginBottom: 8 }}>{selectedMember.role}</div>
+              <div className="syncop" style={{ fontSize: 7, letterSpacing: '0.24em', color: '#414E3A', marginBottom: 8 }}>{selectedMember.role}</div>
               <h3 className="serif" style={{ fontSize: 26, lineHeight: 1.15, color: '#0A0A0A', marginBottom: 8 }}>{selectedMember.name}</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                <span className="syncop" style={{ fontSize: 7, color: '#5E6B57', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
+                <span className="syncop" style={{ fontSize: 7, color: '#414E3A', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
                 {selectedMember.li && <>
                   <span style={{ width: 1, height: 12, background: 'rgba(10,10,10,0.15)' }} />
                   <a href={selectedMember.li} target="_blank" rel="noopener noreferrer"

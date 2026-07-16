@@ -5,11 +5,11 @@ import { TREE_NODES, TREE_LINES, TREE_SEQ, GEN_LABELS } from '../../data'
 interface Props { prog: number }
 
 const nodeWashes: Record<string, { base: string; accent: string; isYou?: boolean }> = {
-  carlos:  { base: '#5E6B57', accent: '#C6A46C', isYou: true },
+  carlos:  { base: '#414E3A', accent: '#C6A46C', isYou: true },
   ana:     { base: '#C6A46C', accent: '#A8B0A2' },
-  lucas:   { base: '#A8B0A2', accent: '#5E6B57' },
+  lucas:   { base: '#A8B0A2', accent: '#414E3A' },
   beatriz: { base: '#D9D6D1', accent: '#C6A46C' },
-  pedro:   { base: '#5E6B57', accent: '#A8B0A2' },
+  pedro:   { base: '#414E3A', accent: '#A8B0A2' },
 }
 
 function drawPaintedCard(
@@ -136,7 +136,7 @@ export default function TreeCanvas({ prog }: Props) {
       const ln = TREE_LINES[s.i!]
       const x1 = vx(ln[0]), y1 = vy(ln[1]), x2 = vx(ln[2]), y2 = vy(ln[3])
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(lerp(x1, x2, a), lerp(y1, y2, a))
-      ctx.strokeStyle = `rgba(94,107,87,${a * 0.55})`
+      ctx.strokeStyle = `rgba(65,78,58,${a * 0.55})`
       ctx.lineWidth = 1; ctx.stroke()
     })
 
@@ -144,13 +144,13 @@ export default function TreeCanvas({ prog }: Props) {
     const ua = us ? iA(us.s, us.e, prog) : 0
     if (ua > 0) {
       ctx.beginPath(); ctx.arc(vx(440), vy(100), 5, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(94,107,87,${ua})`; ctx.fill()
+      ctx.fillStyle = `rgba(65,78,58,${ua})`; ctx.fill()
     }
 
     TREE_NODES.forEach(node => {
       const seq = TREE_SEQ.find(s => s.t === 'n' && s.id === node.id); if (!seq) return
       const a = iA(seq.s, seq.e, prog); if (a <= 0) return
-      const wash = nodeWashes[node.id] || { base: '#5E6B57', accent: '#C6A46C' }
+      const wash = nodeWashes[node.id] || { base: '#414E3A', accent: '#C6A46C' }
       drawPaintedCard(ctx, vx(node.cx), vy(node.cy), vx(56), vy(64), {
         lbl: node.lbl, sub: (node as any).sub, wash, isYou: !!node.you, alpha: a,
       })

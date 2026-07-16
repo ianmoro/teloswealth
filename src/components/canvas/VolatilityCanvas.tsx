@@ -198,15 +198,15 @@ export default function VolatilityCanvas({ prog }: Props) {
       ctx.setLineDash([2, 3]); ctx.stroke(); ctx.setLineDash([])
       if (ev.retire) {
         ctx.beginPath(); ctx.arc(ex, ey, 7, 0, Math.PI * 2)
-        ctx.fillStyle = '#5E6B57'; ctx.fill()
+        ctx.fillStyle = '#414E3A'; ctx.fill()
         ctx.beginPath(); ctx.arc(ex, ey, 13, 0, Math.PI * 2)
-        ctx.strokeStyle = 'rgba(94,107,87,0.25)'; ctx.lineWidth = 1.2; ctx.stroke()
+        ctx.strokeStyle = 'rgba(65,78,58,0.25)'; ctx.lineWidth = 1.2; ctx.stroke()
       } else {
         ctx.beginPath(); ctx.arc(ex, ey, 4, 0, Math.PI * 2)
         ctx.fillStyle = `rgb(${r},${g},${b})`; ctx.fill()
       }
       ctx.fillStyle = '#F5F4F1'
-      ctx.strokeStyle = ev.retire ? 'rgba(94,107,87,0.7)' : 'rgba(35,35,35,0.18)'
+      ctx.strokeStyle = ev.retire ? 'rgba(65,78,58,0.7)' : 'rgba(35,35,35,0.18)'
       ctx.lineWidth = ev.retire ? 1.1 : 0.7
       ctx.fillRect(bx, labelTopY, bw, bh)
       ctx.strokeRect(bx, labelTopY, bw, bh)
@@ -216,7 +216,7 @@ export default function VolatilityCanvas({ prog }: Props) {
       ctx.textAlign = 'center'
       ctx.fillText(`${yrs} anos`, bx + bw / 2, labelTopY + 11)
       ctx.font = `${ev.retire || ev.legado ? '600 ' : '400 '}10px 'Inter', sans-serif`
-      ctx.fillStyle = ev.retire ? '#5E6B57' : '#232323'
+      ctx.fillStyle = ev.retire ? '#414E3A' : '#232323'
       ctx.fillText(ev.lbl, bx + bw / 2, labelTopY + 23)
       ctx.restore()
     })
@@ -246,7 +246,7 @@ export default function VolatilityCanvas({ prog }: Props) {
     if (stepFrac > fadeOutStart && nextLbl !== labels[stepIdx]) {
       const t = (stepFrac - fadeOutStart) / (1 - fadeOutStart)
       ctx.globalAlpha = t
-      ctx.fillStyle = '#5E6B57'
+      ctx.fillStyle = '#414E3A'
       ctx.fillText(nextLbl, janelaX, PAD.t - 32)
     }
     ctx.restore()

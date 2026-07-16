@@ -173,10 +173,10 @@ export default function App() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 16 : 30, padding: isMobile ? '20px 0 0' : '40px 0' }}>
                   <div className="eyebrow eyebrow-terra" style={{ opacity: p1 }}>01 · Família</div>
                   <p className="serif" style={{ fontSize: 'clamp(26px,2.6vw,42px)', lineHeight: 1.22, color: '#0A0A0A', opacity: p1 * (1 - blurP * 0.15), transform: `translateY(${(1 - p1) * 16}px)`, transition: 'transform .4s' }}>
-                    Entendemos <em style={{ color: '#5E6B57' }}>onde a sua família está</em>
+                    Entendemos <em style={{ color: '#414E3A' }}>onde a sua família está</em>
                   </p>
                   <p className="serif" style={{ fontSize: 'clamp(26px,2.6vw,42px)', lineHeight: 1.22, color: '#0A0A0A', fontStyle: 'italic', opacity: p2, transform: `translateY(${(1 - p2) * 18}px)`, transition: 'transform .4s' }}>
-                    e <em style={{ color: '#5E6B57' }}>onde ela quer chegar.</em>
+                    e <em style={{ color: '#414E3A' }}>onde ela quer chegar.</em>
                   </p>
                 </div>
                 <div style={{ position: 'relative', height: '100%', padding: isMobile ? '16px 0 24px' : '70px 0 40px', filter: `blur(${(blurP * 6).toFixed(2)}px)`, opacity: 1 - blurP * 0.42, transition: 'opacity .3s' }}>
@@ -247,9 +247,9 @@ export default function App() {
                   </div>
                   <h2 className="serif" style={{ fontSize: fs, lineHeight: anchored ? 1.22 : 1.12, textAlign: anchored ? 'left' : 'center', color: '#0A0A0A', margin: '0 auto', overflow: 'visible' }}>
                     Construímos um{' '}
-                    <em style={{ color: '#5E6B57', ...flyWord(0) }}>plano</em>{' '}
-                    que <em style={{ color: '#5E6B57' }}>maximiza a conquista</em> dos seus objetivos e{' '}
-                    <em style={{ color: '#5E6B57', ...flyWord(0.01) }}>resiste</em>{' '}
+                    <em style={{ color: '#414E3A', ...flyWord(0) }}>plano</em>{' '}
+                    que <em style={{ color: '#414E3A' }}>maximiza a conquista</em> dos seus objetivos e{' '}
+                    <em style={{ color: '#414E3A', ...flyWord(0.01) }}>resiste</em>{' '}
                     ao tempo.
                   </h2>
                 </div>
@@ -258,11 +258,11 @@ export default function App() {
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px', opacity: phraseIn, pointerEvents: 'none', zIndex: 5, overflow: 'hidden' }}>
                   <h2 className="serif" style={{ fontSize: 'clamp(34px,4.2vw,68px)', lineHeight: 1.18, maxWidth: 1280, textAlign: 'center', color: '#0A0A0A' }}>
                     Um{' '}
-                    <em style={{ color: '#5E6B57', ...arrWord(0) }}>plano</em>{' '}
+                    <em style={{ color: '#414E3A', ...arrWord(0) }}>plano</em>{' '}
                     que{' '}
-                    <em style={{ color: '#5E6B57', ...arrWord(0.01) }}>resiste</em>{' '}
+                    <em style={{ color: '#414E3A', ...arrWord(0.01) }}>resiste</em>{' '}
                     ao previsível<br />
-                    e que está preparado <em style={{ color: '#5E6B57' }}>para o que não é.</em>
+                    e que está preparado <em style={{ color: '#414E3A' }}>para o que não é.</em>
                   </h2>
                 </div>
               </>
@@ -310,7 +310,7 @@ export default function App() {
                 <div style={{ position: 'absolute', top: 88, left: 80, maxWidth: 760, opacity: headIn * matrixAlpha, pointerEvents: 'none', zIndex: 3 }}>
                   <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>— 03 · Vulnerabilidades</div>
                   <h2 className="serif" style={{ fontSize: 'clamp(23px,2.2vw,33px)', lineHeight: 1.3, color: '#0A0A0A' }}>
-                    Mapeamos as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>vulnerabilidades patrimoniais</em> que podem comprometer o plano e as <em style={{ color: '#5E6B57', fontStyle: 'normal' }}>resolvemos</em> ao longo do tempo.
+                    Mapeamos as <em style={{ color: '#414E3A', fontStyle: 'normal' }}>vulnerabilidades patrimoniais</em> que podem comprometer o plano e as <em style={{ color: '#414E3A', fontStyle: 'normal' }}>resolvemos</em> ao longo do tempo.
                   </h2>
                 </div>
 
@@ -401,7 +401,7 @@ export default function App() {
             <div style={{ maxWidth: 760 }}>
               <div className="eyebrow eyebrow-terra" style={{ marginBottom: 14 }}>04 · Nossos pilares</div>
               <h2 className="serif" style={{ fontSize: 'clamp(26px,2.6vw,38px)', lineHeight: 1.2, color: '#0A0A0A' }}>
-                Os princípios que guiam <em style={{ color: '#5E6B57' }}>cada decisão.</em>
+                Os princípios que guiam <em style={{ color: '#414E3A' }}>cada decisão.</em>
               </h2>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
@@ -411,7 +411,7 @@ export default function App() {
               <div style={{ display: 'flex', gap: 6 }}>
                 {PILARES.map((_, i) => {
                   const active = Math.floor(P.met * PILARES.length) === i
-                  return <div key={i} style={{ width: active ? 28 : 14, height: 2, background: active ? '#5E6B57' : 'rgba(10,10,10,0.18)', transition: 'all .35s' }} />
+                  return <div key={i} style={{ width: active ? 28 : 14, height: 2, background: active ? '#414E3A' : 'rgba(10,10,10,0.18)', transition: 'all .35s' }} />
                 })}
               </div>
             </div>
@@ -424,8 +424,8 @@ export default function App() {
                   <div key={i}
                     style={{ width: '100vw', height: '100%', flexShrink: 0, padding: isMobile ? '28px 24px' : '80px 12vw', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 20 : 80, alignItems: isMobile ? 'start' : 'center', borderRight: i < PILARES.length - 1 ? '1px solid rgba(10,10,10,0.06)' : 'none' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                      <div className="serif" style={{ fontSize: isMobile ? 'clamp(60px,18vw,96px)' : 'clamp(160px,15vw,250px)', color: 'rgba(94,107,87,0.30)', lineHeight: 0.85, letterSpacing: '-0.02em' }}>{pil.n}</div>
-                      <div style={{ width: 60, height: 1, background: '#5E6B57' }} />
+                      <div className="serif" style={{ fontSize: isMobile ? 'clamp(60px,18vw,96px)' : 'clamp(160px,15vw,250px)', color: 'rgba(65,78,58,0.30)', lineHeight: 0.85, letterSpacing: '-0.02em' }}>{pil.n}</div>
+                      <div style={{ width: 60, height: 1, background: '#414E3A' }} />
                       <div className="eyebrow eyebrow-terra">Pilar {pil.n}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 28, maxWidth: 540 }}>
@@ -462,7 +462,7 @@ export default function App() {
               </h2>
             </div>
             <div style={{ borderLeft: isMobile ? 'none' : '1px solid rgba(10,10,10,0.12)', borderTop: isMobile ? '1px solid rgba(10,10,10,0.12)' : 'none', paddingLeft: isMobile ? 0 : 36, paddingTop: isMobile ? 24 : 0 }}>
-              <div className="serif" style={{ fontSize: isMobile ? 48 : 64, color: '#5E6B57', lineHeight: 1 }}>+R$700M</div>
+              <div className="serif" style={{ fontSize: isMobile ? 48 : 64, color: '#414E3A', lineHeight: 1 }}>+R$700M</div>
               <div style={{ fontSize: 13, color: 'rgba(10,10,10,0.5)', marginTop: 8, letterSpacing: '0.05em' }}>sob aconselhamento</div>
             </div>
           </div>
@@ -472,12 +472,12 @@ export default function App() {
               <div key={i} onClick={() => p.bio ? setSelectedMember(p) : window.open(p.li, '_blank')}
                 style={{ background: '#ECEAE5', border: '1px solid rgba(10,10,10,0.08)', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'background .35s', color: '#0A0A0A', overflow: 'hidden', width: isMobile ? 'calc(50% - 8px)' : isTablet ? 'calc(50% - 8px)' : 'calc(25% - 12px)' }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#0A0A0A'; el.style.color = '#F5F4F1'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#A8B0A2'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(245,244,241,0.4)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '1') }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#ECEAE5'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#5E6B57'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.background = '#ECEAE5'; el.style.color = '#0A0A0A'; el.querySelectorAll<HTMLElement>('[data-cert]').forEach(x => x.style.color = '#414E3A'); el.querySelectorAll<HTMLElement>('[data-role]').forEach(x => x.style.color = 'rgba(10,10,10,0.4)'); el.querySelectorAll<HTMLElement>('[data-li]').forEach(x => x.style.opacity = '0') }}>
                 <div style={{ padding: '28px 28px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
                   <div>
                     <div className="serif" style={{ fontSize: isMobile ? 16 : 20, lineHeight: 1.2, marginBottom: 4 }}>{p.name}</div>
                     <div data-role style={{ fontSize: 10, color: 'rgba(10,10,10,0.4)', letterSpacing: '0.08em', marginBottom: 4, transition: 'color .35s' }}>{p.role}</div>
-                    <div data-cert className="syncop" style={{ fontSize: 8, color: '#5E6B57', transition: 'color .35s' }}>{p.cert}</div>
+                    <div data-cert className="syncop" style={{ fontSize: 8, color: '#414E3A', transition: 'color .35s' }}>{p.cert}</div>
                   </div>
                   <div data-li style={{ marginTop: 'auto', paddingTop: 8, opacity: 0, transition: 'opacity .3s', display: 'flex', alignItems: 'center', gap: 8 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.339 18.337H5.667v-8.59h2.672v8.59zM7.003 8.574a1.548 1.548 0 1 1 0-3.096 1.548 1.548 0 0 1 0 3.096zm11.335 9.763h-2.669V14.16c0-.996-.018-2.277-1.388-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248h-2.667v-8.59h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.203 1.778 3.203 4.092v4.71z" /></svg>
@@ -500,10 +500,10 @@ export default function App() {
               style={{ position: 'absolute', top: 20, right: 20, width: 32, height: 32, borderRadius: '50%', background: 'rgba(10,10,10,0.07)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
-            <div style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, letterSpacing: '0.26em', color: '#5E6B57', marginBottom: 12, textTransform: 'uppercase' }}>{selectedMember.role}</div>
+            <div style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, letterSpacing: '0.26em', color: '#414E3A', marginBottom: 12, textTransform: 'uppercase' }}>{selectedMember.role}</div>
             <h3 className="serif" style={{ fontSize: 30, lineHeight: 1.12, color: '#0A0A0A', marginBottom: 10 }}>{selectedMember.name}</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
-              <span style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, color: '#5E6B57', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
+              <span style={{ fontFamily: "'Syncopate', sans-serif", fontSize: 8, color: '#414E3A', letterSpacing: '0.12em' }}>{selectedMember.cert}</span>
               <span style={{ width: 1, height: 12, background: 'rgba(10,10,10,0.15)' }} />
               <a href={selectedMember.li} target="_blank" rel="noopener noreferrer"
                 style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', color: '#0A0A0A' }}>
