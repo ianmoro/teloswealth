@@ -159,7 +159,7 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       const shortLbl  = ['6M', '1A', '3A', '5A', '10A']
       const volWord   = ['ALTO', 'ALTO', 'MÉDIO', 'BAIXO', 'MÍN.']
       const C_PRAZO = 'rgb(198,164,108)'
-      const C_VOL   = 'rgb(94,107,87)'
+      const C_VOL   = 'rgb(65,78,58)'
       const barW = 34, barGap = 24, barMaxH = 120
       const yTop  = PAD.t + 36, yBase = yTop + barMaxH
       const xPrazo = W - PAD.r + 10
@@ -251,7 +251,7 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       ctx.font = "700 9.5px 'Syncopate', sans-serif"
       ctx.fillStyle = '#232323'; ctx.textAlign = 'center'
       ctx.fillText('UTILIZAÇÃO', toX(retT + (1 - retT) / 2), PAD.t - 4)
-      ctx.strokeStyle = 'rgba(94,107,87,0.35)'; ctx.lineWidth = 1
+      ctx.strokeStyle = 'rgba(65,78,58,0.35)'; ctx.lineWidth = 1
       ctx.setLineDash([3, 4])
       ctx.beginPath(); ctx.moveTo(retX, PAD.t + 4); ctx.lineTo(retX, H - PAD.b)
       ctx.stroke(); ctx.setLineDash([])
@@ -283,8 +283,8 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       ctx.lineTo(linePts[linePts.length - 1].x, H - PAD.b)
       ctx.closePath()
       const grad = ctx.createLinearGradient(0, PAD.t, 0, H - PAD.b)
-      grad.addColorStop(0, 'rgba(94,107,87,0.18)')
-      grad.addColorStop(1, 'rgba(94,107,87,0)')
+      grad.addColorStop(0, 'rgba(65,78,58,0.18)')
+      grad.addColorStop(1, 'rgba(65,78,58,0)')
       ctx.fillStyle = grad; ctx.fill()
       ctx.restore()
     }
@@ -342,12 +342,12 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
       const coreR = lerp(4.5, 6, goalChrome)
       ctx.save()
       const g = ctx.createRadialGradient(xH, yH, 0, xH, yH, glowR)
-      g.addColorStop(0, 'rgba(94,107,87,0.42)')
-      g.addColorStop(1, 'rgba(94,107,87,0)')
+      g.addColorStop(0, 'rgba(65,78,58,0.42)')
+      g.addColorStop(1, 'rgba(65,78,58,0)')
       ctx.fillStyle = g
       ctx.beginPath(); ctx.arc(xH, yH, glowR, 0, Math.PI * 2); ctx.fill()
       ctx.beginPath(); ctx.arc(xH, yH, coreR, 0, Math.PI * 2)
-      ctx.fillStyle = '#5E6B57'; ctx.fill()
+      ctx.fillStyle = '#414E3A'; ctx.fill()
       ctx.strokeStyle = '#F5F4F1'; ctx.lineWidth = 2; ctx.stroke()
       ctx.restore()
     }
@@ -393,7 +393,7 @@ export default function VolGoalsCanvas({ volProg, morphProg, drawProg, startM }:
         const delta = (ev as any).delta
         if (delta != null) {
           ctx.font = "9px 'Inter', sans-serif"
-          ctx.fillStyle = (ev as any).tone === 'up' ? '#5E6B57' : 'rgba(35,35,35,0.4)'
+          ctx.fillStyle = (ev as any).tone === 'up' ? '#414E3A' : 'rgba(35,35,35,0.4)'
           ctx.textAlign = 'left'
           const sign = delta > 0 ? '+' : ''
           ctx.fillText(`${sign}${delta}M`, bx + bw + 6, by + 18)

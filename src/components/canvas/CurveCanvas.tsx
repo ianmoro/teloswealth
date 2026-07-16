@@ -27,7 +27,7 @@ export default function CurveCanvas({ prog, startM, mood = 'alive', padTop = 88,
 
     const dim = mood === 'fading'
     const lineCol = dim ? 'rgba(35,35,35,0.32)' : '#232323'
-    const accentCol = dim ? 'rgba(94,107,87,0.4)' : '#5E6B57'
+    const accentCol = dim ? 'rgba(65,78,58,0.4)' : '#414E3A'
     const labelCol = dim ? 'rgba(35,35,35,0.3)' : 'rgba(35,35,35,0.55)'
 
     ctx.strokeStyle = dim ? 'rgba(0,0,0,0.04)' : 'rgba(0,0,0,0.07)'
@@ -80,7 +80,7 @@ export default function CurveCanvas({ prog, startM, mood = 'alive', padTop = 88,
       ctx.fillText('ACUMULAÇÃO', toX(retT / 2), PAD.t - 8)
       ctx.fillText('UTILIZAÇÃO', toX(retT + (1 - retT) / 2), PAD.t - 8)
     }
-    ctx.strokeStyle = dim ? 'rgba(94,107,87,0.15)' : 'rgba(94,107,87,0.35)'
+    ctx.strokeStyle = dim ? 'rgba(65,78,58,0.15)' : 'rgba(65,78,58,0.35)'
     ctx.lineWidth = 1
     ctx.setLineDash([3, 4])
     ctx.beginPath(); ctx.moveTo(retX, PAD.t + 4); ctx.lineTo(retX, H - PAD.b); ctx.stroke()
@@ -103,8 +103,8 @@ export default function CurveCanvas({ prog, startM, mood = 'alive', padTop = 88,
       ctx.lineTo(toX(visible[visible.length - 1].t), H - PAD.b)
       ctx.closePath()
       const grad = ctx.createLinearGradient(0, PAD.t, 0, H - PAD.b)
-      grad.addColorStop(0, 'rgba(94,107,87,0.18)')
-      grad.addColorStop(1, 'rgba(94,107,87,0)')
+      grad.addColorStop(0, 'rgba(65,78,58,0.18)')
+      grad.addColorStop(1, 'rgba(65,78,58,0)')
       ctx.fillStyle = grad
       ctx.fill()
     }
@@ -138,7 +138,7 @@ export default function CurveCanvas({ prog, startM, mood = 'alive', padTop = 88,
         ctx.beginPath(); ctx.arc(ex, ey, 8, 0, Math.PI * 2)
         ctx.fillStyle = accentCol; ctx.fill()
         ctx.beginPath(); ctx.arc(ex, ey, 14, 0, Math.PI * 2)
-        ctx.strokeStyle = 'rgba(94,107,87,0.25)'; ctx.lineWidth = 1.2; ctx.stroke()
+        ctx.strokeStyle = 'rgba(65,78,58,0.25)'; ctx.lineWidth = 1.2; ctx.stroke()
       } else {
         ctx.beginPath(); ctx.arc(ex, ey, 5, 0, Math.PI * 2)
         ctx.fillStyle = lineCol; ctx.fill()
