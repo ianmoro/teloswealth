@@ -125,7 +125,7 @@ export default function App() {
 
           <video
             muted loop playsInline
-            src="/0611-2.mov"
+            src="/hero-0717.mp4"
             ref={(el) => {
               if (!el || (el as any)._telosInit) return
               ;(el as any)._telosInit = true
