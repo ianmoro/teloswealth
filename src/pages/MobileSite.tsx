@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Logo } from '../components/Logo'
-import { PILARES, TEAM, LOCATIONS } from '../data'
+import { PILARES, TEAM, LOCATIONS, PLANEJAMENTO_BLOCOS } from '../data'
 
 interface Props {
   onArtigos: () => void
@@ -52,9 +52,10 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
         {[
           ['01 · Família', 'familia'],
           ['02 · Curva de Objetivos', 'objetivos'],
-          ['03 · Nossos Pilares', 'pilares'],
-          ['04 · Nosso Time', 'time'],
-          ['05 · Conteúdo', 'conteudo'],
+          ['03 · Vulnerabilidades', 'vulnerabilidades'],
+          ['04 · Nossos Pilares', 'pilares'],
+          ['05 · Nosso Time', 'time'],
+          ['06 · Conteúdo', 'conteudo'],
         ].map(([label, id]) => (
           <button key={id} onClick={() => scrollTo(id)} className="syncop"
             style={{ display: 'block', width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: 9, letterSpacing: '0.35em', color: 'rgba(10,10,10,0.6)', padding: '10px 0', borderBottom: '1px solid rgba(10,10,10,0.05)' }}>
@@ -98,10 +99,26 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
         </p>
       </section>
 
-      {/* 03 · PILARES */}
+      {/* 03 · VULNERABILIDADES */}
+      <section id="vulnerabilidades" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
+        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>03 · Vulnerabilidades</div>
+        <h2 className="serif" style={{ fontSize: 'clamp(22px,6vw,34px)', lineHeight: 1.22, color: '#0A0A0A', marginBottom: 36 }}>
+          Mapeamos as <em style={{ color: '#414E3A' }}>vulnerabilidades patrimoniais</em> e as <em style={{ color: '#414E3A' }}>resolvemos</em> ao longo do tempo.
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {PLANEJAMENTO_BLOCOS.map((bloco) => (
+            <div key={bloco} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 0', borderBottom: '1px solid rgba(10,10,10,0.07)' }}>
+              <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#414E3A', flexShrink: 0 }} />
+              <span style={{ fontSize: 15, color: 'rgba(10,10,10,0.7)', fontWeight: 300, lineHeight: 1.4 }}>{bloco}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 04 · PILARES */}
       <section id="pilares" style={{ padding: '64px 0 56px', borderTop: '1px solid rgba(10,10,10,0.06)', background: '#F0EFE9' }}>
         <div style={{ padding: '0 20px' }}>
-          <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>03 · Nossos Pilares</div>
+          <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>04 · Nossos Pilares</div>
           <h2 className="serif" style={{ fontSize: 'clamp(22px,6vw,34px)', lineHeight: 1.22, color: '#0A0A0A', marginBottom: 32 }}>
             Os princípios que guiam <em style={{ color: '#414E3A' }}>cada decisão.</em>
           </h2>
@@ -128,9 +145,9 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
         </div>
       </section>
 
-      {/* 04 · TIME */}
+      {/* 05 · TIME */}
       <section id="time" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)' }}>
-        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>04 · Nosso Time</div>
+        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>05 · Nosso Time</div>
         <h2 className="serif" style={{ fontSize: 'clamp(26px,7vw,38px)', lineHeight: 1.1, color: '#0A0A0A', marginBottom: 28 }}>
           Sócios certificados.<br /><em style={{ color: '#414E3A' }}>Um único critério.</em>
         </h2>
@@ -159,9 +176,9 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
         </div>
       </section>
 
-      {/* 05 · CONTEÚDO */}
+      {/* 06 · CONTEÚDO */}
       <section id="conteudo" style={{ padding: '64px 20px 56px', borderTop: '1px solid rgba(10,10,10,0.06)', background: '#F0EFE9' }}>
-        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>05 · Conteúdo</div>
+        <div className="eyebrow eyebrow-terra" style={{ marginBottom: 20 }}>06 · Conteúdo</div>
         <h2 className="serif" style={{ fontSize: 'clamp(24px,6.5vw,36px)', lineHeight: 1.15, color: '#0A0A0A', marginBottom: 40 }}>
           Perspectivas sobre<br />patrimônio e planejamento.
         </h2>
