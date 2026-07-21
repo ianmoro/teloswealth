@@ -236,11 +236,11 @@ export default function App() {
             const phraseIn = clamp((P.obj - 0.89) / 0.07, 0, 1)
 
             const fs    = lerp(56, 33, shrinkP)
-            const left  = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 80, shrinkP)}px)`
-            const top   = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 64, shrinkP)}px)`
+            const left  = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 168, shrinkP)}px)`
+            const top   = `calc(${lerp(50, 0, shrinkP)}% + ${lerp(0, 108, shrinkP)}px)`
             const tx    = lerp(-50, 0, shrinkP)
             const ty    = lerp(-50, 0, shrinkP)
-            const width = lerp(1120, 440, shrinkP)
+            const width = lerp(1120, 520, shrinkP)
 
             // Flying word shared style
             const flyWord = (delay = 0) => {

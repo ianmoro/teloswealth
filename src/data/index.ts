@@ -10,6 +10,15 @@ export const VULN_PAIRS = [
   { vuln: 'Governança familiar ruim',      sol: 'Trust' },
 ]
 
+export const PLANEJAMENTO_BLOCOS = [
+  'Riscos e Seguros',
+  'Planejamento de Objetivos',
+  'Planejamento Tributário',
+  'Sucessório',
+  'Gestão de Ativos',
+  'Previdência',
+]
+
 export const PILARES = [
   {
     n: 'I',
