@@ -67,9 +67,9 @@ export default function MobileSite({ onArtigos: _onArtigos }: Props) {
       {/* HERO */}
       <section style={{ minHeight: '100svh', background: '#0A0A0A', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '56px 20px 52px' }}>
         <div className="eyebrow eyebrow-terra" style={{ color: '#A8B0A2', marginBottom: 28 }}>Telos Wealth</div>
-        <h1 className="serif" style={{ fontSize: 'clamp(32px,8.5vw,52px)', lineHeight: 1.22, color: '#F5F4F1', marginBottom: 36 }}>
+        <h1 className="serif" style={{ fontSize: 'clamp(32px,8.5vw,52px)', lineHeight: 1.22, color: '#F5F4F1', marginBottom: 36, background: 'rgba(18,20,18,0.32)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)', padding: '20px 22px', borderRadius: 6 }}>
           Investimentos e planejamento patrimonial.<br />
-          Para essa geração <em style={{ color: '#A8C49A' }}>e para as próximas.</em>
+          Para essa geração <em style={{ color: '#89B45A' }}>e para as próximas.</em>
         </h1>
         <button onClick={() => ctaRef.current?.scrollIntoView({ behavior: 'smooth' })} className="syncop"
           style={{ alignSelf: 'flex-start', fontSize: 8, background: '#F5F4F1', color: '#0A0A0A', border: 'none', padding: '14px 26px', cursor: 'pointer', letterSpacing: '0.28em' }}>

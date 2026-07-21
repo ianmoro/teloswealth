@@ -179,8 +179,8 @@ export default function App() {
           <HeroCanvas prog={P.hero} />
 
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 40px', pointerEvents: 'none' }}>
-            <h1 className="serif" style={{ position: 'absolute', left: isMobile ? '20px' : '80px', top: '50%', transform: `translateY(calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: isMobile ? 'calc(100% - 40px)' : '50%', maxWidth: 680, fontSize: 'clamp(22px,2.8vw,48px)', lineHeight: 1.12, color: '#F5F4F1', opacity: heroPhrase1, transition: 'transform .25s linear', textAlign: 'left', textShadow: '0 2px 18px rgba(0,0,0,0.55)' }}>
-              Investimentos e planejamento patrimonial.<br />Para essa geração <em style={{ color: '#A8C49A' }}>e para as próximas.</em>
+            <h1 className="serif" style={{ position: 'absolute', left: isMobile ? '20px' : '80px', top: '50%', transform: `translateY(calc(-50% + ${(1 - heroPhrase1) * 20}px))`, width: isMobile ? 'calc(100% - 40px)' : '50%', maxWidth: 680, fontSize: 'clamp(22px,2.8vw,48px)', lineHeight: 1.12, color: '#F5F4F1', opacity: heroPhrase1, transition: 'transform .25s linear', textAlign: 'left', textShadow: '0 2px 18px rgba(0,0,0,0.55)', background: 'rgba(18,20,18,0.32)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)', padding: '22px 26px', borderRadius: 6 }}>
+              Investimentos e planejamento patrimonial.<br />Para essa geração <em style={{ color: '#89B45A' }}>e para as próximas.</em>
             </h1>
             <h1 className="serif" style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,calc(-50% + ${(1 - heroPhrase2) * 22}px))`, width: isMobile ? 'calc(100% - 40px)' : 'calc(100% - 80px)', maxWidth: 1240, fontSize: 'clamp(28px,4.4vw,68px)', lineHeight: 1.14, color: '#F5F4F1', opacity: heroPhrase2, transition: 'transform .25s linear', textShadow: '0 0 50px rgba(0,0,0,0.4)' }}>
               Nosso trabalho é garantir tranquilidade com um <em style={{ color: '#C6A46C' }}>planejamento patrimonial completo e independente.</em>
