@@ -489,17 +489,11 @@ export default function App() {
       {/* ─── TIME ─── */}
       <section ref={teamRef} style={{ background: '#F5F4F1', borderTop: '1px solid rgba(10,10,10,0.06)', padding: isMobile ? '80px 24px 80px' : '140px 80px 120px' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 360px', gap: isMobile ? 32 : 96, marginBottom: isMobile ? 40 : 80, alignItems: 'end' }}>
-            <div>
-              <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24 }}>05 · Nosso Time</div>
-              <h2 className="serif" style={{ fontSize: 'clamp(36px,4vw,62px)', lineHeight: 1.1, color: '#0A0A0A' }}>
-                Nosso Time
-              </h2>
-            </div>
-            <div style={{ borderLeft: isMobile ? 'none' : '1px solid rgba(10,10,10,0.12)', borderTop: isMobile ? '1px solid rgba(10,10,10,0.12)' : 'none', paddingLeft: isMobile ? 0 : 36, paddingTop: isMobile ? 24 : 0 }}>
-              <div className="serif" style={{ fontSize: isMobile ? 48 : 64, color: '#414E3A', lineHeight: 1 }}>+R$700M</div>
-              <div style={{ fontSize: 13, color: 'rgba(10,10,10,0.5)', marginTop: 8, letterSpacing: '0.05em' }}>sob aconselhamento</div>
-            </div>
+          <div style={{ marginBottom: isMobile ? 40 : 80 }}>
+            <div className="eyebrow eyebrow-terra" style={{ marginBottom: 24 }}>05 · Nosso Time</div>
+            <h2 className="serif" style={{ fontSize: 'clamp(36px,4vw,62px)', lineHeight: 1.1, color: '#0A0A0A' }}>
+              Nosso Time
+            </h2>
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, background: 'transparent', marginTop: 8 }}>
