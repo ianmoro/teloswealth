@@ -3,7 +3,7 @@
 
 window.CCO_CONFIG = {
   // ID do cliente OAuth do Google (Google Cloud Console > Credenciais), tipo "Aplicativo da Web".
-  GOOGLE_CLIENT_ID: 'COLE_AQUI.apps.googleusercontent.com',
+  GOOGLE_CLIENT_ID: '145256165932-vmfgm46bc0c48ag26jfcbqootjtl7et1.apps.googleusercontent.com',
 
   // Endereço da função que lê o Notion.
   API_URL: '/api/cco-data',
