@@ -41,7 +41,7 @@ body{background:var(--color-bg)}
 --tw-cap:#4B4A36;--tw-sai:#9A5B3F;--tw-net:#1C1F1A;--tw-accent:#B0A87E;--tw-gold:#C6A664;
 --tw-soft:rgba(176,168,126,.28);--tw-b1:#4B4A36;--tw-b2:#B0A87E;--tw-b3:#6B6759;--tw-b4:#C6A664;--tw-b5:#8C8A6A;--tw-b6:#2E3329;--tw-side:#1C1F1A;--tw-side-ink:#F6F4EF;--tw-side-muted:#B0A87E;--tw-side-active:#262A22;
 --tw-serif:'Newsreader',Georgia,'Times New Roman',serif;--tw-ital:'Gelasio',Georgia,serif;--tw-sans:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
-display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;background:var(--tw-bg);color:var(--tw-ink);font-family:var(--tw-sans);font-size:15px;line-height:1.55;border-radius:var(--cds-radius);overflow:hidden}
+display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;background:var(--tw-bg);color:var(--tw-ink);font-family:var(--tw-sans);font-size:15px;line-height:1.55;border-radius:var(--cds-radius);overflow:hidden;position:relative}
 #tw.tw-dark{--tw-b1:#B0A87E;--tw-b2:#6E6C50;--tw-b3:#A8A493;--tw-b4:#C6A664;--tw-b5:#DEDACD;--tw-b6:#5A5E4F;--tw-bg:#1C1F1A;--tw-card:#262A22;--tw-ink:#F6F4EF;--tw-muted:#A8A493;--tw-line:#3A3F34;--tw-axis:#8C8877;
 --tw-cap:#B0A87E;--tw-sai:#C98463;--tw-net:#C6A664;--tw-side:#141712;--tw-side-active:#262A22}
 .tw-side{background:var(--tw-side);color:var(--tw-side-ink);padding:28px 18px;display:flex;flex-direction:column;gap:28px}
@@ -52,17 +52,34 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 .tw-nav a:hover{opacity:1;background:var(--tw-side-active)}
 .tw-nav a[aria-current=page]{opacity:1;background:var(--tw-side-active);border-left-color:var(--tw-accent)}
 .tw-main{padding:32px 36px 48px;min-width:0;display:flex;flex-direction:column;gap:28px}
-.tw-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--tw-line);padding-bottom:22px}
+.tw-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--tw-line);padding-bottom:22px}
 .tw-eyebrow{font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tw-muted);margin:0 0 6px}
 .tw-top h1{font-family:var(--tw-serif);font-weight:500;font-size:40px;line-height:1.1;margin:0}
 .cc-take{font-family:var(--tw-ital);font-style:italic;font-size:19px;line-height:1.45;color:var(--tw-muted);margin:10px 0 0;max-width:46rem}
 .cc-take b{font-family:var(--tw-sans);font-style:normal;font-weight:700;font-size:16px;color:var(--tw-ink)}
+.tw-filtros{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
 .cc-filter{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tw-muted)}
-.cc-filter select{font-family:var(--tw-sans);font-size:15px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--tw-ink);background:var(--tw-card);border:1px solid var(--tw-line);border-radius:6px;padding:8px 12px;min-width:12rem}
+.cc-filter select,.tw-per-btn{font-family:var(--tw-sans);font-size:15px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--tw-ink);background:var(--tw-card);border:1px solid var(--tw-line);border-radius:6px;padding:8px 12px;min-width:12rem}
+.tw-per{position:relative}
+.tw-per-btn{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;text-align:left}
+.tw-per-btn::after{content:"";width:7px;height:7px;border-right:2px solid var(--tw-muted);border-bottom:2px solid var(--tw-muted);transform:rotate(45deg) translateY(-2px)}
+.tw-per[hidden]{display:none}
+.tw-per-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:40;width:min(300px,calc(100vw - 32px));box-sizing:border-box;background:var(--tw-card);border:1px solid var(--tw-line);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:14px;display:flex;flex-direction:column;gap:12px;text-transform:none;letter-spacing:0;overflow:hidden}
+.tw-per-pop *{box-sizing:border-box;min-width:0}
+.tw-per-pop[hidden]{display:none}
+.tw-per-chips{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tw-per-chips button,.tw-per-pop .tw-aplicar{font-family:var(--tw-sans);font-size:13px;font-weight:600;color:var(--tw-ink);background:transparent;border:1px solid var(--tw-line);border-radius:6px;padding:7px 8px;cursor:pointer;white-space:nowrap;width:100%}
+.tw-per-chips button:hover,.tw-per-pop .tw-aplicar:hover{border-color:var(--tw-muted)}
+.tw-per-pop .tw-aplicar{background:var(--tw-ink);color:var(--tw-bg);border-color:var(--tw-ink)}
+.tw-per-row{display:flex;flex-direction:column;gap:4px;width:100%;font-size:12px;font-weight:600;color:var(--tw-muted)}
+.tw-per-row input,.tw-per-row select{width:100%;max-width:100%;font-family:var(--tw-sans);font-size:14px;color:var(--tw-ink);background:var(--tw-bg);border:1px solid var(--tw-line);border-radius:6px;padding:6px 8px}
+.tw-per-int{display:flex;flex-direction:column;gap:8px}
+.tw-per-sep{border-top:1px solid var(--tw-line)}
+.tw-per-erro{color:var(--tw-sai);font-size:12px;margin:0}
+.tw-per-fora{font-size:12px;color:var(--tw-muted);margin:6px 0 0;max-width:14rem;text-transform:none;letter-spacing:0;font-weight:400}
 .tw-sec{display:flex;flex-direction:column;gap:28px}
 .tw-sec[hidden]{display:none}
 .tw-sechead-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
-.tw-sechead-row .cc-toggle{margin-bottom:0}
 .tw-sechead h2{font-family:var(--tw-serif);font-weight:500;font-size:28px;margin:0}
 .tw-sechead p{font-family:var(--tw-ital);font-style:italic;font-size:17px;color:var(--tw-muted);margin:4px 0 0}
 .cc-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:14px}
@@ -71,15 +88,17 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 .cc-tile .val{font-family:var(--tw-serif);font-weight:500;font-size:32px;line-height:1.15;margin-top:8px;font-variant-numeric:tabular-nums;color:var(--tw-ink)}
 .cc-tile .sub{font-size:13px;color:var(--tw-muted);margin-top:6px}
 .cc-tile .sub b{font-weight:700;color:var(--tw-ink)}
+.cc-tile.tw-clk{cursor:pointer;transition:border-color .15s}
+.cc-tile.tw-clk:hover,.cc-tile.tw-clk:focus-visible{border-color:var(--tw-muted);outline:none}
 .cc-block{display:flex;flex-direction:column;gap:14px}
-.cc-sec h2,.cc-block>h2{font-family:var(--tw-serif);font-weight:500;font-size:24px;margin:0}
+.cc-block>h2{font-family:var(--tw-serif);font-weight:500;font-size:24px;margin:0}
 .cc-card h3{font-family:var(--tw-sans);font-weight:700;font-size:16px;margin:0}
 .cc-note{font-size:13px;color:var(--tw-muted);margin:4px 0 14px}
 .cc-note b{color:var(--tw-ink)}
 .cc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:14px}
 .cc-cardhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
 .cc-toggle{display:inline-flex;border:1px solid var(--tw-line);border-radius:6px;overflow:hidden;margin-bottom:10px}
-.cc-cardhead .cc-toggle{margin-bottom:0}
+.cc-cardhead .cc-toggle,.tw-sechead-row .cc-toggle{margin-bottom:0}
 .cc-toggle button{font-family:var(--tw-sans);font-size:13px;font-weight:600;background:transparent;color:var(--tw-muted);border:0;padding:6px 12px;cursor:pointer}
 .cc-toggle button[aria-pressed=true]{background:var(--tw-ink);color:var(--tw-bg)}
 .tw-switch{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--tw-muted);cursor:pointer;user-select:none}
@@ -93,30 +112,15 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 .cc-legend i{display:inline-block;width:.65rem;height:.65rem;border-radius:2px;margin-right:.4rem;vertical-align:middle}
 .cc-chart{position:relative}
 .cc-chart svg{display:block;font-family:var(--tw-sans);font-size:12px;font-variant-numeric:tabular-nums}
-#chart-mes{min-height:300px}
-#chart-fc{min-height:340px}
-#chart-reun{min-height:260px}
-#chart-cascata{min-height:290px}
-.tw-casc-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0 10px}
-.tw-casc-ctl label{font-size:13px;color:var(--tw-muted)}
+#chart-mes{min-height:300px}#chart-fc{min-height:340px}#chart-reun{min-height:260px}#chart-cascata{min-height:290px}
+.tw-casc-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 #chart-cascata .tw-clk{cursor:pointer}
-.cc-tbl td.resg{color:var(--tw-sai);font-weight:600}
-.tw-swatch-resg{color:var(--tw-b4)}
-#tw{position:relative}
-.tw-modal{position:absolute;inset:0;z-index:50;background:rgba(28,31,26,.45)}
-.cc-tile.tw-clk{cursor:pointer;transition:border-color .15s}
-.cc-tile.tw-clk:hover{border-color:var(--tw-muted)}
-.tw-modal[hidden]{display:none}
-.tw-modal-box{position:absolute;left:50%;transform:translateX(-50%);background:var(--tw-card);color:var(--tw-ink);border:1px solid var(--tw-line);border-radius:10px;width:min(820px,calc(100% - 32px));max-height:min(70vh,640px);overflow:auto;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-.tw-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.tw-modal-head h3{margin:0}
-.tw-modal-x{font-family:var(--tw-sans);font-size:20px;line-height:1;background:transparent;border:0;color:var(--tw-muted);cursor:pointer;padding:2px 6px}
-#tbl-casc-itens td:nth-child(3){white-space:normal;min-width:12rem}
-#tbl-casc-itens th.vazio{display:none}
 .tw-ref{margin:-12px 0 0}
 #tbl-saude td:last-child{white-space:normal;min-width:16rem;color:var(--tw-sai)}
 .cc-tbl tr.tw-sel td{background:var(--tw-soft);font-weight:700}
 .cc-tbl tr.tw-total td{font-weight:700;border-top:2px solid var(--tw-line)}
+.cc-tbl tr.tw-grp td{font-weight:700;background:var(--tw-bg);border-top:1px solid var(--tw-line)}
+.cc-tbl td.tw-mudo{color:var(--tw-muted);font-style:italic}
 .tw-sim{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--tw-muted);margin:0 0 12px}
 .tw-sim label{font-weight:600;color:var(--tw-ink)}
 .tw-sim input{font-family:var(--tw-sans);font-size:14px;width:7rem;color:var(--tw-ink);background:var(--tw-bg);border:1px solid var(--tw-line);border-radius:6px;padding:6px 8px}
@@ -133,9 +137,23 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 .cc-fail{display:flex;align-items:center;justify-content:center;gap:.4rem;min-height:inherit;color:var(--tw-muted);font-size:13px}
 .cc-fail::before{content:"";width:.375rem;height:.375rem;border-radius:50%;background:var(--tw-sai)}
 .cc-empty{font-size:13px;color:var(--tw-muted);padding:8px 0}
-.tw-soon{border-style:dashed}
-.tw-soon p{font-family:var(--tw-ital);font-style:italic;font-size:17px;color:var(--tw-muted);margin:0}
-.tw-soon ul{margin:12px 0 0;padding-left:18px;font-size:14px}
+.tw-modal{position:absolute;inset:0;z-index:50;background:rgba(28,31,26,.45)}
+.tw-modal[hidden]{display:none}
+.tw-modal-box{position:absolute;left:50%;transform:translateX(-50%);background:var(--tw-card);color:var(--tw-ink);border:1px solid var(--tw-line);border-radius:10px;width:min(980px,calc(100% - 32px));max-height:min(78vh,720px);overflow:auto;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.tw-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.tw-modal-head h3{margin:0}
+.tw-modal-x{font-family:var(--tw-sans);font-size:20px;line-height:1;background:transparent;border:0;color:var(--tw-muted);cursor:pointer;padding:2px 6px}
+.tw-mdl-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:0 0 10px;padding:10px 0;border-top:1px solid var(--tw-line);border-bottom:1px solid var(--tw-line)}
+.tw-mdl-tools label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tw-muted)}
+.tw-mdl-tools label[hidden]{display:none}
+.tw-mdl-tools select{font-family:var(--tw-sans);font-size:13px;font-weight:600;color:var(--tw-ink);background:var(--tw-bg);border:1px solid var(--tw-line);border-radius:6px;padding:5px 8px;text-transform:none;letter-spacing:0}
+.tw-mdl-cont{margin-left:auto;font-size:12px;color:var(--tw-muted)}
+#tbl-modal td:nth-child(4),#tbl-modal td.l{white-space:normal}
+#tbl-modal td.l{min-width:6rem}
+.tw-sort{font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;background:transparent;border:0;padding:0;cursor:pointer}
+.tw-sort:hover{color:var(--tw-ink)}
+#tw [data-dash-source-state=empty]{color:transparent}
+#tw [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
 @media (max-width:760px){
  #tw{grid-template-columns:1fr}
  .tw-side{padding:16px;gap:12px}
@@ -144,6 +162,7 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
  .tw-nav a[aria-current=page]{border-bottom-color:var(--tw-accent)}
  .tw-main{padding:20px 16px 32px}
  .tw-top h1{font-size:30px}
+ .tw-per-pop{right:auto;left:0}
 }
 </style>
 </head>
@@ -178,58 +197,66 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
       <div>
         <p class="tw-eyebrow">Gestão comercial · Telos Wealth</p>
         <h1 id="titulo-pagina">Painel comercial · Todos</h1>
-    <p class="cc-take">Na mesa: <b data-fmt="brl" data-source="pipe_kpi" data-field="captacao_mesa" data-where="banker=Todos">—</b> de captação ponderada e <b data-fmt="brl" data-source="pipe_kpi" data-field="saida_esperada" data-where="banker=Todos">—</b> de saída esperada. Para este mês, a previsão é de <b data-fmt="brl" data-source="pipe_kpi" data-field="captacao_mes" data-where="banker=Todos">—</b> em captação e <b data-fmt="brl" data-source="pipe_kpi" data-field="receita_mes" data-where="banker=Todos">—</b> em receita.</p>
       </div>
-      <label class="cc-filter">Banker<select id="sel-banker" aria-label="Banker"></select></label>
+      <div class="tw-filtros">
+        <div class="cc-filter tw-per" id="per-wrap">Período
+          <button type="button" class="tw-per-btn" id="per-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="per-pop"><span>—</span></button>
+          <div class="tw-per-pop" id="per-pop" role="dialog" aria-label="Escolher período" hidden>
+            <div class="tw-per-chips"><button type="button" data-q="mes">Este mês</button><button type="button" data-q="mesant">Mês passado</button><button type="button" data-q="ano">Este ano</button><button type="button" data-q="tudo">Período inteiro</button></div>
+            <div class="tw-per-sep"></div>
+            <div class="tw-per-int"><label class="tw-per-row" for="per-mes">Mês específico<input type="month" id="per-mes" min="2024-01" max="2030-12"></label><label class="tw-per-row" for="per-ano">Ano específico<select id="per-ano"></select></label></div>
+            <div class="tw-per-sep"></div>
+            <div class="tw-per-int"><label class="tw-per-row" for="per-de">De<input type="date" id="per-de" min="2024-01-01" max="2030-12-31"></label><label class="tw-per-row" for="per-ate">Até<input type="date" id="per-ate" min="2024-01-01" max="2030-12-31"></label><button type="button" class="tw-aplicar" id="per-aplicar">Aplicar intervalo</button></div>
+            <p class="tw-per-erro" id="per-erro" hidden>Escolha as duas datas, com a inicial antes da final.</p>
+          </div>
+        </div>
+        <label class="cc-filter">Banker<select id="sel-banker" aria-label="Banker"></select></label>
+      </div>
     </header>
 
     <section class="tw-sec" id="resumo">
-      <div class="tw-sechead"><h2>Resumo</h2><p>Como estamos hoje.</p></div>
-  <div class="cc-tiles">
-    <div class="cc-card cc-tile"><div class="lbl">Captação esperada · este mês</div><div class="val dash-skeleton" data-fmt="brl" data-source="pipe_kpi" data-field="captacao_mes" data-where="banker=Todos">—</div><div class="sub">Ponderada, previsão até o fim do mês</div></div>
-    <div class="cc-card cc-tile"><div class="lbl">Captado · este mês</div><div class="val dash-skeleton" data-fmt="brl" data-source="pipe_kpi" data-field="captado_mes" data-where="banker=Todos">—</div><div class="sub">Ritmo do BP 2027: <b data-fmt="brl" data-source="ritmo_bp" data-field="ritmo_mensal" data-where="banker=Todos">—</b>/mês</div></div>
-    <div class="cc-card cc-tile"><div class="lbl">Receita esperada · este mês</div><div class="val dash-skeleton" data-fmt="brl" data-source="pipe_kpi" data-field="receita_mes" data-where="banker=Todos">—</div><div class="sub">Seguro, crédito, câmbio e outros</div></div>
-    <div class="cc-card cc-tile"><div class="lbl">Captação na mesa · ponderada</div><div class="val dash-skeleton" data-fmt="brl" data-source="pipe_kpi" data-field="captacao_mesa" data-where="banker=Todos">—</div><div class="sub">de <b data-fmt="brl" data-source="pipe_kpi" data-field="captacao_bruta" data-where="banker=Todos">—</b> brutos em aberto</div></div>
-    <div class="cc-card cc-tile"><div class="lbl">Saída esperada · resgates</div><div class="val dash-skeleton" data-fmt="brl" data-source="pipe_kpi" data-field="saida_esperada" data-where="banker=Todos">—</div><div class="sub">de <b data-fmt="brl" data-source="pipe_kpi" data-field="saida_em_risco" data-where="banker=Todos">—</b> em risco</div></div>
-    <div class="cc-card cc-tile"><div class="lbl">Negócios em aberto</div><div class="val dash-skeleton" data-fmt="int" data-source="pipe_kpi" data-field="negocios_abertos" data-where="banker=Todos">—</div><div class="sub"><b data-fmt="int" data-source="pipe_kpi" data-field="previsoes_vencidas" data-where="banker=Todos">—</b> com previsão vencida</div></div>
-  </div>
-  <div class="cc-block">
-    <h2>Previsão por mês</h2>
-    <div class="cc-card">
-      <div class="cc-cardhead"><h3 id="titulo-mes">Captação e saída por mês: realizado e esperado</h3><div class="cc-toggle" role="group" aria-label="Base de valor"><button type="button" id="btn-pond" aria-pressed="true">Ponderado</button><button type="button" id="btn-abs" aria-pressed="false">Absoluto</button></div></div>
-      <p class="cc-note" id="nota-mes">Valores ponderados pela Temperatura. No mês atual, a parte cheia é o já realizado e a clara é o previsto. Captação acima do zero, saída abaixo; a linha é o líquido.</p>
-      <div class="cc-toggle" role="group" aria-label="Linha de negócio"><button type="button" id="btn-cap" aria-pressed="true">Captação × Saída</button><button type="button" id="btn-rec" aria-pressed="false">Receita</button></div>
-      <div class="cc-legend" id="lg-mes"></div>
-      <div class="cc-chart dash-skeleton" id="chart-mes" data-source="pipe_mes"></div>
-    </div>
-  </div>
-<div class="cc-block">
-      <h2>Concentração</h2>
-      <div class="cc-card">
-        <h3>Os 5 maiores negócios de captação em aberto</h3>
-        <p class="cc-note">Pelo valor ponderado. A coluna Acumulado mostra quanto do pipeline ponderado depende desses negócios.</p>
-        <div class="cc-tbl-wrap">
-          <table class="cc-tbl" id="tbl-conc5" data-source="concentracao" data-row-key="chave">
-            <thead><tr><th data-field="posicao">#</th><th data-field="negocio" class="l">Negócio</th><th data-field="cliente" class="l">Cliente</th><th data-field="dono" class="l">Banker</th><th data-field="tipo" class="l">Tipo</th><th data-field="ponderado">Ponderado</th><th data-field="participacao">Participação</th><th data-field="acumulado">Acumulado</th></tr></thead>
-            <tbody></tbody>
-          </table>
+      <div class="tw-sechead"><h2>Resumo</h2><p>Como estamos em <span class="tw-per-lbl">—</span>. Clique num card para ver os negócios.</p></div>
+      <div class="cc-tiles">
+        <div class="cc-card cc-tile tw-clk" data-pop="res_capesp" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação esperada · <span class="tw-per-lbl">—</span></div><div class="val dash-skeleton" data-fmt="brl" data-source="c_kpis" data-field="cap_esperada" data-where="banker=Todos">—</div><div class="sub">Ponderada, previsão no período · <b data-fmt="brl" data-source="c_kpis" data-field="cap_esperada_bruta" data-where="banker=Todos">—</b> bruto</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="res_captado" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captado · <span class="tw-per-lbl">—</span></div><div class="val dash-skeleton" data-fmt="brl" data-source="c_kpis" data-field="captado" data-where="banker=Todos">—</div><div class="sub">Ritmo do BP 2027: <b data-fmt="brl" data-source="ritmo_bp" data-field="ritmo_mensal" data-where="banker=Todos">—</b>/mês</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="res_recesp" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Receita esperada · <span class="tw-per-lbl">—</span></div><div class="val dash-skeleton" data-fmt="brl" data-source="c_kpis" data-field="receita_esperada" data-where="banker=Todos">—</div><div class="sub">Ponderada · <b data-fmt="brl" data-source="c_kpis" data-field="receita_esperada_bruta" data-where="banker=Todos">—</b> bruto</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="res_mesa" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação na mesa · todas as datas</div><div class="val dash-skeleton" data-fmt="brl" data-source="c_kpis" data-field="cap_mesa" data-where="banker=Todos">—</div><div class="sub">Ponderada, de <b data-fmt="brl" data-source="c_kpis" data-field="cap_mesa_bruta" data-where="banker=Todos">—</b> brutos em aberto. Não segue o filtro.</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="res_resg" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Resgates em risco · <span class="tw-per-lbl">—</span></div><div class="val dash-skeleton" data-fmt="brl" data-source="c_kpis" data-field="resg_risco" data-where="banker=Todos">—</div><div class="sub">Valor cheio dos resgates em aberto</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="res_abertos" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Negócios em aberto · <span class="tw-per-lbl">—</span></div><div class="val dash-skeleton" data-fmt="int" data-source="c_kpis" data-field="abertos" data-where="banker=Todos">—</div><div class="sub"><b data-fmt="int" data-source="c_kpis" data-field="vencidas" data-where="banker=Todos">—</b> com previsão vencida</div></div>
+      </div>
+      <div class="cc-block">
+        <h2>Previsão por mês</h2>
+        <div class="cc-card">
+          <div class="cc-cardhead"><h3 id="titulo-mes">Captação e resgates por mês</h3><div class="cc-toggle" role="group" aria-label="Base de valor"><button type="button" id="btn-pond" aria-pressed="true">Ponderado</button><button type="button" id="btn-abs" aria-pressed="false">Absoluto</button></div></div>
+          <p class="cc-note" id="nota-mes"></p>
+          <div class="cc-toggle" role="group" aria-label="Linha de negócio"><button type="button" id="btn-cap" aria-pressed="true">Captação × Resgates</button><button type="button" id="btn-rec" aria-pressed="false">Receita</button></div>
+          <div class="cc-legend" id="lg-mes"></div>
+          <div class="cc-chart dash-skeleton" id="chart-mes" data-source="c_fluxo"></div>
         </div>
       </div>
-    </div>
+      <div class="cc-block">
+        <h2>Concentração</h2>
+        <div class="cc-card">
+          <h3>Os 5 maiores negócios de captação em aberto · <span class="tw-per-lbl">—</span></h3>
+          <p class="cc-note">Pelo valor ponderado, entre os negócios com previsão no período. Acumulado mostra quanto do pipeline ponderado do período depende desses negócios.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-conc5" data-source="c_conc5" data-row-key="chave"><thead><tr><th data-field="posicao">#</th><th data-field="negocio" class="l">Negócio</th><th data-field="cliente" class="l">Cliente</th><th data-field="dono" class="l">Banker</th><th data-field="tipo" class="l">Tipo</th><th data-field="ponderado">Ponderado</th><th data-field="participacao">Participação</th><th data-field="acumulado">Acumulado</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
     </section>
 
     <section class="tw-sec" id="forecast" hidden>
-      <div class="tw-sechead tw-sechead-row"><div><h2>Forecast</h2><p>Vamos bater a meta?</p></div><div class="cc-toggle" role="group" aria-label="Período"><button type="button" data-per="2026" aria-pressed="true">2026</button><button type="button" data-per="2027" aria-pressed="false">2027</button><button type="button" data-per="all" aria-pressed="false">Consolidado</button></div></div>
+      <div class="tw-sechead tw-sechead-row"><div><h2>Forecast</h2><p>Vamos bater a meta? Esta aba não segue o filtro de período.</p></div><div class="cc-toggle" role="group" aria-label="Horizonte"><button type="button" data-per="2026" aria-pressed="true">2026</button><button type="button" data-per="2027" aria-pressed="false">2027</button><button type="button" data-per="all" aria-pressed="false">Consolidado</button></div></div>
+      <p class="cc-note tw-ref">Clique num card para ver como o número é composto.</p>
       <div class="cc-tiles">
-        <div class="cc-card cc-tile"><div class="lbl" id="lbl-fc-ini">AuA inicial</div><div class="val" data-fmt="brl" data-fc data-fcf="ini" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</div><div class="sub" id="sub-fc-ref">Referência em <b data-fmt="data" data-fc data-source="forecast_resumo" data-field="data_ref" data-where="chave=Todos|pond">—</b></div><div class="sub" id="sub-fc-proj" hidden>Projeção para 31/12/2026</div></div>
-        <div class="cc-card cc-tile" id="tile-aua-atual"><div class="lbl">AuA atual</div><div class="val" data-fmt="brl" data-source="aua_atual" data-field="aua_atual" data-where="banker=Todos">—</div><div class="sub">Inicial + <b data-fmt="brl" data-source="aua_atual" data-field="captado" data-where="banker=Todos">—</b> captados − <b data-fmt="brl" data-source="aua_atual" data-field="resgatado" data-where="banker=Todos">—</b> resgatados desde <b data-fmt="data" data-source="aua_atual" data-field="data_ref" data-where="banker=Todos">—</b></div></div>
-        <div class="cc-card cc-tile"><div class="lbl" id="lbl-fc-fim">Projetado · dez/2027</div><div class="val" data-fmt="brl" data-fc data-fcf="fim" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</div><div class="sub tw-so-telos">Meta <b data-fmt="brl" data-fc data-fcf="meta" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</b> · gap <b data-fmt="brl" data-fc data-fcf="gap" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</b></div></div>
-        <div class="cc-card cc-tile"><div class="lbl" id="lbl-fc-cap">Captação líquida esperada · até dez/2027</div><div class="val" data-fmt="brl" data-fc data-fcf="cap" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</div><div class="sub">Pela previsão de fechamento dos negócios</div></div>
-        <div class="cc-card cc-tile"><div class="lbl" id="lbl-fc-mkt">Ganho de capital · até dez/2027</div><div class="val" data-fmt="brl" data-fc data-fcf="mkt" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</div><div class="sub"><b data-fmt="pct" data-fc data-source="forecast_resumo" data-field="ganho_2026" data-where="chave=Todos|pond">—</b> a.a. em 2026 e <b data-fmt="pct" data-fc data-source="forecast_resumo" data-field="ganho_2027" data-where="chave=Todos|pond">—</b> em 2027</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="fc_ini" role="button" tabindex="0"><div class="lbl" id="lbl-fc-ini">AuA inicial</div><div class="val" data-fmt="brl" data-fc data-fcf="ini" data-source="forecast_resumo" data-field="aua_inicial" data-where="chave=Todos|pond">—</div><div class="sub" id="sub-fc-ref">Referência em <b data-fmt="data" data-fc data-source="forecast_resumo" data-field="data_ref" data-where="chave=Todos|pond">—</b></div><div class="sub" id="sub-fc-proj" hidden>Projeção para 31/12/2026</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="fc_atual" role="button" tabindex="0"><div class="lbl">AuA atual</div><div class="val" data-fmt="brl" data-source="aua_atual" data-field="aua_atual" data-where="banker=Todos">—</div><div class="sub">Inicial + <b data-fmt="brl" data-source="aua_atual" data-field="captado" data-where="banker=Todos">—</b> captados − <b data-fmt="brl" data-source="aua_atual" data-field="resgatado" data-where="banker=Todos">—</b> resgatados desde <b data-fmt="data" data-source="aua_atual" data-field="data_ref" data-where="banker=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="fc_fim" role="button" tabindex="0"><div class="lbl" id="lbl-fc-fim">AuA projetado · dez/2026</div><div class="val" data-fmt="brl" data-fc data-fcf="fim" data-source="forecast_resumo" data-field="proj_2026" data-where="chave=Todos|pond">—</div><div class="sub tw-so-telos">Meta <b data-fmt="brl" data-fc data-fcf="meta" data-source="forecast_resumo" data-field="meta_2026" data-where="chave=Todos|pond">—</b> · gap <b data-fmt="brl" data-fc data-fcf="gap" data-source="forecast_resumo" data-field="gap_2026" data-where="chave=Todos|pond">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="fc_cap" role="button" tabindex="0"><div class="lbl" id="lbl-fc-cap">Captação líquida · até dez/2026</div><div class="val" data-fmt="brl" data-fc data-fcf="cap" data-source="forecast_resumo" data-field="capt_liq_2026" data-where="chave=Todos|pond">—</div><div class="sub">Já captado desde a referência + pipeline com previsão no horizonte − resgates</div></div>
+        <div class="cc-card cc-tile tw-clk" data-pop="fc_mkt" role="button" tabindex="0"><div class="lbl" id="lbl-fc-mkt">Ganho de capital · até dez/2026</div><div class="val" data-fmt="brl" data-fc data-fcf="mkt" data-source="forecast_resumo" data-field="mercado_2026" data-where="chave=Todos|pond">—</div><div class="sub"><b data-fmt="pct" data-fc data-source="forecast_resumo" data-field="ganho_2026" data-where="chave=Todos|pond">—</b> a.a. em 2026 e <b data-fmt="pct" data-fc data-source="forecast_resumo" data-field="ganho_2027" data-where="chave=Todos|pond">—</b> em 2027</div></div>
       </div>
       <div class="cc-card">
         <div class="cc-cardhead"><h3 id="titulo-fc">Curva de AuA projetada</h3><div class="cc-toggle" role="group" aria-label="Base de valor"><button type="button" id="btn-fc-pond" aria-pressed="true">Ponderado</button><button type="button" id="btn-fc-abs" aria-pressed="false">Absoluto</button></div></div>
-        <p class="cc-note">AuA inicial e ganho de capital vêm dos Parâmetros do painel no Notion. Captação e saída entram no mês da previsão de fechamento; atrasados contam no primeiro mês. Negócios sem previsão ficam fora da curva: <b data-fmt="brl" data-fc data-source="forecast_resumo" data-field="sem_previsao" data-where="chave=Todos|pond">—</b> em captação bruta.</p>
+        <p class="cc-note">AuA inicial e ganho de capital vêm dos Parâmetros do painel no Notion. Entram na curva o que já foi captado e resgatado desde a data de referência e o pipeline pelo mês da previsão (atrasados no mês atual). Resgates em aberto contam pelo valor cheio. Negócios sem previsão ficam fora: <b data-fmt="brl" data-fc data-source="forecast_resumo" data-field="sem_previsao" data-where="chave=Todos|pond">—</b> em captação bruta.</p>
         <div class="tw-sim"><label for="sim-aua">Simular outro AuA inicial (R$ mi)</label><input id="sim-aua" type="number" inputmode="decimal" min="0" step="1" placeholder="ex.: 650"><button type="button" id="sim-limpar">Limpar</button><span>Só para esta visualização. O oficial fica no Notion.</span></div>
         <div class="cc-legend" id="lg-fc"></div>
         <div class="cc-chart dash-skeleton" id="chart-fc" data-source="forecast"></div>
@@ -237,155 +264,122 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
     </section>
 
     <section class="tw-sec" id="pipeline" hidden>
-      <div class="tw-sechead"><h2>Pipeline</h2><p>O que está na mesa e de onde vem.</p></div>
-  <div class="cc-block">
-    <h2>Por tipo de negócio</h2>
-    <div class="cc-grid">
-      <div class="cc-card">
-        <h3 id="titulo-aberto">Em aberto</h3>
-        <p class="cc-note">Quantidade, valor bruto, valor ponderado e idade média desde o início.</p>
-        <div class="cc-tbl-wrap">
-          <table class="cc-tbl" id="tbl-tipo" data-source="pipe_tipo" data-row-key="chave">
-            <thead><tr><th data-field="tipo">Tipo</th><th data-field="negocios">Negócios</th><th data-field="valor">Bruto</th><th data-field="ponderado">Ponderado</th><th data-field="idade_media_dias">Idade média</th></tr></thead>
-            <tbody></tbody>
-          </table>
+      <div class="tw-sechead"><h2>Pipeline</h2><p>O que está na mesa em <span class="tw-per-lbl">—</span> e de onde vem.</p></div>
+      <div class="cc-block">
+        <h2>Por tipo de negócio</h2>
+        <div class="cc-grid">
+          <div class="cc-card"><h3>Em aberto</h3><p class="cc-note">Com previsão no período (atrasados no mês atual). Quantidade, valor bruto, ponderado (resgates pelo valor cheio) e idade média.</p>
+            <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-tipo" data-source="c_tipo" data-row-key="chave"><thead><tr><th data-field="tipo">Tipo</th><th data-field="negocios">Negócios</th><th data-field="valor">Bruto</th><th data-field="ponderado">Ponderado</th><th data-field="idade_media_dias">Idade média</th></tr></thead><tbody></tbody></table></div></div>
+          <div class="cc-card"><h3>Concluídos</h3><p class="cc-note">Com conclusão no período. Taxa de ganho, ciclo médio em dias e valor ganho.</p>
+            <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-conc" data-source="c_concl" data-row-key="chave"><thead><tr><th data-field="tipo">Tipo</th><th data-field="ganhos">Ganhos</th><th data-field="perdidos">Perdidos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="ciclo_medio_dias">Ciclo médio</th><th data-field="realizado">Realizado</th></tr></thead><tbody></tbody></table></div></div>
         </div>
       </div>
-      <div class="cc-card">
-        <h3 id="titulo-concluidos">Concluídos</h3>
-        <p class="cc-note">Taxa de ganho, ciclo médio em dias e valor realizado.</p>
-        <div class="cc-tbl-wrap">
-          <table class="cc-tbl" id="tbl-conc" data-source="conc_tipo" data-row-key="chave">
-            <thead><tr><th data-field="tipo">Tipo</th><th data-field="ganhos">Ganhos</th><th data-field="perdidos">Perdidos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="ciclo_medio_dias">Ciclo médio</th><th data-field="realizado">Realizado</th></tr></thead>
-            <tbody></tbody>
-          </table>
+      <div class="cc-block">
+        <h2>Origem e perdas</h2>
+        <div class="cc-card"><h3>De onde vêm os negócios</h3><p class="cc-note">Por Origem, sem contar resgates. Em aberto pela previsão no período; ganhos, perdidos e captado pela conclusão no período. % do captado = peso da origem no captado total do período.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-origem" data-source="c_origem" data-row-key="chave"><thead><tr><th data-field="origem">Origem</th><th data-field="abertos">Em aberto</th><th data-field="captacao_ponderada">Captação ponderada</th><th data-field="receita_ponderada">Receita ponderada</th><th data-field="ganhos">Ganhos</th><th data-field="perdidos">Perdidos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="captado">Captado</th><th data-field="pct_captado">% do captado</th></tr></thead><tbody></tbody></table></div></div>
+        <div class="cc-card"><h3>Por que perdemos</h3><p class="cc-note">Negócios perdidos no período por Motivo de perda, sem contar resgates.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-perdas" data-source="c_perdas" data-row-key="chave"><thead><tr><th data-field="motivo">Motivo</th><th data-field="negocios">Negócios</th><th data-field="valor">Valor</th></tr></thead><tbody></tbody></table></div></div>
+      </div>
+      <div class="cc-block">
+        <h2>Negócios em aberto</h2>
+        <div class="cc-card">
+          <div class="cc-cardhead"><h3>Por previsão de fechamento</h3><label class="tw-switch"><input type="checkbox" id="chk-sem-zero"><span class="tw-switch-track" aria-hidden="true"></span>Ocultar negócios com valor zero</label></div>
+          <p class="cc-note">Com previsão no período; sem previsão só em Período inteiro. Previsões vencidas aparecem em vermelho. "Vazio" = valor não preenchido.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-lista" data-source="c_lista" data-row-key="chave"><thead><tr><th data-field="negocio">Negócio</th><th data-field="cliente" class="l">Cliente</th><th data-field="banker" class="l">Banker</th><th data-field="tipo" class="l">Tipo</th><th data-field="etapa" class="l">Etapa</th><th data-field="temperatura" class="l">Temperatura</th><th data-field="valor">Valor</th><th data-field="ponderado">Ponderado</th><th data-field="previsao">Previsão</th><th data-field="idade_dias">Idade</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="cc-block">
-      <h2>Origem e perdas</h2>
-      <div class="cc-card">
-        <h3>De onde vêm os negócios</h3>
-        <p class="cc-note">Por Origem, sem contar resgates. Taxa de ganho considera só negócios já concluídos.</p>
-        <div class="cc-tbl-wrap">
-          <table class="cc-tbl" id="tbl-origem" data-source="origem" data-row-key="chave">
-            <thead><tr><th data-field="origem">Origem</th><th data-field="abertos">Em aberto</th><th data-field="captacao_ponderada">Captação ponderada</th><th data-field="receita_ponderada">Receita ponderada</th><th data-field="ganhos">Ganhos</th><th data-field="perdidos">Perdidos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="captado">Captado</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="cc-card">
-        <h3>Por que perdemos</h3>
-        <p class="cc-note">Negócios perdidos por Motivo de perda, sem contar resgates.</p>
-        <div class="cc-tbl-wrap">
-          <table class="cc-tbl" id="tbl-perdas" data-source="perdas" data-row-key="chave">
-            <thead><tr><th data-field="motivo">Motivo</th><th data-field="negocios">Negócios</th><th data-field="valor">Valor</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="cc-block">
-    <h2>Negócios em aberto</h2>
-    <div class="cc-card">
-      <div class="cc-cardhead"><h3 id="titulo-lista">Por previsão de fechamento</h3><label class="tw-switch"><input type="checkbox" id="chk-sem-zero"><span class="tw-switch-track" aria-hidden="true"></span>Ocultar negócios com valor zero</label></div>
-      <p class="cc-note">Previsões vencidas aparecem em vermelho: são a pauta da revisão semanal.</p>
-      <div class="cc-tbl-wrap">
-        <table class="cc-tbl" id="tbl-lista" data-source="pipe_lista" data-row-key="url">
-          <thead><tr><th data-field="negocio">Negócio</th><th data-field="banker" class="l">Banker</th><th data-field="tipo" class="l">Tipo</th><th data-field="etapa" class="l">Etapa</th><th data-field="temperatura" class="l">Temperatura</th><th data-field="valor">Valor</th><th data-field="ponderado">Ponderado</th><th data-field="previsao">Previsão</th><th data-field="idade_dias">Idade</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
     </section>
 
     <section class="tw-sec" id="time" hidden>
-      <div class="tw-sechead"><h2>Time</h2><p>Como cada banker está indo.</p></div>
+      <div class="tw-sechead"><h2>Time</h2><p>Como cada banker está indo em <span class="tw-per-lbl">—</span>.</p></div>
       <div class="cc-tiles">
-        <div class="cc-card cc-tile"><div class="lbl">Reuniões · últimos 30 dias</div><div class="val" data-fmt="int" data-source="reun_resumo" data-field="ultimos_30d" data-where="banker=Todos">—</div><div class="sub">Pela data da reunião no Notion</div></div>
-        <div class="cc-card cc-tile"><div class="lbl">Média semanal</div><div class="val" data-fmt="dec" data-source="reun_resumo" data-field="media_semanal" data-where="banker=Todos">—</div><div class="sub">Nas 11 semanas anteriores à atual</div></div>
-        <div class="cc-card cc-tile"><div class="lbl">Agendadas</div><div class="val" data-fmt="int" data-source="reun_resumo" data-field="agendadas" data-where="banker=Todos">—</div><div class="sub">Reuniões com data a partir de amanhã</div></div>
-        <div class="cc-card cc-tile"><div class="lbl">Última reunião</div><div class="val" data-fmt="data" data-source="reun_resumo" data-field="ultima" data-where="banker=Todos">—</div><div class="sub">Registrada no Notion</div></div>
+        <div class="cc-card cc-tile"><div class="lbl">Reuniões · <span class="tw-per-lbl">—</span></div><div class="val" data-fmt="int" data-source="c_reun" data-field="no_periodo" data-where="banker=Todos">—</div><div class="sub">Até hoje, pela data da reunião no Notion</div></div>
+        <div class="cc-card cc-tile"><div class="lbl">Média semanal</div><div class="val" data-fmt="dec" data-source="c_reun" data-field="media_semanal" data-where="banker=Todos">—</div><div class="sub">Nas semanas do período até hoje</div></div>
+        <div class="cc-card cc-tile"><div class="lbl">Agendadas</div><div class="val" data-fmt="int" data-source="c_reun" data-field="agendadas" data-where="banker=Todos">—</div><div class="sub">A partir de amanhã, qualquer data</div></div>
+        <div class="cc-card cc-tile"><div class="lbl">Última reunião</div><div class="val" data-fmt="data" data-source="c_reun" data-field="ultima" data-where="banker=Todos">—</div><div class="sub">Registrada no Notion</div></div>
       </div>
       <div class="cc-card">
         <h3 id="titulo-reun">Reuniões por semana</h3>
-        <p class="cc-note">Semanas de segunda a domingo, das últimas 11 até a próxima. Um sinal antecipado de pipeline: depende de todos registrarem as reuniões.</p>
+        <p class="cc-note">Semanas de segunda a domingo dentro do período. Um sinal antecipado de pipeline: depende de todos registrarem as reuniões.</p>
         <div class="cc-legend" id="lg-reun"></div>
-        <div class="cc-chart dash-skeleton" id="chart-reun" data-source="reun_semana"></div>
+        <div class="cc-chart dash-skeleton" id="chart-reun" data-source="reunioes"></div>
       </div>
       <div class="cc-block">
         <h2>Comparativo entre bankers</h2>
         <div class="cc-card">
           <h3>Pipeline, resultado e atividade lado a lado</h3>
-          <p class="cc-note">Mostra sempre todos os bankers; o selecionado no filtro fica destacado. "% do AuA" é o pipeline ponderado de captação sobre o AuA inicial dos Parâmetros.</p>
-          <div class="cc-tbl-wrap">
-            <table class="cc-tbl" id="tbl-comp" data-source="comparativo" data-row-key="banker">
-              <thead><tr><th data-field="banker">Banker</th><th data-field="aua_inicial">AuA inicial</th><th data-field="captacao_ponderada">Pipeline ponderado</th><th data-field="pipeline_sobre_aua">% do AuA</th><th data-field="receita_ponderada">Receita ponderada</th><th data-field="saida_esperada">Saída esperada</th><th data-field="abertos">Em aberto</th><th data-field="vencidas">Vencidas</th><th data-field="sem_valor">Sem valor</th><th data-field="ganhos">Ganhos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="ciclo_medio_dias">Ciclo médio</th><th data-field="reunioes_30d">Reuniões 30d</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
+          <p class="cc-note">Mostra sempre todos os bankers; o do filtro fica destacado. Em aberto pela previsão no período; ganhos, taxa e ciclo pela conclusão no período. Ciclo = dias do início à conclusão. "% do AuA" é o pipeline ponderado de captação sobre o AuA inicial dos Parâmetros.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-comp" data-source="c_comp" data-row-key="banker"><thead><tr><th data-field="banker">Banker</th><th data-field="aua_inicial">AuA inicial</th><th data-field="captacao_ponderada">Pipeline ponderado</th><th data-field="pipeline_sobre_aua">% do AuA</th><th data-field="receita_ponderada">Receita ponderada</th><th data-field="resg_risco">Resgates em risco</th><th data-field="abertos">Em aberto</th><th data-field="ganhos">Ganhos</th><th data-field="taxa_ganho">Taxa de ganho</th><th data-field="ciclo_cap">Ciclo captação</th><th data-field="ciclo_rec">Ciclo receita</th><th data-field="reunioes">Reuniões</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
       <div class="cc-block">
         <h2>Originação</h2>
         <div class="cc-card">
           <h3>Negócios originados para outro banker</h3>
-          <p class="cc-note">Um banker origina e outro fecha. A originação não gera captação nem receita: o dinheiro entra pelo negócio de quem fechou. Aqui medimos só a originação em si, por quem originou. Volume é o valor cadastrado na originação.</p>
-          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-orig-res" data-source="originacao_resumo" data-row-key="banker"><thead><tr><th data-field="banker">Banker</th><th data-field="abertas">Em aberto</th><th data-field="ganhas">Ganhas</th><th data-field="perdidas">Perdidas</th><th data-field="conversao">Conversão</th><th data-field="volume_aberto">Volume em aberto</th><th data-field="volume_ganho">Volume ganho</th></tr></thead><tbody></tbody></table></div>
+          <p class="cc-note">Um banker origina e outro fecha. A originação não gera captação nem receita: o dinheiro entra pelo negócio de quem fechou. Por enquanto mostra Tax, Ian e Gabe; Todos soma os três. Volume é o valor cadastrado na originação.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-orig-res" data-source="c_orig_res" data-row-key="banker"><thead><tr><th data-field="banker">Originador</th><th data-field="abertas">Em aberto</th><th data-field="ganhas">Ganhas</th><th data-field="perdidas">Perdidas</th><th data-field="conversao">Conversão</th><th data-field="volume_aberto">Volume em aberto</th><th data-field="volume_ganho">Volume ganho</th></tr></thead><tbody></tbody></table></div>
         </div>
         <div class="cc-card">
           <h3>Originações</h3>
-          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-orig-lista" data-source="originacao" data-row-key="id"><thead><tr><th data-field="negocio">Negócio</th><th data-field="banker" class="l">Originado por</th><th data-field="etapa" class="l">Etapa</th><th data-field="temperatura" class="l">Temperatura</th><th data-field="valor">Volume</th><th data-field="previsao">Previsão</th><th data-field="concluido">Concluído em</th></tr></thead><tbody></tbody></table></div>
+          <p class="cc-note">"Conduzido por" vem do campo Deal conduzido no Notion: ligue a originação ao negócio do banker que vai tocar. "Não vinculado" = ainda sem ligação.</p>
+          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-orig-lista" data-source="c_orig_lista" data-row-key="chave"><thead><tr><th data-field="negocio">Negócio</th><th data-field="banker" class="l">Originado por</th><th data-field="conduzido" class="l">Conduzido por</th><th data-field="etapa" class="l">Etapa</th><th data-field="etapa_conduzido" class="l">Etapa do deal</th><th data-field="temperatura" class="l">Temperatura</th><th data-field="valor">Volume</th><th data-field="previsao">Previsão</th><th data-field="concluido">Concluído em</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
     </section>
 
     <section class="tw-sec" id="revisao" hidden>
-      <div class="tw-sechead tw-sechead-row"><div><h2>Revisão semanal</h2><p>Como estávamos na semana passada e como estamos agora.</p></div><div class="tw-casc-ctl"><label for="sel-rev-per">Período</label><select id="sel-rev-per" class="dash-select"><option value="">—</option></select></div></div>
-      <p class="cc-note tw-ref">Clique num card para ver os negócios. Comparação com a foto da semana de <b data-fmt="data" data-rev data-source="rev_kpis" data-field="semana" data-where="chave=Todos">—</b>, tirada em <b data-fmt="data" data-rev data-source="rev_kpis" data-field="data_foto" data-where="chave=Todos">—</b>. Realizado conta pela data de conclusão; a realizar, pela previsão de fechamento, com os atrasados no mês corrente.</p>
+      <div class="tw-sechead"><h2>Revisão semanal</h2><p>Como estávamos na semana passada e como estamos agora, em <span class="tw-per-lbl">—</span>.</p></div>
+      <p class="cc-note tw-ref">Clique num card para ver os negócios. Comparação com a foto da semana de <b data-fmt="data" data-source="rev_kpis" data-field="semana" data-where="banker=Todos">—</b>, tirada em <b data-fmt="data" data-source="rev_kpis" data-field="data_foto" data-where="banker=Todos">—</b>. Realizado conta pela data de conclusão; a realizar, pela previsão de fechamento, com os atrasados no mês corrente.</p>
       <div class="cc-tiles">
-        <div class="cc-card cc-tile tw-clk" data-medida="cap_realizada" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação realizada</div><div class="val" data-fmt="brl" data-rev data-source="rev_kpis" data-field="cap_realizada" data-where="chave=Todos">—</div><div class="sub">Líquida de resgates: <b data-fmt="brl" data-rev data-source="rev_kpis" data-field="cap_liquida" data-where="chave=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-rev data-source="rev_kpis" data-field="d_cap_realizada" data-where="chave=Todos">—</b></div></div>
-        <div class="cc-card cc-tile tw-clk" data-medida="cap_aberta" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação a realizar</div><div class="val" data-fmt="brl" data-rev data-source="rev_kpis" data-field="cap_aberta" data-where="chave=Todos">—</div><div class="sub">Ponderada: <b data-fmt="brl" data-rev data-source="rev_kpis" data-field="cap_aberta_pond" data-where="chave=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-rev data-source="rev_kpis" data-field="d_cap_aberta" data-where="chave=Todos">—</b></div></div>
-        <div class="cc-card cc-tile tw-clk" data-medida="resg_risco" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Resgates em risco</div><div class="val" data-fmt="brl" data-rev data-source="rev_kpis" data-field="resg_risco" data-where="chave=Todos">—</div><div class="sub">Saída esperada: <b data-fmt="brl" data-rev data-source="rev_kpis" data-field="resg_esperado" data-where="chave=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-rev data-source="rev_kpis" data-field="d_resg_risco" data-where="chave=Todos">—</b></div></div>
-        <div class="cc-card cc-tile tw-clk" data-medida="rec_realizada" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Receita realizada</div><div class="val" data-fmt="brl" data-rev data-source="rev_kpis" data-field="rec_realizada" data-where="chave=Todos">—</div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-rev data-source="rev_kpis" data-field="d_rec_realizada" data-where="chave=Todos">—</b></div></div>
-        <div class="cc-card cc-tile tw-clk" data-medida="rec_aberta" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Receita a realizar</div><div class="val" data-fmt="brl" data-rev data-source="rev_kpis" data-field="rec_aberta" data-where="chave=Todos">—</div><div class="sub">Ponderada: <b data-fmt="brl" data-rev data-source="rev_kpis" data-field="rec_aberta_pond" data-where="chave=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-rev data-source="rev_kpis" data-field="d_rec_aberta" data-where="chave=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-medida="cap_realizada" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação net realizada</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="cap_liquida" data-where="banker=Todos">—</div><div class="sub">Captação total: <b data-fmt="brl" data-source="rev_kpis" data-field="cap_realizada" data-where="banker=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_cap_liquida" data-where="banker=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-medida="cap_aberta" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação a realizar</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="cap_aberta_pond" data-where="banker=Todos">—</div><div class="sub">Ponderada · absoluto <b data-fmt="brl" data-source="rev_kpis" data-field="cap_aberta" data-where="banker=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_cap_aberta_pond" data-where="banker=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-medida="resg_risco" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Resgates em risco</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="resg_risco" data-where="banker=Todos">—</div><div class="sub">Valor cheio, sem ponderação</div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_resg_risco" data-where="banker=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-medida="rec_realizada" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Receita realizada</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="rec_realizada" data-where="banker=Todos">—</div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_rec_realizada" data-where="banker=Todos">—</b></div></div>
+        <div class="cc-card cc-tile tw-clk" data-medida="rec_aberta" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Receita a realizar</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="rec_aberta" data-where="banker=Todos">—</div><div class="sub">Ponderada: <b data-fmt="brl" data-source="rev_kpis" data-field="rec_aberta_pond" data-where="banker=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_rec_aberta" data-where="banker=Todos">—</b></div></div>
       </div>
       <div class="cc-card">
-        <h3 id="titulo-rev-bk">Por banker</h3>
-        <p class="cc-note">Mostra sempre todos os bankers no período escolhido; o do filtro fica destacado. Participação = fatia de cada banker na captação realizada do período. Ordenado pelo captado.</p>
-        <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-rev-bk" data-source="rev_bankers" data-row-key="chave"><thead><tr><th data-field="banker">Banker</th><th data-field="captado">Captado</th><th data-field="participacao">Participação</th><th data-field="liquido">Líquido de resgates</th><th data-field="a_captar">A captar</th><th data-field="a_captar_pond">A captar ponderado</th><th data-field="resg_risco">Resgates em risco</th><th data-field="receita">Receita realizada</th><th data-field="receita_a_realizar">Receita a realizar</th></tr></thead><tbody></tbody></table></div>
+        <div class="cc-cardhead"><h3>Por banker · <span class="tw-per-lbl">—</span></h3><div class="cc-toggle" role="group" aria-label="Visão da tabela"><button type="button" id="btn-bk-cap" aria-pressed="true">Captação</button><button type="button" id="btn-bk-rec" aria-pressed="false">Receita</button></div></div>
+        <p class="cc-note" id="nota-rev-bk"></p>
+        <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-rev-bk" data-source="rev_bankers" data-row-key="banker"><thead><tr></tr></thead><tbody></tbody></table></div>
       </div>
       <div class="cc-card">
         <div class="cc-cardhead"><h3 id="titulo-casc">Cascata do pipe de captação</h3><div class="tw-casc-ctl"><div class="cc-toggle" role="group" aria-label="Linha de negócio"><button type="button" id="btn-rev-cap" aria-pressed="true">Captação</button><button type="button" id="btn-rev-rec" aria-pressed="false">Receita</button></div><div class="cc-toggle" role="group" aria-label="Base de valor"><button type="button" id="btn-casc-abs" aria-pressed="true">Bruto</button><button type="button" id="btn-casc-pond" aria-pressed="false">Ponderado</button></div></div></div>
         <p class="cc-note" id="nota-casc"></p>
-        <div class="cc-chart dash-skeleton" id="chart-cascata" data-source="cascata_periodo"></div>
+        <div class="cc-chart dash-skeleton" id="chart-cascata" data-source="c_cascata"></div>
         <p class="cc-note">Clique numa barra para ver os negócios que ela representa.</p>
-      </div>
-      <div class="tw-modal" id="casc-modal" hidden>
-        <div class="tw-modal-box" role="dialog" aria-modal="true" aria-labelledby="casc-modal-tit">
-          <div class="tw-modal-head"><h3 id="casc-modal-tit">Negócios</h3><button type="button" class="tw-modal-x" id="casc-modal-x" aria-label="Fechar">×</button></div>
-          <p class="cc-note" id="casc-modal-nota"></p>
-          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-casc-itens" data-source="cascata_itens" data-row-key="chave"><thead><tr><th data-field="negocio">Negócio</th><th data-field="banker" class="l">Banker</th><th data-field="detalhe" class="l">O que mudou</th><th data-field="valor_abs" id="th-casc-valor">Valor</th><th data-field="ponderado" id="th-casc-pond" class="vazio">Ponderado</th></tr></thead><tbody></tbody></table></div>
-        </div>
       </div>
       <div class="cc-block">
         <h2>Saúde do pipeline</h2>
         <div class="cc-card">
-          <h3>Negócios em aberto com pendências</h3>
-          <p class="cc-note">A pauta da revisão: cada linha precisa de uma ação do banker. Ordenado pelo número de pendências e pelo valor.</p>
-          <p class="cc-take"><b data-fmt="int" data-source="saude_resumo" data-field="vencida" data-where="banker=Todos">—</b> com previsão vencida e <b data-fmt="int" data-source="saude_resumo" data-field="sem_tarefa" data-where="banker=Todos">—</b> sem próximo passo, de <b data-fmt="int" data-source="saude_resumo" data-field="abertos" data-where="banker=Todos">—</b> em aberto.</p>
+          <div class="cc-cardhead"><h3>Negócios em aberto com pendências</h3><label class="tw-switch"><input type="checkbox" id="chk-saude-zero" checked><span class="tw-switch-track" aria-hidden="true"></span>Incluir negócios com valor zero</label></div>
+          <p class="cc-note">A pauta da revisão: cada linha precisa de uma ação do banker. Com previsão no período ou sem previsão. Valor zero preenchido não é pendência; valor vazio é.</p>
+          <p class="cc-take"><b data-fmt="int" data-source="saude_resumo" data-field="vencida" data-where="banker=Todos">—</b> com previsão vencida, <b data-fmt="int" data-source="saude_resumo" data-field="sem_tarefa" data-where="banker=Todos">—</b> sem próximo passo e <b data-fmt="int" data-source="saude_resumo" data-field="sem_valor" data-where="banker=Todos">—</b> sem valor preenchido, de <b data-fmt="int" data-source="saude_resumo" data-field="abertos" data-where="banker=Todos">—</b> em aberto.</p>
           <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-saude" data-source="saude" data-row-key="id"><thead><tr><th data-field="negocio">Negócio</th><th data-field="banker" class="l">Banker</th><th data-field="etapa" class="l">Etapa</th><th data-field="valor">Valor</th><th data-field="previsao">Previsão</th><th data-field="pendencias" class="l">Pendências</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
       <div class="cc-card">
-          <h3>Precisão das previsões</h3>
-          <p class="cc-note">Captação prevista para cada mês na última foto antes de ele começar, contra o captado de fato. Inclui previsões atrasadas, que contam como esperadas no mês.</p>
-          <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-prec" data-source="precisao" data-row-key="chave"><thead><tr><th data-field="mes">Mês</th><th data-field="foto">Foto</th><th data-field="previsto_ponderado">Previsto ponderado</th><th data-field="previsto_bruto">Previsto bruto</th><th data-field="realizado">Realizado</th><th data-field="aderencia">Realizado / previsto</th><th data-field="em_andamento" class="l">Em andamento</th></tr></thead><tbody></tbody></table></div>
+        <h3>Precisão das previsões</h3>
+        <p class="cc-note">Meses do período. Captação prevista para cada mês na última foto antes de ele começar, contra o captado de fato. Inclui previsões atrasadas, que contam como esperadas no mês.</p>
+        <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-prec" data-source="precisao" data-row-key="chave"><thead><tr><th data-field="mes">Mês</th><th data-field="foto">Foto</th><th data-field="previsto_ponderado">Previsto ponderado</th><th data-field="previsto_bruto">Previsto bruto</th><th data-field="realizado">Realizado</th><th data-field="aderencia">Realizado / previsto</th><th data-field="em_andamento" class="l">Em andamento</th></tr></thead><tbody></tbody></table></div>
       </div>
     </section>
   </main>
+  <div class="tw-modal" id="tw-modal" hidden>
+    <div class="tw-modal-box" role="dialog" aria-modal="true" aria-labelledby="mdl-tit">
+      <div class="tw-modal-head"><h3 id="mdl-tit">Negócios</h3><button type="button" class="tw-modal-x" id="mdl-x" aria-label="Fechar">×</button></div>
+      <p class="cc-note" id="mdl-nota"></p>
+      <div class="tw-mdl-tools">
+        <label id="mdl-f-banker">Banker<select id="mdl-banker"></select></label>
+        <label>Valor<select id="mdl-valor"></select></label>
+        <label id="mdl-f-cat"><span id="mdl-cat-lbl">Tipo</span><select id="mdl-cat"></select></label>
+        <label>Agrupar por<select id="mdl-grupo"></select></label>
+        <span class="tw-mdl-cont" id="mdl-cont"></span>
+      </div>
+      <p class="cc-note">Clique no título de uma coluna para ordenar; clique de novo para inverter.</p>
+      <div class="cc-tbl-wrap"><table class="cc-tbl" id="tbl-modal" data-source="negocios_vivo" data-row-key="chave"><thead><tr></tr></thead><tbody></tbody></table></div>
+    </div>
+  </div>
 </div>
 </div>
 <script src="painel.js"></script>

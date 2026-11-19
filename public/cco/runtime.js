@@ -30,6 +30,8 @@
     setParams(p) {
       params = Object.assign({}, params, p);
       try { localStorage.setItem('cco_params', JSON.stringify(params)); } catch (e) {}
+      // Os cálculos do painel dependem do banker e do período escolhidos: refaz e redesenha.
+      rodarCalcs();
       avisar();
     },
     setLink(sec) { try { history.replaceState(null, '', '#' + sec); } catch (e) {} }
