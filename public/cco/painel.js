@@ -407,12 +407,16 @@ const LINHA_REV = t => LINHA_CAP(t) || t === 'Resgate' ? 'cap' : (!t || t === 'S
 const ultimaSemana = h => h.reduce((m, r) => (r.semana && r.semana > m ? r.semana : m), '');
 const dataDaFoto = (foto, S) => foto.reduce((m, r) => (r.data_foto && r.data_foto > m ? r.data_foto : m), '') || S;
 const itemNoPer = (r, P) => P.tipo === 'tudo' || dentro(r.data, P);
+/* Foto de comparação da Revisão: a escolhida no seletor ou, por padrão, a última foto de uma semana anterior à atual. Assim uma foto tirada no meio da semana não zera a comparação. */
+const semanasFoto = h => [...new Set(h.map(r => r.semana).filter(Boolean))].sort();
+function fotoPadrao(h) { const s = semanasFoto(h), atualSem = semanaDe(hojeISO()); return s.filter(x => x < atualSem).pop() || s[s.length - 1] || ''; }
+function fotoRef(h) { const p = (dash.params() || {}).foto, s = semanasFoto(h); return p && s.includes(p) ? p : fotoPadrao(h); }
 dash.calc('rev_itens', {
   inputs: ['historico', 'negocios_vivo'],
   title: 'Negócios por trás dos números da Revisão',
-  description: 'Uma linha por negócio e momento (foto mais recente do Histórico ou agora): captação realizada (ganha, pela data de conclusão), resgate efetivado (Resgate perdido), captação e receita a realizar (em aberto pela previsão, atrasados no mês corrente; ponderado pela Temperatura), resgate em risco (em aberto, valor cheio) e receita realizada.',
+  description: 'Uma linha por negócio e momento (foto de comparação do Histórico ou agora; por padrão, a última foto de uma semana anterior à atual): captação realizada (ganha, pela data de conclusão), resgate efetivado (Resgate perdido), captação e receita a realizar (em aberto pela previsão, atrasados no mês corrente; ponderado pela Temperatura), resgate em risco (em aberto, valor cheio) e receita realizada.',
   fn: (historico, negocios_vivo) => {
-    const S = ultimaSemana(historico); if (!S) return [];
+    const S = fotoRef(historico); if (!S) return [];
     const foto = historico.filter(r => r.semana === S && LINHA_REV(r.tipo)), vivo = negocios_vivo.filter(r => LINHA_REV(r.tipo));
     const dataFoto = dataDaFoto(foto, S), out = [];
     const linhas = (rows, refIni, momento) => rows.forEach(r => {
@@ -467,9 +471,9 @@ dash.calc('rev_bankers', {
 dash.calc('cascata_itens', {
   inputs: ['historico', 'negocios_vivo'],
   title: 'Negócios por barra da cascata',
-  description: 'Pipe em aberto com previsão no período, na foto mais recente do Histórico e agora, e a barra em que cada negócio cai. Atrasados contam no mês corrente (da foto ou de hoje). Captação inclui Resgate com sinal negativo, sempre pelo valor cheio. Data ajustada = previsão que mudou para dentro do período, ou negócio reaberto. Mudou de valor indica se mudou o valor, a temperatura ou ambos.',
+  description: 'Pipe em aberto com previsão no período, na foto de comparação do Histórico (por padrão, a última foto de uma semana anterior à atual) e agora, e a barra em que cada negócio cai. Atrasados contam no mês corrente (da foto ou de hoje). Captação inclui Resgate com sinal negativo, sempre pelo valor cheio. Data ajustada = previsão que mudou para dentro do período, ou negócio reaberto. Mudou de valor indica se mudou o valor, a temperatura ou ambos.',
   fn: (historico, negocios_vivo) => {
-    const P = PER(), S = ultimaSemana(historico); if (!S) return [];
+    const P = PER(), S = fotoRef(historico); if (!S) return [];
     const foto = historico.filter(r => r.semana === S && LINHA_REV(r.tipo)), vivo = negocios_vivo.filter(r => LINHA_REV(r.tipo));
     const fRef = dataDaFoto(foto, S).slice(0, 7) + '-01', hRef = mesAtualIni();
     const fMap = new Map(foto.map(r => [r.id, r])), vMap = new Map(vivo.map(r => [r.id, r]));
@@ -1077,8 +1081,19 @@ function fillSaude() {
   fillTable('tbl-saude', 'saude', [['negocio'], ['banker', null, 'l'], ['etapa', null, 'l'], ['valor', (v, r) => r.pendencias.includes('Valor não preenchido') ? 'Vazio' : BRL(v)], ['previsao', DATA], ['pendencias', null, 'l']],
     {key: 'id', filter: r => doAtual(r) && (saudeZero || r.valor_zero !== 'Sim'), empty: 'Nenhuma pendência. Pipeline em ordem.'});
 }
+const selFoto = $('sel-foto');
+selFoto.addEventListener('change', () => dash.setParams({foto: selFoto.value}));
+function fillFotos() {
+  const d = dash.data('historico'); if (d.status !== 'ok') return;
+  const h = d.data, s = semanasFoto(h).slice().reverse(), pad = fotoPadrao(h), dataF = {};
+  h.forEach(r => { if (r.semana && r.data_foto && (!dataF[r.semana] || r.data_foto > dataF[r.semana])) dataF[r.semana] = r.data_foto; });
+  const rot = w => 'Semana de ' + DATA(w) + ' · tirada em ' + DATA(dataF[w] || w);
+  const k = s.join('|') + '#' + pad;
+  if (selFoto.dataset.k !== k) { selFoto.dataset.k = k; selFoto.replaceChildren(new Option('Semana anterior · ' + DATA(pad), ''), ...s.map(w => new Option(rot(w), w))); }
+  const p = (dash.params() || {}).foto; selFoto.value = p && s.includes(p) ? p : '';
+}
 function fillRevisao() {
-  fillRevBankers(); fillSaude();
+  fillFotos(); fillRevBankers(); fillSaude();
   const P = PER();
   fillTable('tbl-prec', 'precisao', [['mes', MESLBL], ['foto', DATA], ['previsto_ponderado', BRL], ['previsto_bruto', BRL], ['realizado', BRL], ['aderencia', PCTN], ['em_andamento', null, 'l']], {key: 'chave', filter: r => r.banker === atual() && mesNoPer(r.mes, P), empty: 'Nenhum mês do período tem foto anterior para comparar.'});
 }
