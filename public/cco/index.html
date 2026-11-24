@@ -116,6 +116,7 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 .tw-casc-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 #chart-cascata .tw-clk{cursor:pointer}
 .tw-ref{margin:-12px 0 0}
+.tw-foto-ctl{align-self:flex-start}
 #tbl-saude td:last-child{white-space:normal;min-width:16rem;color:var(--tw-sai)}
 .cc-tbl tr.tw-sel td{background:var(--tw-soft);font-weight:700}
 .cc-tbl tr.tw-total td{font-weight:700;border-top:2px solid var(--tw-line)}
@@ -330,6 +331,7 @@ display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100%;backgroun
 
     <section class="tw-sec" id="revisao" hidden>
       <div class="tw-sechead"><h2>Revisão semanal</h2><p>Como estávamos na semana passada e como estamos agora, em <span class="tw-per-lbl">—</span>.</p></div>
+      <label class="cc-filter tw-foto-ctl" for="sel-foto">Comparar com a foto<select id="sel-foto"></select></label>
       <p class="cc-note tw-ref">Clique num card para ver os negócios. Comparação com a foto da semana de <b data-fmt="data" data-source="rev_kpis" data-field="semana" data-where="banker=Todos">—</b>, tirada em <b data-fmt="data" data-source="rev_kpis" data-field="data_foto" data-where="banker=Todos">—</b>. Realizado conta pela data de conclusão; a realizar, pela previsão de fechamento, com os atrasados no mês corrente.</p>
       <div class="cc-tiles">
         <div class="cc-card cc-tile tw-clk" data-medida="cap_realizada" role="button" tabindex="0" title="Ver os negócios"><div class="lbl">Captação net realizada</div><div class="val" data-fmt="brl" data-source="rev_kpis" data-field="cap_liquida" data-where="banker=Todos">—</div><div class="sub">Captação total: <b data-fmt="brl" data-source="rev_kpis" data-field="cap_realizada" data-where="banker=Todos">—</b></div><div class="sub">Desde a foto: <b data-fmt="dbrl" data-source="rev_kpis" data-field="d_cap_liquida" data-where="banker=Todos">—</b></div></div>

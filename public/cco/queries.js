@@ -31,7 +31,7 @@ SELECT ${ID('url')} AS id, banker, negocio, etapa, temperatura, valor, previsao,
 
   Q.historico = `WITH h AS (SELECT date("date:Semana:start") AS semana, date("date:Data da foto:start") AS data_foto, ${ID('"ID do negócio"')} AS id, "Banker" AS banker, "Negócio" AS negocio, "Tipo" AS tipo, "Etapa" AS etapa, "Temperatura" AS temperatura, COALESCE("Valor", 0) AS valor, date("date:Previsão de fechamento:start") AS previsao, date("date:Concluído em:start") AS concluido FROM ${HIST}),
 w AS (SELECT DISTINCT semana FROM h),
-k AS (SELECT semana FROM w WHERE semana = (SELECT MAX(semana) FROM w) OR semana = (SELECT MAX(w2.semana) FROM w AS w2 WHERE substr(w2.semana, 1, 7) = substr(w.semana, 1, 7)))
+k AS (SELECT semana FROM w WHERE semana >= date((SELECT MAX(semana) FROM w), '-56 days') OR semana = (SELECT MAX(w2.semana) FROM w AS w2 WHERE substr(w2.semana, 1, 7) = substr(w.semana, 1, 7)))
 SELECT * FROM h WHERE semana IN (SELECT semana FROM k) ORDER BY semana, banker, id`;
 
   Q.params = `SELECT "Linha" AS linha, "Tipo" AS tipo, "AuA inicial" AS aua_inicial, date("date:Data de referência:start") AS data_ref, "Ano" AS ano, "Ganho de capital (% a.a.)" AS ganho_aa FROM ${PAR} ORDER BY "Tipo", "Linha"`;
